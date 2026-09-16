@@ -11,8 +11,10 @@
    ============================================================ */
 
 import '../styles/admin.css';
+import { initTheme } from '../ui/theme.js';
 
 document.addEventListener('DOMContentLoaded', () => {
+  initTheme();
   initSlugFields();
   initConfirmations();
   initCharCounters();

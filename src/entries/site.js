@@ -21,6 +21,7 @@ import '../styles/pages.css';
 
 import { initCursor } from '../ui/cursor.js';
 import { initNav, initReveals, reduceMotion } from '../ui/motion.js';
+import { initTheme } from '../ui/theme.js';
 
 const PAGE = (typeof window !== 'undefined' && window.__DCP) || {};
 const PAGE_TYPE = PAGE.pageType || 'detail';
@@ -54,6 +55,7 @@ function runBoot(onDone) {
 /* ---- app ----------------------------------------------------- */
 
 async function app() {
+  initTheme();
   initNav();
   initCursor({ reduced: reduceMotion });
   initReveals();

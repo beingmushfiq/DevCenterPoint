@@ -102,14 +102,87 @@
   --glow-subtle: 0 4px 24px rgb(0 0 0 / 0.50);
 
   --color-success: var(--signal-ok);
-  --color-focus: var(--blue-400);
+  --color-nav-bg: rgb(10 9 8 / 0.82);
 }
 
-/* Dark is native */
+/* ============================================================
+   LAYER 2B — THEME SPECIFIC TOKENS
+   ============================================================ */
 [data-theme='dark'] {
   --color-bg: var(--carbon-950);
+  --color-bg-deep: #04060a;
   --color-surface: var(--carbon-900);
+  --color-surface-raised: var(--carbon-850);
+  --color-surface-sunken: var(--carbon-800);
+  --color-surface-float: var(--carbon-700);
+
+  --color-border: rgb(248 250 252 / 0.10);
+  --color-border-strong: rgb(248 250 252 / 0.20);
+  --color-border-hover: rgb(37 99 235 / 0.40);
+  --color-rule: rgb(248 250 252 / 0.07);
+
   --color-text: var(--bone-100);
+  --color-text-muted: var(--bone-300);
+  --color-text-subtle: var(--bone-400);
+  --color-text-faint: var(--bone-500);
+
+  --color-primary: var(--blue-500);
+  --color-primary-hover: var(--blue-400);
+  --color-primary-deep: var(--blue-600);
+  --color-primary-soft: var(--blue-300);
+  --color-accent: #0ea5e9;
+  --color-structure: var(--steel-500);
+
+  --color-ember: rgb(29 78 216 / 0.30);
+  --color-blueprint: rgb(37 99 235 / 0.20);
+
+  --glow-primary: 0 0 20px -2px rgb(37 99 235 / 0.50);
+  --glow-primary-strong: 0 0 32px -4px rgb(37 99 235 / 0.70);
+  --glow-amber: 0 0 20px -2px rgb(14 165 233 / 0.45);
+  --glow-subtle: 0 4px 24px rgb(0 0 0 / 0.50);
+
+  --color-success: var(--signal-ok);
+  --color-focus: var(--blue-400);
+  --color-nav-bg: rgb(10 9 8 / 0.82);
+}
+
+/* Light theme — calibrated for 100% visibility, crisp contrast, and precision engineering */
+[data-theme='light'] {
+  --color-bg: #f8fafc;
+  --color-bg-deep: #f1f5f9;
+  --color-surface: #ffffff;
+  --color-surface-raised: #ffffff;
+  --color-surface-sunken: #edf2f7;
+  --color-surface-float: #ffffff;
+
+  --color-border: rgb(15 23 42 / 0.12);
+  --color-border-strong: rgb(15 23 42 / 0.22);
+  --color-border-hover: rgb(37 99 235 / 0.50);
+  --color-rule: rgb(15 23 42 / 0.08);
+
+  --color-text: #0f172a;
+  --color-text-muted: #334155;
+  --color-text-subtle: #475569;
+  --color-text-faint: #64748b;
+
+  --color-primary: #2563eb;
+  --color-primary-hover: #1d4ed8;
+  --color-primary-deep: #1e40af;
+  --color-primary-soft: #dbeafe;
+  --color-accent: #0284c7;
+  --color-structure: #64748b;
+
+  --color-ember: rgb(37 99 235 / 0.06);
+  --color-blueprint: rgb(37 99 235 / 0.08);
+
+  --glow-primary: 0 4px 20px -2px rgb(37 99 235 / 0.22);
+  --glow-primary-strong: 0 8px 28px -4px rgb(37 99 235 / 0.32);
+  --glow-amber: 0 4px 20px -2px rgb(2 132 199 / 0.20);
+  --glow-subtle: 0 8px 24px -4px rgb(15 23 42 / 0.08);
+
+  --color-success: #059669;
+  --color-focus: #2563eb;
+  --color-nav-bg: rgb(255 255 255 / 0.88);
 }
 
 /* ============================================================

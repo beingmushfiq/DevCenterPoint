@@ -71,6 +71,9 @@ export class Scene {
     this.buildStars();
     this.bindEvents();
 
+    const initialTheme = document.documentElement.getAttribute('data-theme') || 'dark';
+    this.setTheme(initialTheme);
+
     this.onResize();
     this.loop();
   }
@@ -419,6 +422,19 @@ export class Scene {
       this.pointerTarget.x = (e.clientX / window.innerWidth) * 2 - 1;
       this.pointerTarget.y = -((e.clientY / window.innerHeight) * 2 - 1);
     }, { passive: true });
+    window.addEventListener('dcp:themechange', (e) => {
+      if (e.detail && e.detail.theme) {
+        this.setTheme(e.detail.theme);
+      }
+    }, { passive: true });
+  }
+
+  setTheme(theme) {
+    this.isLight = theme === 'light';
+    const fogColor = this.isLight ? 0xf1f5f9 : 0x07090e;
+    if (this.scene && this.scene.fog) {
+      this.scene.fog.color.setHex(fogColor);
+    }
   }
 
   onResize() {

@@ -1,4 +1,4 @@
-﻿/* ============================================================
+/* ============================================================
    DEVCENTERPOINT — "CARBON & SIGNAL"
    An editorial-industrial system. Drama comes from typography,
    grid, and the 3D field — never from decorative gradients.
@@ -16,6 +16,7 @@ body {
   line-height: 1.7;
   -webkit-font-smoothing: antialiased;
   overflow-x: hidden;
+  transition: background-color var(--motion-base), color var(--motion-base);
 }
 
 img, canvas { display: block; max-width: 100%; }
@@ -205,7 +206,7 @@ a { color: inherit; text-decoration: none; }
   transform: scaleX(0); transform-origin: left;
   transition: transform var(--motion-base) var(--ease-emphasis);
 }
-.btn--ghost:hover { color: var(--carbon-950); border-color: var(--color-text); }
+.btn--ghost:hover { color: var(--color-bg); border-color: var(--color-text); }
 .btn--ghost:hover::after { transform: scaleX(1); }
 
 .link-rule {
@@ -472,7 +473,7 @@ a { color: inherit; text-decoration: none; }
 
 /* ============ ATMOSPHERE ============ */
 .blueprint { z-index: 0; }
-.stage { position: fixed; inset: 0; z-index: 1; width: 100%; height: 100%; }
+.stage { position: fixed; inset: 0; z-index: 1; width: 100%; height: 100%; transition: opacity var(--motion-base); }
 .spline-slot { position: fixed; inset: 0; z-index: 4; pointer-events: none; }
 
 .grain {
@@ -488,6 +489,16 @@ a { color: inherit; text-decoration: none; }
     radial-gradient(ellipse 46% 38% at 88% 4%, var(--color-blueprint), transparent 70%);
 }
 
+[data-theme='light'] .blueprint { opacity: 0.85; }
+[data-theme='light'] .grain { opacity: 0.02; mix-blend-mode: multiply; }
+[data-theme='light'] .vignette {
+  background:
+    radial-gradient(ellipse 90% 70% at 50% 45%, transparent 60%, var(--color-bg-deep) 130%),
+    radial-gradient(ellipse 55% 42% at 42% 96%, var(--color-ember), transparent 72%),
+    radial-gradient(ellipse 46% 38% at 88% 4%, var(--color-blueprint), transparent 70%);
+}
+[data-theme='light'] .stage { opacity: 0.7; filter: contrast(1.1); }
+
 /* ============ NAV ============ */
 .nav {
   position: fixed; top: 0; left: 0; right: 0; z-index: 100;
@@ -497,7 +508,7 @@ a { color: inherit; text-decoration: none; }
   border-bottom: 1px solid transparent;
 }
 .nav.is-scrolled {
-  background: rgb(10 9 8 / 0.82);
+  background: var(--color-nav-bg);
   backdrop-filter: blur(20px) saturate(140%);
   -webkit-backdrop-filter: blur(20px) saturate(140%);
   border-bottom-color: var(--color-border);
@@ -722,3 +733,52 @@ a { color: inherit; text-decoration: none; }
   .curve__bar { transition: none; }
   .cap__item::before, .cap__item::after { transition: opacity var(--motion-base); }
 }
+
+/* ============ THEME TOGGLE BUTTON ============ */
+.theme-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  border-radius: var(--radius-xs);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  color: var(--color-text);
+  cursor: pointer;
+  transition: border-color var(--motion-fast), color var(--motion-fast), background var(--motion-fast), transform var(--motion-fast), box-shadow var(--motion-fast);
+  position: relative;
+  flex: none;
+}
+.theme-toggle:hover {
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+  background: var(--color-surface-raised);
+  box-shadow: var(--glow-primary);
+  transform: translateY(-1px);
+}
+.theme-toggle:active {
+  transform: translateY(0);
+}
+.theme-toggle svg {
+  width: 17px;
+  height: 17px;
+  display: block;
+  transition: transform var(--motion-base) var(--ease-spring), opacity var(--motion-fast);
+}
+.theme-toggle__icon-sun {
+  display: none;
+}
+.theme-toggle__icon-moon {
+  display: block;
+}
+
+[data-theme='light'] .theme-toggle__icon-sun {
+  display: block;
+  color: #f59e0b;
+}
+[data-theme='light'] .theme-toggle__icon-moon {
+  display: none;
+}
+

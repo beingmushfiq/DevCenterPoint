@@ -61,6 +61,17 @@
   <script type="application/ld+json" nonce="<%= nonce %>"><%- jsonLd(orgLd) %></script>
 
   <script nonce="<%= nonce %>">
+    /* Early theme resolution: prevents any flash of unstyled theme (FOUT) */
+    (function() {
+      try {
+        var saved = localStorage.getItem('dcp-theme');
+        var theme = saved || (window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
+        document.documentElement.setAttribute('data-theme', theme);
+      } catch (e) {
+        document.documentElement.setAttribute('data-theme', 'dark');
+      }
+    })();
+
     /* Page type is read by the site entry to decide whether this
        page gets a WebGL field at all. */
     window.__DCP = { pageType: '<%= pageType %>', path: '<%= currentPath %>' };
