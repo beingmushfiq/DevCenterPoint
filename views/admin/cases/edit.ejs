@@ -1,0 +1,221 @@
+<form class="admin-form" method="POST" action="<%= cs.id ? `/admin/cases/${cs.id}/edit` : '/admin/cases/new' %>">
+  <% if (locals.csrfToken) { %><input type="hidden" name="_csrf" value="<%= csrfToken %>" /><% } %>
+
+  <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--color-border); padding-bottom: var(--space-4);">
+    <h2 style="font-family: var(--font-display); font-size: 1.25rem;"><%= cs.id ? 'Edit Case Study' : 'Create Case Study' %></h2>
+    <div style="display: flex; gap: var(--space-3);">
+      <a class="btn btn--ghost" href="/admin/cases">Cancel</a>
+      <button class="btn btn--primary" type="submit">Save Case Study</button>
+    </div>
+  </div>
+
+  <div class="admin-form__row">
+    <div class="field">
+      <label class="field__label" for="title">Title <span class="req">*</span></label>
+      <input type="text" id="title" name="title" required value="<%= cs.title || '' %>" placeholder="Consolidating four dispatch systems into one" />
+    </div>
+
+    <div class="field">
+      <label class="field__label" for="slug">Slug <span class="req">*</span></label>
+      <input type="text" id="slug" name="slug" required value="<%= cs.slug || '' %>" placeholder="nordic-freight-consolidation" />
+      <span class="field__hint">URL path: /work/{slug}</span>
+    </div>
+  </div>
+
+  <div class="admin-form__row">
+    <div class="field">
+      <label class="field__label" for="client_name">Client Name</label>
+      <input type="text" id="client_name" name="client_name" value="<%= cs.client_name || '' %>" placeholder="Nordic Logistics Group" />
+    </div>
+
+    <div class="field">
+      <label class="field__label" for="client_visibility">Client Visibility</label>
+      <select id="client_visibility" name="client_visibility">
+        <option value="named" <%= cs.client_visibility === 'named' ? 'selected' : '' %>>Named (Show full client name)</option>
+        <option value="confidential" <%= cs.client_visibility === 'confidential' ? 'selected' : '' %>>Confidential (Use anonymised label)</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="admin-form__row">
+    <div class="field">
+      <label class="field__label" for="client_label">Client Label (if confidential)</label>
+      <input type="text" id="client_label" name="client_label" value="<%= cs.client_label || '' %>" placeholder="Pan-European carrier" />
+    </div>
+
+    <div class="field">
+      <label class="field__label" for="sector">Sector</label>
+      <input type="text" id="sector" name="sector" value="<%= cs.sector || '' %>" placeholder="Logistics / Freight" />
+    </div>
+  </div>
+
+  <div class="admin-form__row">
+    <div class="field">
+      <label class="field__label" for="year">Year</label>
+      <input type="number" id="year" name="year" value="<%= cs.year || new Date().getFullYear() %>" />
+    </div>
+
+    <div class="field">
+      <label class="field__label" for="engagement">Engagement Model</label>
+      <input type="text" id="engagement" name="engagement" value="<%= cs.engagement || 'Full delivery' %>" placeholder="Review &rarr; Delivery" />
+    </div>
+  </div>
+
+  <div class="admin-form__row">
+    <div class="field">
+      <label class="field__label" for="duration">Duration</label>
+      <input type="text" id="duration" name="duration" value="<%= cs.duration || '' %>" placeholder="6 months" />
+    </div>
+
+    <div class="field">
+      <label class="field__label" for="team_size">Team Size</label>
+      <input type="text" id="team_size" name="team_size" value="<%= cs.team_size || '' %>" placeholder="3 senior engineers" />
+    </div>
+  </div>
+
+  <div class="field field--full">
+    <label class="field__label" for="summary">Summary / Lede <span class="req">*</span></label>
+    <textarea id="summary" name="summary" required rows="3" placeholder="High-level standfirst describing the core outcome..."><%= cs.summary || '' %></textarea>
+  </div>
+
+  <div class="form-section">
+    <h3 class="form-section__label">Narrative Chapters (Markdown)</h3>
+  </div>
+
+  <div class="field field--full">
+    <label class="field__label" for="challenge">01 / Challenge</label>
+    <textarea id="challenge" name="challenge" rows="5"><%= cs.challenge || '' %></textarea>
+  </div>
+
+  <div class="field field--full">
+    <label class="field__label" for="approach">02 / Approach</label>
+    <textarea id="approach" name="approach" rows="5"><%= cs.approach || '' %></textarea>
+  </div>
+
+  <div class="field field--full">
+    <label class="field__label" for="outcome">03 / Outcome &amp; Results</label>
+    <textarea id="outcome" name="outcome" rows="5"><%= cs.outcome || '' %></textarea>
+  </div>
+
+  <div class="form-section">
+    <h3 class="form-section__label">Client Testimonial &amp; Quote</h3>
+  </div>
+
+  <div class="field field--full">
+    <label class="field__label" for="quote">Quote</label>
+    <textarea id="quote" name="quote" rows="3" placeholder="They spent three weeks refusing to write code until the data model was right..."><%= cs.quote || '' %></textarea>
+  </div>
+
+  <div class="admin-form__row">
+    <div class="field">
+      <label class="field__label" for="quote_attribution">Attribution / Author</label>
+      <input type="text" id="quote_attribution" name="quote_attribution" value="<%= cs.quote_attribution || '' %>" placeholder="Mette Sørensen, Director of Operations" />
+    </div>
+  </div>
+
+  <div class="form-section">
+    <h3 class="form-section__label">Key Metrics (3-4 items)</h3>
+  </div>
+
+  <div id="metrics-container">
+    <% (cs.metrics || []).forEach(function (m, idx) { %>
+      <div class="admin-form__row" style="margin-bottom: var(--space-3);">
+        <input type="text" name="metric_label[]" value="<%= m.label %>" placeholder="Label (e.g. Reconciliation time)" />
+        <input type="text" name="metric_value[]" value="<%= m.value %>" placeholder="Value (e.g. 9)" />
+        <input type="text" name="metric_unit[]" value="<%= m.unit || '' %>" placeholder="Unit (e.g. min)" />
+        <input type="text" name="metric_prefix[]" value="<%= m.prefix || '' %>" placeholder="Prefix (optional)" />
+      </div>
+    <% }); %>
+    <div class="admin-form__row" style="margin-bottom: var(--space-3);">
+      <input type="text" name="metric_label[]" placeholder="New Metric Label" />
+      <input type="text" name="metric_value[]" placeholder="Value" />
+      <input type="text" name="metric_unit[]" placeholder="Unit" />
+      <input type="text" name="metric_prefix[]" placeholder="Prefix" />
+    </div>
+  </div>
+
+  <div class="form-section">
+    <h3 class="form-section__label">Disciplines &amp; Technologies</h3>
+  </div>
+
+  <div class="field field--full">
+    <label class="field__label">Disciplines Involved</label>
+    <div style="display: flex; gap: var(--space-4); flex-wrap: wrap; margin-top: var(--space-2);">
+      <% (services || []).forEach(function (s) { %>
+        <label style="display: flex; align-items: center; gap: var(--space-2); font-size: 0.875rem;">
+          <input type="checkbox" name="service_ids[]" value="<%= s.id %>" <%= (cs.serviceIds || []).includes(s.id) ? 'checked' : '' %> />
+          <%= s.title %>
+        </label>
+      <% }); %>
+    </div>
+  </div>
+
+  <div class="field field--full">
+    <label class="field__label" for="tech">Technologies (Comma separated)</label>
+    <input type="text" id="tech" name="tech" value="<%= (cs.tech || []).join(', ') %>" placeholder="Node.js, Postgres, TimescaleDB, RabbitMQ, Docker" />
+  </div>
+
+  <div class="form-section">
+    <h3 class="form-section__label">Media, Status &amp; SEO</h3>
+  </div>
+
+  <div class="admin-form__row">
+    <div class="field">
+      <label class="field__label" for="cover_media_id">Cover Image</label>
+      <select id="cover_media_id" name="cover_media_id">
+        <option value="">No cover image</option>
+        <% (mediaList || []).forEach(function (m) { %>
+          <option value="<%= m.id %>" <%= cs.cover_media_id === m.id ? 'selected' : '' %>><%= m.original_name %> (<%= m.path %>)</option>
+        <% }); %>
+      </select>
+    </div>
+
+    <div class="field">
+      <label class="field__label" for="cover_alt">Cover Image Alt Text</label>
+      <input type="text" id="cover_alt" name="cover_alt" value="<%= cs.cover_alt || '' %>" placeholder="Dispatch console topology diagram" />
+    </div>
+  </div>
+
+  <div class="admin-form__row">
+    <div class="field">
+      <label class="field__label" for="status">Publication Status</label>
+      <select id="status" name="status">
+        <option value="draft" <%= cs.status === 'draft' ? 'selected' : '' %>>Draft</option>
+        <option value="published" <%= cs.status === 'published' ? 'selected' : '' %>>Published</option>
+        <option value="archived" <%= cs.status === 'archived' ? 'selected' : '' %>>Archived</option>
+      </select>
+    </div>
+
+    <div class="field">
+      <label class="field__label" for="sort_order">Sort Order</label>
+      <input type="number" id="sort_order" name="sort_order" value="<%= cs.sort_order || 0 %>" />
+    </div>
+  </div>
+
+  <div class="admin-form__row">
+    <div class="field">
+      <label class="field__label">Featured Project</label>
+      <label style="display: flex; align-items: center; gap: var(--space-2); margin-top: var(--space-2); font-size: 0.875rem;">
+        <input type="checkbox" name="is_featured" value="1" <%= cs.is_featured ? 'checked' : '' %> />
+        Feature on homepage
+      </label>
+    </div>
+  </div>
+
+  <div class="admin-form__row">
+    <div class="field">
+      <label class="field__label" for="seo_title">SEO Title</label>
+      <input type="text" id="seo_title" name="seo_title" value="<%= cs.seo_title || '' %>" placeholder="Defaults to Title — DevCenterPoint" />
+    </div>
+
+    <div class="field">
+      <label class="field__label" for="seo_description">SEO Description</label>
+      <input type="text" id="seo_description" name="seo_description" value="<%= cs.seo_description || '' %>" placeholder="Defaults to Summary" />
+    </div>
+  </div>
+
+  <div class="form__foot" style="margin-top: var(--space-8); border-top: 1px solid var(--color-border); padding-top: var(--space-6);">
+    <button class="btn btn--primary" type="submit">Save Case Study</button>
+    <a class="btn btn--ghost" href="/admin/cases">Cancel</a>
+  </div>
+</form>

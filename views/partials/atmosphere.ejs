@@ -1,0 +1,22 @@
+<%
+  /* ============================================================
+     ATMOSPHERE
+
+     Layering is fixed by base.css and must not be reordered:
+       0 blueprint · 1 canvas · 2 content · 3 grain/vignette
+       · 4 flash/spline · 100 nav · 150 dots · 200 rail · 700 boot
+
+     The canvas and the Spline slot are emitted only where the
+     entry actually mounts them. A reading page should not carry an
+     inert full-screen canvas it will never touch.
+     ============================================================ */
+  const wantsScene = (locals.pageType === 'home' || locals.pageType === 'index');
+%>
+  <div class="blueprint" aria-hidden="true"></div>
+<% if (wantsScene) { %>
+  <canvas id="webgl" class="stage" aria-hidden="true"></canvas>
+  <div id="spline-slot" class="spline-slot" aria-hidden="true"></div>
+<% } %>
+  <div class="grain" aria-hidden="true"></div>
+  <div class="vignette" aria-hidden="true"></div>
+  <div id="flash" class="flash" aria-hidden="true"></div>

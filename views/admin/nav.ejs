@@ -1,0 +1,43 @@
+<form class="admin-form" method="POST" action="/admin/nav">
+  <% if (locals.csrfToken) { %><input type="hidden" name="_csrf" value="<%= csrfToken %>" /><% } %>
+
+  <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--color-border); padding-bottom: var(--space-4);">
+    <h2 style="font-family: var(--font-display); font-size: 1.25rem;">Manage Navigation Links</h2>
+    <button class="btn btn--primary" type="submit">Save Navigation</button>
+  </div>
+
+  <div style="margin-top: var(--space-6);">
+    <p class="body" style="margin-bottom: var(--space-6); font-size: 0.875rem;">
+      Configure links for the primary header navigation, footer links, and legal links at the very bottom.
+    </p>
+
+    <% (items || []).forEach(function (item, idx) { %>
+      <div style="display: flex; gap: var(--space-3); margin-bottom: var(--space-3); align-items: center;">
+        <select name="location[]" style="width: 140px;">
+          <option value="primary" <%= item.location === 'primary' ? 'selected' : '' %>>Primary Nav</option>
+          <option value="footer" <%= item.location === 'footer' ? 'selected' : '' %>>Footer</option>
+          <option value="legal" <%= item.location === 'legal' ? 'selected' : '' %>>Legal</option>
+        </select>
+        <input type="text" name="label[]" value="<%= item.label %>" placeholder="Label (e.g. Disciplines)" style="flex: 1;" />
+        <input type="text" name="url[]" value="<%= item.url %>" placeholder="URL (e.g. /services)" style="flex: 1;" />
+      </div>
+    <% }); %>
+
+    <div class="form-section">
+      <h3 class="form-section__label">Add Another Link</h3>
+      <div style="display: flex; gap: var(--space-3); margin-bottom: var(--space-3); align-items: center;">
+        <select name="location[]" style="width: 140px;">
+          <option value="primary">Primary Nav</option>
+          <option value="footer">Footer</option>
+          <option value="legal">Legal</option>
+        </select>
+        <input type="text" name="label[]" placeholder="New Link Label" style="flex: 1;" />
+        <input type="text" name="url[]" placeholder="New URL (/path)" style="flex: 1;" />
+      </div>
+    </div>
+  </div>
+
+  <div class="form__foot" style="margin-top: var(--space-8); border-top: 1px solid var(--color-border); padding-top: var(--space-6);">
+    <button class="btn btn--primary" type="submit">Save Navigation</button>
+  </div>
+</form>

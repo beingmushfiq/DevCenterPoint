@@ -1,0 +1,83 @@
+<%
+  /* ============================================================
+     DOCUMENT HEAD  +  OPENING BODY
+
+     Every page starts with this include and ends with foot.ejs.
+     EJS `include()` inherits the parent's locals, so `seo`, `site`,
+     `nav`, `nonce` and the helpers are all available here without
+     being passed again.
+
+     Two inline scripts live in this block. Both carry the CSP
+     nonce: in production the nonce is the only thing that lets
+     them run, and in development the policy allows inline anyway,
+     so the attribute is harmless either way.
+     ============================================================ */
+  const pageType = locals.pageType || 'detail';
+  const bodyClass = locals.bodyClass || '';
+  const tags = assetTags('site');
+
+  const orgLd = {
+    '@context': 'https://schema.org',
+    '@type': 'Organization',
+    name: site.name,
+    url: url('/'),
+    description: site.defaultDescription || undefined,
+    email: site.email || undefined,
+  };
+%><!DOCTYPE html>
+<html lang="en" data-theme="dark" data-page="<%= pageType %>">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title><%= seo.title %></title>
+  <% if (seo.description) { %><meta name="description" content="<%= seo.description %>" /><% } %>
+  <% if (seo.noindex) { %><meta name="robots" content="noindex, nofollow" /><% } %>
+  <link rel="canonical" href="<%= seo.canonical %>" />
+
+  <meta property="og:type" content="<%= seo.type || 'website' %>" />
+  <meta property="og:site_name" content="<%= site.name %>" />
+  <meta property="og:title" content="<%= seo.title %>" />
+  <% if (seo.description) { %><meta property="og:description" content="<%= seo.description %>" /><% } %>
+  <meta property="og:url" content="<%= seo.canonical %>" />
+  <% if (seo.image) { %><meta property="og:image" content="<%= url(seo.image) %>" /><% } %>
+  <meta name="twitter:card" content="<%= seo.image ? 'summary_large_image' : 'summary' %>" />
+  <meta name="twitter:title" content="<%= seo.title %>" />
+  <% if (seo.description) { %><meta name="twitter:description" content="<%= seo.description %>" /><% } %>
+
+  <meta name="theme-color" content="#0a0908" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%230a0908'/%3E%3Crect x='9' y='9' width='14' height='14' fill='%23ff4d1c'/%3E%3Crect x='14' y='14' width='4' height='4' fill='%230a0908'/%3E%3C/svg%3E" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&display=swap" />
+
+  <%- tags.css %>
+
+  <script type="application/ld+json" nonce="<%= nonce %>"><%- jsonLd(orgLd) %></script>
+
+  <script nonce="<%= nonce %>">
+    /* Page type is read by the site entry to decide whether this
+       page gets a WebGL field at all. */
+    window.__DCP = { pageType: '<%= pageType %>', path: '<%= currentPath %>' };
+    document.documentElement.classList.add('js');
+
+    /* Fail-safe bootstrap.
+       Content must never depend on JS succeeding. If the runtime has
+       NOT signalled readiness in time, force-reveal the page and lift
+       the boot overlay so the visitor always sees the site. */
+    window.setTimeout(function () {
+      if (window.__dcpReady) return;
+      document.documentElement.classList.add('reveal-all');
+      var b = document.getElementById('boot');
+      if (b && !b.classList.contains('is-done')) b.classList.add('is-done');
+    }, 2600);
+  </script>
+</head>
+<body class="<%= bodyClass %>">
+  <a class="skip-link" href="#top">Skip to content</a>
+
+  <%- include('atmosphere') %>
+  <%- include('boot') %>
+  <%- include('nav') %>
+
+  <main id="top">

@@ -1,0 +1,72 @@
+  </main>
+
+  <footer class="foot">
+    <div class="wrap">
+      <div class="foot__grid">
+        <div class="foot__brand">
+          <span class="nav__glyph" aria-hidden="true"></span>
+          <div>
+            <p class="foot__name"><%= site.name %></p>
+            <% if (settings['company.tagline']) { %>
+              <p><%= settings['company.tagline'] %></p>
+            <% } %>
+            <% if (settings['footer.note']) { %>
+              <p class="foot__note"><%= settings['footer.note'] %></p>
+            <% } %>
+          </div>
+        </div>
+
+        <div class="foot__col">
+          <h4>Navigate</h4>
+          <% nav.footer.forEach(function (item) { %>
+            <a href="<%= item.url %>"><%= item.label %></a>
+          <% }); %>
+        </div>
+
+        <div class="foot__col">
+          <h4>Contact</h4>
+          <% if (site.email) { %>
+            <a href="mailto:<%= site.email %>"><%= site.email %></a>
+          <% } %>
+          <% if (settings['company.phone']) { %>
+            <a href="tel:<%= String(settings['company.phone']).replace(/[^\d+]/g, '') %>"><%= settings['company.phone'] %></a>
+          <% } %>
+          <% if (site.location) { %>
+            <span class="foot__static"><%= site.location %></span>
+          <% } %>
+          <% if (settings['company.hours']) { %>
+            <span class="foot__static"><%= settings['company.hours'] %></span>
+          <% } %>
+        </div>
+
+        <div class="foot__col">
+          <h4>Elsewhere</h4>
+          <% const social = [
+               ['LinkedIn', site.social.linkedin],
+               ['GitHub', site.social.github],
+               ['X', site.social.x],
+             ].filter(function (pair) { return pair[1]; }); %>
+          <% if (social.length === 0) { %>
+            <span class="foot__static">No external profiles yet.</span>
+          <% } else { %>
+            <% social.forEach(function (pair) { %>
+              <a href="<%= pair[1] %>" rel="noopener noreferrer" target="_blank"><%= pair[0] %></a>
+            <% }); %>
+          <% } %>
+        </div>
+      </div>
+
+      <div class="foot__base">
+        <span class="code">© <span data-year>2026</span> <%= site.name %></span>
+        <span class="code foot__legal">
+          <% nav.legal.forEach(function (item) { %>
+            <a href="<%= item.url %>"><%= item.label %></a>
+          <% }); %>
+        </span>
+      </div>
+    </div>
+  </footer>
+
+  <%- assetTags('site').js %>
+</body>
+</html>

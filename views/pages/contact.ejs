@@ -1,0 +1,129 @@
+<%- include('../partials/head', { pageType: 'detail', bodyClass: 'page-contact' }) %>
+
+<section class="chapter chapter--flow chapter--lead">
+  <div class="wrap">
+    <%- include('../partials/breadcrumbs', { crumbs: [{ label: 'Contact' }] }) %>
+
+    <div class="wrap--split" style="gap: var(--space-16);">
+      <div>
+        <div class="page-head" data-reveal>
+          <p class="chapter__index"><span class="code">START A PROJECT</span></p>
+          <h1 class="display display--md">Tell us the problem. <em>We will tell you what it takes.</em></h1>
+          <p class="body body--lead page-head__lede">We reply within one business day with what we would build first, what it costs, and what we would refuse to build. No sales layer — you speak with a senior engineer.</p>
+        </div>
+
+        <div style="margin-top: var(--space-12);" data-reveal>
+          <div class="specs">
+            <div class="spec">
+              <span class="spec__k">Direct email</span>
+              <span class="spec__v"><a href="mailto:<%= site.email %>"><%= site.email %></a></span>
+            </div>
+            <% if (settings['company.phone']) { %>
+              <div class="spec">
+                <span class="spec__k">Phone</span>
+                <span class="spec__v"><%= settings['company.phone'] %></span>
+              </div>
+            <% } %>
+            <div class="spec">
+              <span class="spec__k">Response time</span>
+              <span class="spec__v">Within 24 hours on business days</span>
+            </div>
+            <div class="spec">
+              <span class="spec__k">Privacy &amp; NDA</span>
+              <span class="spec__v">All details held in strict confidence</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <% if (sent) { %>
+          <div class="note note--ok" data-reveal>
+            <h3 style="font-family: var(--font-display); font-size: 1.25rem; margin-bottom: var(--space-2); color: var(--color-text);">Enquiry received.</h3>
+            <p>Thank you for getting in touch. One of our senior engineers will review your notes and reply within one business day.</p>
+            <div style="margin-top: var(--space-6);">
+              <a class="btn btn--ghost" href="/work">In the meantime, view our work &rarr;</a>
+            </div>
+          </div>
+        <% } else { %>
+          <form class="form" method="POST" action="/contact" data-reveal>
+            <div class="hp" aria-hidden="true">
+              <label for="website">Leave this field blank</label>
+              <input type="text" id="website" name="website" tabindex="-1" autocomplete="off" />
+            </div>
+            <input type="hidden" name="source_path" value="<%= currentPath %>" />
+
+            <div class="form__row">
+              <div class="field <%= errors && errors.name ? 'has-error' : '' %>">
+                <label class="field__label" for="name">Your Name <span class="req">*</span></label>
+                <input type="text" id="name" name="name" required value="<%= values.name || '' %>" placeholder="Ada Lovelace" />
+                <% if (errors && errors.name) { %><span class="field__error"><%= errors.name %></span><% } %>
+              </div>
+
+              <div class="field <%= errors && errors.email ? 'has-error' : '' %>">
+                <label class="field__label" for="email">Work Email <span class="req">*</span></label>
+                <input type="email" id="email" name="email" required value="<%= values.email || '' %>" placeholder="ada@company.com" />
+                <% if (errors && errors.email) { %><span class="field__error"><%= errors.email %></span><% } %>
+              </div>
+            </div>
+
+            <div class="form__row">
+              <div class="field">
+                <label class="field__label" for="company">Company / Organisation</label>
+                <input type="text" id="company" name="company" value="<%= values.company || '' %>" placeholder="Acme Systems" />
+              </div>
+
+              <div class="field">
+                <label class="field__label" for="phone">Phone (optional)</label>
+                <input type="tel" id="phone" name="phone" value="<%= values.phone || '' %>" placeholder="+1 (555) 000-0000" />
+              </div>
+            </div>
+
+            <% if (types && types.length > 0) { %>
+              <div class="field">
+                <span class="field__label">Enquiry Type</span>
+                <div class="choices choices--2">
+                  <% types.forEach(function (t) { %>
+                    <% const isChecked = (values.enquiry_type || selected || 'other') === t.value; %>
+                    <label class="choice">
+                      <input type="radio" name="enquiry_type" value="<%= t.value %>" <%= isChecked ? 'checked' : '' %> />
+                      <span class="choice__label"><%= t.label %></span>
+                    </label>
+                  <% }); %>
+                </div>
+              </div>
+            <% } %>
+
+            <% if (budgets && budgets.length > 0) { %>
+              <div class="field">
+                <label class="field__label" for="budget_range">Anticipated Budget</label>
+                <select id="budget_range" name="budget_range">
+                  <option value="">Select budget range (optional)</option>
+                  <% budgets.forEach(function (b) { %>
+                    <option value="<%= b.value %>" <%= values.budget_range === b.value ? 'selected' : '' %>><%= b.label %></option>
+                  <% }); %>
+                </select>
+              </div>
+            <% } %>
+
+            <div class="field field--full <%= errors && errors.message ? 'has-error' : '' %>">
+              <label class="field__label" for="message">Project Description <span class="req">*</span></label>
+              <textarea id="message" name="message" required rows="6" placeholder="Describe what you want to build, what system exists today, and the main challenges you are facing..."><%= values.message || '' %></textarea>
+              <span class="field__hint">The messy version is fine. Plain language beats a polished spec.</span>
+              <% if (errors && errors.message) { %><span class="field__error"><%= errors.message %></span><% } %>
+            </div>
+
+            <div class="form__foot">
+              <button class="btn btn--primary btn--lg" type="submit" data-magnetic="0.2">
+                Send enquiry <span class="btn__twin" aria-hidden="true">Send enquiry</span>
+              </button>
+              <span class="form__note">Reply within one business day. No spam, ever.</span>
+            </div>
+          </form>
+        <% } %>
+      </div>
+    </div>
+  </div>
+</section>
+
+<%- include('../partials/foot') %>

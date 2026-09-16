@@ -1,0 +1,65 @@
+<form class="admin-form" method="POST" action="<%= testimonial.id ? `/admin/testimonials/${testimonial.id}/edit` : '/admin/testimonials/new' %>">
+  <% if (locals.csrfToken) { %><input type="hidden" name="_csrf" value="<%= csrfToken %>" /><% } %>
+
+  <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--color-border); padding-bottom: var(--space-4);">
+    <h2 style="font-family: var(--font-display); font-size: 1.25rem;"><%= testimonial.id ? 'Edit Testimonial' : 'New Testimonial' %></h2>
+    <div style="display: flex; gap: var(--space-3);">
+      <a class="btn btn--ghost" href="/admin/testimonials">Cancel</a>
+      <button class="btn btn--primary" type="submit">Save Testimonial</button>
+    </div>
+  </div>
+
+  <div class="field field--full">
+    <label class="field__label" for="quote">Quote <span class="req">*</span></label>
+    <textarea id="quote" name="quote" required rows="4" placeholder="They spent three weeks refusing to write code until the data model was right..."><%= testimonial.quote || '' %></textarea>
+  </div>
+
+  <div class="admin-form__row">
+    <div class="field">
+      <label class="field__label" for="attribution">Author / Name <span class="req">*</span></label>
+      <input type="text" id="attribution" name="attribution" required value="<%= testimonial.attribution || '' %>" placeholder="Mette Sørensen" />
+    </div>
+
+    <div class="field">
+      <label class="field__label" for="role">Role / Title</label>
+      <input type="text" id="role" name="role" value="<%= testimonial.role || '' %>" placeholder="Director of Operations" />
+    </div>
+  </div>
+
+  <div class="admin-form__row">
+    <div class="field">
+      <label class="field__label" for="company">Company</label>
+      <input type="text" id="company" name="company" value="<%= testimonial.company || '' %>" placeholder="Nordic Freight" />
+    </div>
+
+    <div class="field">
+      <label class="field__label" for="case_study_id">Associated Case Study (Optional)</label>
+      <select id="case_study_id" name="case_study_id">
+        <option value="">None (Standalone)</option>
+        <% (caseStudies || []).forEach(function (cs) { %>
+          <option value="<%= cs.id %>" <%= testimonial.case_study_id === cs.id ? 'selected' : '' %>><%= cs.title %></option>
+        <% }); %>
+      </select>
+    </div>
+  </div>
+
+  <div class="admin-form__row">
+    <div class="field">
+      <label class="field__label" for="status">Status</label>
+      <select id="status" name="status">
+        <option value="active" <%= testimonial.status === 'active' ? 'selected' : '' %>>Active</option>
+        <option value="inactive" <%= testimonial.status === 'inactive' ? 'selected' : '' %>>Inactive</option>
+      </select>
+    </div>
+
+    <div class="field">
+      <label class="field__label" for="sort_order">Sort Order</label>
+      <input type="number" id="sort_order" name="sort_order" value="<%= testimonial.sort_order || 0 %>" />
+    </div>
+  </div>
+
+  <div class="form__foot" style="margin-top: var(--space-8); border-top: 1px solid var(--color-border); padding-top: var(--space-6);">
+    <button class="btn btn--primary" type="submit">Save Testimonial</button>
+    <a class="btn btn--ghost" href="/admin/testimonials">Cancel</a>
+  </div>
+</form>

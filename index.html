@@ -1,0 +1,400 @@
+﻿<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>DevCenterPoint — Product Engineering for Systems That Have to Last</title>
+  <meta name="description" content="We design, build and stand behind scalable, secure, high-performance digital systems — web, mobile, cloud, AI and custom software. Senior engineers only, no handoff." />
+  <meta name="theme-color" content="#0a0908" />
+  <meta property="og:title" content="DevCenterPoint — Bring Your Problems. Bring Your Idea." />
+  <meta property="og:description" content="Most software isn't expensive to build. It's expensive to change. We make the expensive decisions while they're still cheap." />
+  <meta property="og:type" content="website" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/src/styles/tokens.css" />
+  <link rel="stylesheet" href="/src/styles/base.css" />
+  <script>
+    /* Fail-safe bootstrap.
+       Content must never depend on JS succeeding. If the runtime has
+       NOT signalled readiness in time, force-reveal the page and lift
+       the boot overlay so the visitor always sees the site. */
+    document.documentElement.classList.add('js');
+    window.setTimeout(function () {
+      if (window.__dcpReady) return;
+      document.documentElement.classList.add('reveal-all');
+      var b = document.getElementById('boot');
+      if (b && !b.classList.contains('is-done')) b.classList.add('is-done');
+    }, 2600);
+  </script>
+</head>
+<body>
+  <a class="skip-link" href="#ch-01">Skip to content</a>
+
+  <div id="boot" class="boot" role="status" aria-live="polite">
+    <div class="boot__mark">DEVCENTERPOINT</div>
+    <div class="boot__bar"><span class="boot__fill" id="bootFill"></span></div>
+    <div class="boot__meta">
+      <span>Initialising render core</span>
+      <span id="bootPct">0%</span>
+    </div>
+  </div>
+
+  <div class="blueprint" aria-hidden="true"></div>
+  <canvas id="webgl" class="stage" aria-hidden="true"></canvas>
+  <div id="spline-slot" class="spline-slot" aria-hidden="true"></div>
+  <div class="grain" aria-hidden="true"></div>
+  <div class="vignette" aria-hidden="true"></div>
+  <div id="flash" class="flash" aria-hidden="true"></div>
+
+  <header class="nav" id="nav">
+    <a class="nav__brand" href="#top" aria-label="DevCenterPoint home">
+      <span class="nav__glyph" aria-hidden="true"></span>
+      <span class="nav__name">DevCenterPoint</span>
+    </a>
+    <nav class="nav__links" aria-label="Primary">
+      <a href="#ch-03">What we are</a>
+      <a href="#ch-04">Disciplines</a>
+      <a href="#ch-06">Guarantees</a>
+    </nav>
+    <a class="btn btn--ghost nav__cta" href="#ch-08">Start a project</a>
+  </header>
+
+  <div class="rail" aria-hidden="true">
+    <span class="rail__fill" id="railFill"></span>
+  </div>
+  <div class="chapter-dots" id="dots" aria-hidden="true"></div>
+
+  <main id="top">
+
+    <!-- ============ 01 · HERO ============ -->
+    <section class="chapter chapter--hero" id="ch-01" data-scene="shards">
+      <div class="wrap">
+        <p class="eyebrow" data-reveal><span class="code">DCP / 001</span> Product Engineering Studio — Est. 2026</p>
+        <h1 class="display" data-split>
+          <span class="line">Bring your problems.</span>
+          <span class="line"><em>Bring your idea.</em></span>
+        </h1>
+        <p class="lede" data-reveal>We design the system, build it, and stand behind it in production. No slide deck, no handoff, no disappearing act — an engineering partner accountable for what actually ships.</p>
+        <div class="hero__actions" data-reveal>
+          <a class="btn btn--primary" href="#ch-08" data-magnetic="0.3">Start a project <span class="btn__twin" aria-hidden="true">Start a project</span></a>
+          <a class="btn btn--ghost" href="#ch-02" data-magnetic="0.2">Why foundations fail</a>
+        </div>
+        <div class="hero__foot" data-reveal>
+          <span class="hero__foot-item">Senior engineers only</span>
+          <span class="hero__foot-item">You own every commit</span>
+          <span class="hero__foot-item">Reply within one business day</span>
+        </div>
+      </div>
+      <div class="scroll-hint" aria-hidden="true"><span></span></div>
+    </section>
+
+    <!-- ============ 02 · THE COST CURVE ============ -->
+    <section class="chapter" id="ch-02" data-scene="scatter">
+      <div class="wrap">
+        <div class="wrap--split">
+          <div class="col">
+            <p class="chapter__index" data-reveal><span class="code">01</span> The Problem</p>
+            <h2 class="display display--md" data-reveal>Software is rarely expensive to build. It is expensive to <em>change.</em></h2>
+          </div>
+          <div class="col">
+            <p class="body body--lead" data-reveal>Every system carries the cost of its own decisions. Made early, a correction is nearly free. Made late — after launch, after your team has built on top of it — the same correction costs orders of magnitude more.</p>
+            <p class="body" data-reveal>This is not a metaphor. It is the single most reliable pattern in software delivery, and it is the reason most "successful" launches quietly become unfixable within eighteen months.</p>
+          </div>
+        </div>
+
+        <div class="curve" data-reveal data-curve>
+          <div class="curve__cell">
+            <span class="curve__stage">In discovery</span>
+            <span class="curve__x">1<i>×</i></span>
+            <span class="curve__label">Redraw the architecture on a whiteboard. Cost: a conversation.</span>
+            <span class="curve__bar" aria-hidden="true"></span>
+          </div>
+          <div class="curve__cell">
+            <span class="curve__stage">During build</span>
+            <span class="curve__x">10<i>×</i></span>
+            <span class="curve__label">Refactor the module, migrate the data, re-test the surface.</span>
+            <span class="curve__bar" aria-hidden="true"></span>
+          </div>
+          <div class="curve__cell">
+            <span class="curve__stage">In production</span>
+            <span class="curve__x">100<i>×</i></span>
+            <span class="curve__label">Coordinate a migration, absorb downtime, apologise to customers, rebuild trust.</span>
+            <span class="curve__bar" aria-hidden="true"></span>
+          </div>
+        </div>
+
+        <p class="body body--wide" data-reveal>We exist to make the expensive decisions <strong>while they are still cheap to make</strong> — and to build the kind of foundation that does not force you back here.</p>
+      </div>
+    </section>
+
+    <!-- ============ 03 · WHAT WE ARE ============ -->
+    <section class="chapter" id="ch-03" data-scene="converge">
+      <div class="wrap wrap--split">
+        <div class="col">
+          <p class="chapter__index" data-reveal><span class="code">02</span> What We Are</p>
+          <h2 class="display display--md" data-reveal>An engineering partner, <em>not a vendor.</em></h2>
+          <p class="body" data-reveal>The name is the model, literally: a <strong>dev centre</strong> that holds every discipline under one roof, and a <strong>single point</strong> of contact you can hold accountable.</p>
+          <p class="scramble code" data-scramble="DEV·CENTER·POINT" aria-hidden="true">DEV-CENTER-POINT</p>
+        </div>
+        <div class="col">
+          <p class="body body--lead" data-reveal>A vendor takes your specification, builds exactly what it says, and is finished the moment it compiles. That is a transaction, and it is why so much software arrives complete and unusable.</p>
+          <p class="body" data-reveal>We work the other way around. We interrogate the problem until the right scope is obvious, then commit to it in writing. <strong>The person who scopes your project is the person who architects it.</strong></p>
+          <div class="specs">
+            <div class="spec" data-reveal>
+              <span class="spec__k">Engagement</span>
+              <span class="spec__v">Discovery, architecture and delivery as one continuous engagement — not three vendors blaming each other.</span>
+            </div>
+            <div class="spec" data-reveal>
+              <span class="spec__k">Who writes the code</span>
+              <span class="spec__v">Senior engineers, the same ones in every call. <strong>No silent handoff to a junior bench.</strong></span>
+            </div>
+            <div class="spec" data-reveal>
+              <span class="spec__k">Scope honesty</span>
+              <span class="spec__v">If your idea needs a smaller first version, we say so before you pay for a larger one.</span>
+            </div>
+            <div class="spec" data-reveal>
+              <span class="spec__k">What we refuse</span>
+              <span class="spec__v">Fixed-bid fiction, unpaid "test projects", and code we would not be willing to maintain ourselves.</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ 04 · DISCIPLINES ============ -->
+    <section class="chapter" id="ch-04" data-scene="build">
+      <div class="wrap">
+        <p class="chapter__index" data-reveal><span class="code">03</span> What We Do</p>
+        <h2 class="display display--md" data-reveal>Six disciplines, <em>one system.</em></h2>
+        <p class="body body--wide" data-reveal>Most problems do not respect team boundaries. We staff across all six so the interface between them — where projects usually rot — is our problem, not yours.</p>
+
+        <ul class="cap">
+          <li class="cap__item" data-reveal>
+            <span class="cap__n code">01 / WEB</span>
+            <h3>Web &amp; Platform Engineering</h3>
+            <p>Interfaces and services built for the load you do not have yet, measured in real numbers rather than adjectives.</p>
+            <div class="cap__tags"><span>TypeScript</span><span>React</span><span>Node</span><span>Edge</span></div>
+          </li>
+          <li class="cap__item" data-reveal>
+            <span class="cap__n code">02 / MOBILE</span>
+            <h3>Mobile &amp; Offline-First</h3>
+            <p>Apps that stay useful when the network does not — sync conflicts resolved in the data model, not in your user's patience.</p>
+            <div class="cap__tags"><span>React Native</span><span>Swift</span><span>Kotlin</span><span>SQLite</span></div>
+          </li>
+          <li class="cap__item" data-reveal>
+            <span class="cap__n code">03 / CLOUD</span>
+            <h3>Cloud &amp; Platform Ops</h3>
+            <p>Infrastructure defined in code, reviewed like code, and rolled back like code. Environments you can rebuild from scratch on demand.</p>
+            <div class="cap__tags"><span>AWS</span><span>Terraform</span><span>Kubernetes</span><span>CI/CD</span></div>
+          </li>
+          <li class="cap__item" data-reveal>
+            <span class="cap__n code">04 / AI</span>
+            <h3>AI &amp; Decision Systems</h3>
+            <p>Models wired into real workflows — with the evaluation harnesses, guardrails and cost ceilings that make them trustworthy.</p>
+            <div class="cap__tags"><span>RAG</span><span>Evals</span><span>LLM Ops</span><span>Python</span></div>
+          </li>
+          <li class="cap__item" data-reveal>
+            <span class="cap__n code">05 / DESIGN</span>
+            <h3>Design Systems &amp; UX</h3>
+            <p>One source of truth for every screen your team will ever ship, so quality becomes repeatable instead of heroic.</p>
+            <div class="cap__tags"><span>Tokens</span><span>Figma</span><span>WCAG 2.2</span><span>Componentry</span></div>
+          </li>
+          <li class="cap__item" data-reveal>
+            <span class="cap__n code">06 / DATA</span>
+            <h3>Data &amp; Integration</h3>
+            <p>The unglamorous layer that decides whether everything above it works: schemas, events, migrations and the systems nobody wants to own.</p>
+            <div class="cap__tags"><span>Postgres</span><span>Event Streams</span><span>ETL</span><span>APIs</span></div>
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ============ 05 · HOW WE WORK ============ -->
+    <section class="chapter" id="ch-05" data-scene="name">
+      <div class="wrap">
+        <p class="chapter__index" data-reveal><span class="code">04</span> How We Work</p>
+        <h2 class="display display--md" data-reveal>Five non-negotiables, <em>held on every project.</em></h2>
+        <p class="body body--wide" data-reveal>These are not values on a wall. They are operating rules, and they are the first things we are willing to be judged on.</p>
+
+        <div class="method">
+          <div class="method__row" data-reveal>
+            <span class="method__n">M—01</span>
+            <h3 class="method__t">Written before spoken</h3>
+            <p class="method__d">Every architectural decision is recorded in a short document — including the options we rejected and why. Six months later, nobody has to guess what we were thinking.</p>
+          </div>
+          <div class="method__row" data-reveal>
+            <span class="method__n">M—02</span>
+            <h3 class="method__t">Boring where it counts</h3>
+            <p class="method__d">We spend novelty on your product, never on your infrastructure. Proven tools in the critical path; anything new has to earn its place with a reason you can read.</p>
+          </div>
+          <div class="method__row" data-reveal>
+            <span class="method__n">M—03</span>
+            <h3 class="method__t">Observable from day one</h3>
+            <p class="method__d">Logs, traces and alerts ship with the first feature, not the first incident. You should never be the one to discover that your system is down.</p>
+          </div>
+          <div class="method__row" data-reveal>
+            <span class="method__n">M—04</span>
+            <h3 class="method__t">Reversible by default</h3>
+            <p class="method__d">Every change can be undone in a single step. The rollback path is written before the migration is, and tested before it is needed.</p>
+          </div>
+          <div class="method__row" data-reveal>
+            <span class="method__n">M—05</span>
+            <h3 class="method__t">Your team can run it</h3>
+            <p class="method__d">We optimise for the day we are no longer in the room. Documentation, pairing and a real handover are part of the build — never an afterthought bolted on at the end.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ 06 · GUARANTEES ============ -->
+    <section class="chapter" id="ch-06" data-scene="leap">
+      <div class="wrap">
+        <p class="chapter__index" data-reveal><span class="code">05</span> What We Commit To</p>
+        <h2 class="display display--md" data-reveal>Terms you can hold us to, <em>in writing.</em></h2>
+        <p class="body body--wide" data-reveal>Confidence is cheap. These are the specific commitments we put into the first proposal, so you are never relying on our good intentions.</p>
+
+        <div class="metrics">
+          <div class="metric" data-reveal>
+            <span class="metric__v" data-count="1">0</span>
+            <span class="metric__l">business day to a reply from a named engineer — no queue, no account manager</span>
+          </div>
+          <div class="metric" data-reveal>
+            <span class="metric__v" data-count="100" data-suffix="%">0</span>
+            <span class="metric__l">of the code yours, in your repositories, from the very first commit</span>
+          </div>
+          <div class="metric" data-reveal>
+            <span class="metric__v" data-count="30">0</span>
+            <span class="metric__l">days of post-handover support included in scope, not sold back to you</span>
+          </div>
+        </div>
+
+        <div class="specs">
+          <div class="spec" data-reveal>
+            <span class="spec__k">Security posture</span>
+            <span class="spec__v">Threat modelling during design, dependency and secret scanning enforced in the pipeline, no credentials ever in the repository.</span>
+          </div>
+          <div class="spec" data-reveal>
+            <span class="spec__k">Performance budget</span>
+            <span class="spec__v">A published budget for load time, bundle size and query cost — agreed before the first sprint, regression-tested after every release.</span>
+          </div>
+          <div class="spec" data-reveal>
+            <span class="spec__k">Accessibility floor</span>
+            <span class="spec__v">WCAG 2.2 AA as a baseline, not a stretch goal. Keyboard paths and reduced-motion behaviour are part of definition of done.</span>
+          </div>
+          <div class="spec" data-reveal>
+            <span class="spec__k">Exit conditions</span>
+            <span class="spec__v">If we are not the right team for a problem, we say so early and point you to who is. A bad fit delivered well is still a bad outcome.</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ 07 · WHO STANDS BEHIND IT ============ -->
+    <section class="chapter" id="ch-07" data-scene="merge">
+      <div class="wrap wrap--narrow center">
+        <p class="chapter__index" data-reveal><span class="code">06</span> Who Stands Behind It</p>
+        <h2 class="display display--hero" data-split>There is no <em>“I”</em> in the code we hand you.</h2>
+        <p class="body body--lead" data-reveal>Teams fail software far more often than code does. So we removed the gaps where that usually happens: no sales layer between you and the engineer, no architect who never sees production, no ticket queue that swallows context.</p>
+        <p class="body" data-reveal>The people who scope your project are the people who build it — and the people who answer when it breaks. A system is only ever as dependable as the specific humans who promised it, so we make ours accountable <strong>by name.</strong></p>
+        <blockquote class="quote" data-reveal>
+          <p>“A foundation is not what you build on. It is what you are still standing on in three years.”</p>
+          <cite>DevCenterPoint — working principle</cite>
+        </blockquote>
+      </div>
+    </section>
+
+    <!-- ============ 08 · START ============ -->
+    <section class="chapter chapter--cta" id="ch-08" data-scene="expand">
+      <div class="wrap wrap--narrow center">
+        <p class="chapter__index" data-reveal><span class="code">07</span> Start Here</p>
+        <h2 class="display display--md" data-reveal>Bring us the thing you are <em>not sure is possible.</em></h2>
+        <p class="body" data-reveal>Describe the problem in plain language — the messy version, not the polished one. We will tell you what it genuinely takes, what we would build first, and what we would refuse to build at all. In writing, before you commit to anything.</p>
+      </div>
+
+      <div class="wrap">
+        <div class="paths">
+          <div class="path path--first" data-reveal>
+            <span class="path__flag">Start narrow</span>
+            <h3 class="path__t">Architecture review</h3>
+            <p class="path__d">Hand us the system you already have. We read the code, then tell you where it will break, what it will cost to keep, and the three changes with the highest return.</p>
+            <ul class="path__spec">
+              <li>Existing repository, read-only</li>
+              <li>Written findings, no slideware</li>
+              <li>Yours to act on with or without us</li>
+            </ul>
+            <span class="path__term">One to two weeks</span>
+          </div>
+          <div class="path" data-reveal>
+            <span class="path__flag">Validate the idea</span>
+            <h3 class="path__t">Design sprint</h3>
+            <p class="path__d">For an idea that has not been built yet. We pressure-test the premise, cut it to the smallest version worth shipping, and cost the whole thing before you commit a budget.</p>
+            <ul class="path__spec">
+              <li>Scope, architecture and estimate</li>
+              <li>Riskiest assumption identified first</li>
+              <li>Fixed fee, credited against the build</li>
+            </ul>
+            <span class="path__term">Two to three weeks</span>
+          </div>
+          <div class="path" data-reveal>
+            <span class="path__flag">Build it</span>
+            <h3 class="path__t">Full delivery</h3>
+            <p class="path__d">Discovery through production, run by the same engineers who scoped it. Delivered in slices you can use, so value lands long before the final invoice does.</p>
+            <ul class="path__spec">
+              <li>Senior team, no junior handoff</li>
+              <li>Working software every two weeks</li>
+              <li>30 days of support included</li>
+            </ul>
+            <span class="path__term">Multi-phase</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="wrap wrap--narrow center">
+        <p class="body" data-reveal>Every engagement begins the same way: a conversation about the problem, not a pitch about us. If we are not the right team, we will say so in that first reply and point you somewhere better.</p>
+        <div class="hero__actions center" data-reveal>
+          <a class="btn btn--primary btn--lg" href="mailto:hello@devcenterpoint.com?subject=Project%20enquiry" data-magnetic="0.32">Start a project <span class="btn__twin" aria-hidden="true">Start a project</span></a>
+          <a class="btn btn--ghost btn--lg" href="mailto:hello@devcenterpoint.com?subject=Architecture%20review" data-magnetic="0.22">Request an architecture review</a>
+        </div>
+        <div class="hero__foot hero__foot--center" data-reveal>
+          <span class="hero__foot-item">hello@devcenterpoint.com</span>
+          <span class="hero__foot-item">One business day</span>
+        </div>
+      </div>
+    </section>
+
+    <footer class="foot">
+      <div class="wrap foot__grid">
+        <div class="foot__brand">
+          <span class="nav__glyph" aria-hidden="true"></span>
+          <p>DevCenterPoint — product engineering for systems that have to last. Design, build and accountability in one place.</p>
+        </div>
+        <div class="foot__col">
+          <h4>Disciplines</h4>
+          <a href="#ch-04">Web &amp; Platform</a>
+          <a href="#ch-04">Mobile</a>
+          <a href="#ch-04">Cloud &amp; Ops</a>
+          <a href="#ch-04">AI Systems</a>
+        </div>
+        <div class="foot__col">
+          <h4>Company</h4>
+          <a href="#ch-03">What we are</a>
+          <a href="#ch-05">How we work</a>
+          <a href="#ch-06">Guarantees</a>
+        </div>
+        <div class="foot__col">
+          <h4>Reach us</h4>
+          <a href="mailto:hello@devcenterpoint.com">hello@devcenterpoint.com</a>
+          <a href="#top">Back to top</a>
+        </div>
+      </div>
+      <div class="wrap foot__base">
+        <span class="code">© 2026 DevCenterPoint</span>
+        <span class="code">Built to expand</span>
+      </div>
+    </footer>
+  </main>
+
+  <script type="module" src="/src/main.js"></script>
+</body>
+</html>

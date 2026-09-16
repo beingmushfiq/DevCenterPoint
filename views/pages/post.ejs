@@ -1,0 +1,95 @@
+<%- include('../partials/head', { pageType: 'detail', bodyClass: 'page-post' }) %>
+
+<article class="chapter chapter--flow chapter--lead">
+  <div class="wrap">
+    <%- include('../partials/breadcrumbs', {
+      crumbs: [
+        { label: 'Insights', url: '/insights' },
+        { label: post.title }
+      ]
+    }) %>
+
+    <header class="page-head page-head--wide" data-reveal>
+      <p class="chapter__index"><span class="code">INSIGHT</span> <%= formatDate(post.published_at, 'long') %> &middot; <%= post.reading_time || 4 %> MIN READ</p>
+      <h1 class="display display--md"><%= post.title %></h1>
+      <% if (post.excerpt) { %>
+        <p class="body body--lead page-head__lede"><%= post.excerpt %></p>
+      <% } %>
+      <div class="page-head__rule"></div>
+    </header>
+
+    <% if (post.cover_path) { %>
+      <div class="figure" data-reveal>
+        <div class="figure__frame">
+          <img src="<%= asset(post.cover_path) %>" alt="<%= post.cover_alt || post.title %>" />
+        </div>
+      </div>
+    <% } %>
+
+    <div class="reader" style="margin-top: var(--space-12);">
+      <div class="reader__main">
+        <div class="prose" data-reveal>
+          <%- md(post.body) %>
+        </div>
+      </div>
+
+      <aside class="reader__aside" data-reveal>
+        <div class="reader__block">
+          <span class="reader__k">Published</span>
+          <p class="reader__v"><%= formatDate(post.published_at, 'long') %></p>
+        </div>
+
+        <% if (post.author_name) { %>
+          <div class="reader__block">
+            <span class="reader__k">Author</span>
+            <p class="reader__v"><%= post.author_name %></p>
+          </div>
+        <% } %>
+
+        <% if (post.tags && post.tags.length > 0) { %>
+          <div class="reader__block">
+            <span class="reader__k">Topics</span>
+            <div class="tag-row">
+              <% post.tags.forEach(function (t) { %>
+                <a class="tag" href="/insights?tag=<%= encodeURIComponent(typeof t === 'string' ? t : t.slug) %>"><%= typeof t === 'string' ? t : t.name %></a>
+              <% }); %>
+            </div>
+          </div>
+        <% } %>
+
+        <div class="reader__block">
+          <span class="reader__k">Newsletter / Questions</span>
+          <p class="reader__v">Have an engineering problem in mind?</p>
+          <a class="btn btn--ghost" href="/contact" style="margin-top: var(--space-4); width: 100%; text-align: center;">Get in touch</a>
+        </div>
+      </aside>
+    </div>
+
+    <% if (related && related.length > 0) { %>
+      <div style="margin-top: var(--space-24); padding-top: var(--space-16); border-top: 1px solid var(--color-border);" data-reveal>
+        <div class="page-head">
+          <p class="chapter__index"><span class="code">CONTINUE READING</span></p>
+          <h2 class="display display--md">Related insights</h2>
+        </div>
+        <div class="grid grid--3" style="margin-top: var(--space-8);">
+          <% related.forEach(function (r) { %>
+            <article class="card card--media">
+              <% if (r.cover_path) { %>
+                <a href="/insights/<%= r.slug %>" class="card__media" tabindex="-1" aria-hidden="true">
+                  <img src="<%= asset(r.cover_path) %>" alt="<%= r.cover_alt || r.title %>" loading="lazy" />
+                </a>
+              <% } %>
+              <div class="card__body">
+                <span class="card__n code"><%= formatDate(r.published_at, 'short') %></span>
+                <h3 class="card__title"><a href="/insights/<%= r.slug %>"><%= r.title %></a></h3>
+                <p class="card__summary"><%= r.excerpt || truncate(r.body, 120) %></p>
+              </div>
+            </article>
+          <% }); %>
+        </div>
+      </div>
+    <% } %>
+  </div>
+</article>
+
+<%- include('../partials/foot') %>

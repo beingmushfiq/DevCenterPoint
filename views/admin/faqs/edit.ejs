@@ -1,0 +1,48 @@
+<form class="admin-form" method="POST" action="<%= faq.id ? `/admin/faqs/${faq.id}/edit` : '/admin/faqs/new' %>">
+  <% if (locals.csrfToken) { %><input type="hidden" name="_csrf" value="<%= csrfToken %>" /><% } %>
+
+  <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--color-border); padding-bottom: var(--space-4);">
+    <h2 style="font-family: var(--font-display); font-size: 1.25rem;"><%= faq.id ? 'Edit FAQ' : 'New FAQ' %></h2>
+    <div style="display: flex; gap: var(--space-3);">
+      <a class="btn btn--ghost" href="/admin/faqs">Cancel</a>
+      <button class="btn btn--primary" type="submit">Save FAQ</button>
+    </div>
+  </div>
+
+  <div class="field field--full">
+    <label class="field__label" for="question">Question <span class="req">*</span></label>
+    <input type="text" id="question" name="question" required value="<%= faq.question || '' %>" placeholder="What does an architecture review include?" />
+  </div>
+
+  <div class="field field--full">
+    <label class="field__label" for="answer">Answer (Markdown) <span class="req">*</span></label>
+    <textarea id="answer" name="answer" required rows="6" placeholder="Direct, thorough answer..."><%= faq.answer || '' %></textarea>
+  </div>
+
+  <div class="admin-form__row">
+    <div class="field">
+      <label class="field__label" for="category">Category</label>
+      <input type="text" id="category" name="category" value="<%= faq.category || 'General' %>" placeholder="General / Delivery / Cost" />
+    </div>
+
+    <div class="field">
+      <label class="field__label" for="status">Status</label>
+      <select id="status" name="status">
+        <option value="active" <%= faq.status === 'active' ? 'selected' : '' %>>Active</option>
+        <option value="inactive" <%= faq.status === 'inactive' ? 'selected' : '' %>>Inactive</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="admin-form__row">
+    <div class="field">
+      <label class="field__label" for="sort_order">Sort Order</label>
+      <input type="number" id="sort_order" name="sort_order" value="<%= faq.sort_order || 0 %>" />
+    </div>
+  </div>
+
+  <div class="form__foot" style="margin-top: var(--space-8); border-top: 1px solid var(--color-border); padding-top: var(--space-6);">
+    <button class="btn btn--primary" type="submit">Save FAQ</button>
+    <a class="btn btn--ghost" href="/admin/faqs">Cancel</a>
+  </div>
+</form>

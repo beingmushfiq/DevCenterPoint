@@ -1,0 +1,87 @@
+<form class="admin-form" method="POST" action="/admin/settings">
+  <% if (locals.csrfToken) { %><input type="hidden" name="_csrf" value="<%= csrfToken %>" /><% } %>
+
+  <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--color-border); padding-bottom: var(--space-4);">
+    <h2 style="font-family: var(--font-display); font-size: 1.25rem;">Site Settings &amp; Defaults</h2>
+    <button class="btn btn--primary" type="submit">Save Settings</button>
+  </div>
+
+  <div class="form-section">
+    <h3 class="form-section__label">Company Identity</h3>
+  </div>
+
+  <div class="admin-form__row">
+    <div class="field">
+      <label class="field__label" for="company.name">Company Name</label>
+      <input type="text" id="company.name" name="company.name" value="<%= settingsMap['company.name'] || '' %>" />
+    </div>
+
+    <div class="field">
+      <label class="field__label" for="company.tagline">Tagline</label>
+      <input type="text" id="company.tagline" name="company.tagline" value="<%= settingsMap['company.tagline'] || '' %>" />
+    </div>
+  </div>
+
+  <div class="admin-form__row">
+    <div class="field">
+      <label class="field__label" for="company.email">Contact Email</label>
+      <input type="email" id="company.email" name="company.email" value="<%= settingsMap['company.email'] || '' %>" />
+    </div>
+
+    <div class="field">
+      <label class="field__label" for="company.phone">Phone</label>
+      <input type="text" id="company.phone" name="company.phone" value="<%= settingsMap['company.phone'] || '' %>" />
+    </div>
+  </div>
+
+  <div class="field field--full">
+    <label class="field__label" for="company.location">Location / Office</label>
+    <input type="text" id="company.location" name="company.location" value="<%= settingsMap['company.location'] || '' %>" />
+  </div>
+
+  <div class="form-section">
+    <h3 class="form-section__label">Default SEO</h3>
+  </div>
+
+  <div class="field field--full">
+    <label class="field__label" for="seo.default_title">Default Page Title</label>
+    <input type="text" id="seo.default_title" name="seo.default_title" value="<%= settingsMap['seo.default_title'] || '' %>" />
+  </div>
+
+  <div class="field field--full">
+    <label class="field__label" for="seo.default_description">Default Meta Description</label>
+    <textarea id="seo.default_description" name="seo.default_description" rows="3"><%= settingsMap['seo.default_description'] || '' %></textarea>
+  </div>
+
+  <div class="form-section">
+    <h3 class="form-section__label">Social &amp; Profiles</h3>
+  </div>
+
+  <div class="admin-form__row">
+    <div class="field">
+      <label class="field__label" for="social.linkedin">LinkedIn URL</label>
+      <input type="url" id="social.linkedin" name="social.linkedin" value="<%= settingsMap['social.linkedin'] || '' %>" />
+    </div>
+
+    <div class="field">
+      <label class="field__label" for="social.github">GitHub URL</label>
+      <input type="url" id="social.github" name="social.github" value="<%= settingsMap['social.github'] || '' %>" />
+    </div>
+  </div>
+
+  <div class="admin-form__row">
+    <div class="field">
+      <label class="field__label" for="social.x">X (Twitter) URL</label>
+      <input type="url" id="social.x" name="social.x" value="<%= settingsMap['social.x'] || '' %>" />
+    </div>
+
+    <div class="field">
+      <label class="field__label" for="footer.note">Footer Note</label>
+      <input type="text" id="footer.note" name="footer.note" value="<%= settingsMap['footer.note'] || '' %>" />
+    </div>
+  </div>
+
+  <div class="form__foot" style="margin-top: var(--space-8); border-top: 1px solid var(--color-border); padding-top: var(--space-6);">
+    <button class="btn btn--primary" type="submit">Save Settings</button>
+  </div>
+</form>

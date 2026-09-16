@@ -1,0 +1,118 @@
+<div class="stat-grid">
+  <div class="stat-card">
+    <span class="stat-card__v"><%= stats.cases %></span>
+    <span class="stat-card__l">Case Studies</span>
+    <a class="stat-card__link" href="/admin/cases">Manage work &rarr;</a>
+  </div>
+
+  <div class="stat-card">
+    <span class="stat-card__v"><%= stats.posts %></span>
+    <span class="stat-card__l">Insights</span>
+    <a class="stat-card__link" href="/admin/posts">Manage articles &rarr;</a>
+  </div>
+
+  <div class="stat-card">
+    <span class="stat-card__v"><%= stats.services %></span>
+    <span class="stat-card__l">Services</span>
+    <a class="stat-card__link" href="/admin/services">View disciplines &rarr;</a>
+  </div>
+
+  <div class="stat-card">
+    <span class="stat-card__v" style="color: <%= stats.unreadSubmissions > 0 ? 'var(--color-primary)' : 'inherit' %>;">
+      <%= stats.unreadSubmissions %>
+    </span>
+    <span class="stat-card__l">New Enquiries</span>
+    <a class="stat-card__link" href="/admin/submissions">Review submissions &rarr;</a>
+  </div>
+</div>
+
+<div class="wrap--split" style="gap: var(--space-8); margin-top: var(--space-8);">
+  <div>
+    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: var(--space-4);">
+      <h2 style="font-family: var(--font-display); font-size: 1.125rem; font-weight: 600;">Recent Project Enquiries</h2>
+      <a href="/admin/submissions" style="font-family: var(--font-mono); font-size: 0.75rem; color: var(--color-primary);">All &rarr;</a>
+    </div>
+
+    <% if (stats.recentSubmissions && stats.recentSubmissions.length > 0) { %>
+      <div class="admin-table-wrap">
+        <table class="admin-table">
+          <thead>
+            <tr>
+              <th>Contact</th>
+              <th>Type</th>
+              <th>Date</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            <% stats.recentSubmissions.forEach(function (sub) { %>
+              <tr>
+                <td>
+                  <div class="admin-table__title">
+                    <a href="/admin/submissions/<%= sub.id %>"><%= sub.name %></a>
+                  </div>
+                  <small style="color: var(--color-text-faint);"><%= sub.company || sub.email %></small>
+                </td>
+                <td>
+                  <span class="badge badge--draft"><%= sub.enquiry_type %></span>
+                </td>
+                <td style="font-family: var(--font-mono); font-size: 0.75rem;">
+                  <%= formatDate(sub.created_at, 'short') %>
+                </td>
+                <td style="text-align: right;">
+                  <a href="/admin/submissions/<%= sub.id %>" style="color: var(--color-primary); font-size: 0.8125rem;">View</a>
+                </td>
+              </tr>
+            <% }); %>
+          </tbody>
+        </table>
+      </div>
+    <% } else { %>
+      <div class="note note--quiet">
+        <p>No contact submissions yet.</p>
+      </div>
+    <% } %>
+  </div>
+
+  <div>
+    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: var(--space-4);">
+      <h2 style="font-family: var(--font-display); font-size: 1.125rem; font-weight: 600;">Recent Activity Log</h2>
+    </div>
+
+    <% if (stats.recentAudits && stats.recentAudits.length > 0) { %>
+      <div class="admin-table-wrap">
+        <table class="admin-table">
+          <thead>
+            <tr>
+              <th>Action</th>
+              <th>Item</th>
+              <th>Timestamp</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% stats.recentAudits.forEach(function (a) { %>
+              <tr>
+                <td>
+                  <span class="badge <%= a.action === 'create' ? 'badge--published' : a.action === 'delete' ? 'badge--error' : 'badge--draft' %>">
+                    <%= a.action %>
+                  </span>
+                </td>
+                <td>
+                  <div style="font-size: 0.8125rem; color: var(--color-text);"><%= a.summary || `${a.entity_type} #${a.entity_id}` %></div>
+                  <small style="color: var(--color-text-faint); font-family: var(--font-mono); font-size: 0.6875rem;"><%= a.display_name || 'System' %></small>
+                </td>
+                <td style="font-family: var(--font-mono); font-size: 0.6875rem; white-space: nowrap;">
+                  <%= a.created_at %>
+                </td>
+              </tr>
+            <% }); %>
+          </tbody>
+        </table>
+      </div>
+    <% } else { %>
+      <div class="note note--quiet">
+        <p>No audit entries recorded yet.</p>
+      </div>
+    <% } %>
+  </div>
+</div>

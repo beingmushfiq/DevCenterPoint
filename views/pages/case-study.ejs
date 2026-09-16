@@ -1,0 +1,183 @@
+<%- include('../partials/head', { pageType: 'detail', bodyClass: 'page-case-study' }) %>
+
+<article class="chapter chapter--flow chapter--lead">
+  <div class="wrap">
+    <%- include('../partials/breadcrumbs', {
+      crumbs: [
+        { label: 'Work', url: '/work' },
+        { label: cs.title }
+      ]
+    }) %>
+
+    <header class="page-head page-head--wide" data-reveal>
+      <p class="chapter__index"><span class="code">CASE / <%= cs.year %></span> <%= (cs.sector || 'ENGINEERING').toUpperCase() %></p>
+      <h1 class="display display--md"><%= cs.title %></h1>
+      <p class="body body--lead page-head__lede"><%= cs.summary %></p>
+
+      <div class="page-head__meta markers">
+        <span class="marker">Client: <strong><%= displayClient %></strong></span>
+        <% if (cs.engagement) { %><span class="marker">Model: <strong><%= cs.engagement %></strong></span><% } %>
+        <% if (cs.duration) { %><span class="marker">Duration: <strong><%= cs.duration %></strong></span><% } %>
+        <% if (cs.team_size) { %><span class="marker">Team: <strong><%= cs.team_size %></strong></span><% } %>
+      </div>
+      <div class="page-head__rule"></div>
+    </header>
+
+    <% if (cs.cover_path) { %>
+      <div class="figure" data-reveal>
+        <div class="figure__frame">
+          <img src="<%= asset(cs.cover_path) %>" alt="<%= cs.cover_alt || cs.title %>" />
+        </div>
+      </div>
+    <% } %>
+
+    <% if (children.metrics && children.metrics.length > 0) { %>
+      <section class="metrics" style="margin-top: var(--space-16);" data-reveal>
+        <% children.metrics.forEach(function (m) { %>
+          <div class="metric">
+            <span class="metric__v"><%= m.prefix || '' %><%= m.value %><%= m.unit || '' %></span>
+            <span class="metric__l"><%= m.label %><% if (m.note) { %> <small style="display:block; opacity:0.7; font-size: 0.75rem;"><%= m.note %></small><% } %></span>
+          </div>
+        <% }); %>
+      </section>
+    <% } %>
+
+    <div class="reader" style="margin-top: var(--space-16);">
+      <div class="reader__main">
+        <% if (cs.challenge) { %>
+          <section class="record" data-reveal>
+            <span class="record__label code">01 / Challenge</span>
+            <div class="record__body prose">
+              <%- md(cs.challenge) %>
+            </div>
+          </section>
+        <% } %>
+
+        <% if (cs.approach) { %>
+          <section class="record" data-reveal>
+            <span class="record__label code">02 / Approach</span>
+            <div class="record__body prose">
+              <%- md(cs.approach) %>
+            </div>
+          </section>
+        <% } %>
+
+        <% if (cs.solution) { %>
+          <section class="record" data-reveal>
+            <span class="record__label code">03 / Solution</span>
+            <div class="record__body prose">
+              <%- md(cs.solution) %>
+            </div>
+          </section>
+        <% } %>
+
+        <% if (cs.outcome || cs.results) { %>
+          <section class="record" data-reveal>
+            <span class="record__label code">04 / Results</span>
+            <div class="record__body prose">
+              <%- md(cs.outcome || cs.results) %>
+            </div>
+          </section>
+        <% } %>
+
+        <% if (children.images && children.images.length > 0) { %>
+          <section class="record" data-reveal>
+            <span class="record__label code">Artifacts</span>
+            <div class="record__body">
+              <% children.images.forEach(function (img) { %>
+                <figure class="figure" style="margin-top: var(--space-8);">
+                  <div class="figure__frame">
+                    <img src="<%= asset(img.path) %>" alt="<%= img.alt_text || 'Case study illustration' %>" loading="lazy" />
+                  </div>
+                  <% if (img.caption) { %>
+                    <figcaption><%= img.caption %></figcaption>
+                  <% } %>
+                </figure>
+              <% }); %>
+            </div>
+          </section>
+        <% } %>
+
+        <% if (cs.quote || cs.testimonial_quote) { %>
+          <div class="voice" style="margin-top: var(--space-16);" data-reveal>
+            <blockquote>
+              <p>“<%= cs.quote || cs.testimonial_quote %>”</p>
+            </blockquote>
+            <% if (cs.quote_attribution || cs.testimonial_author) { %>
+              <cite class="voice__by">
+                <%= cs.quote_attribution || cs.testimonial_author %><% if (cs.testimonial_role) { %> — <%= cs.testimonial_role %><% } %>
+              </cite>
+            <% } %>
+          </div>
+        <% } %>
+      </div>
+
+      <aside class="reader__aside" data-reveal>
+        <div class="reader__block">
+          <span class="reader__k">Client</span>
+          <p class="reader__v"><strong><%= displayClient %></strong></p>
+        </div>
+
+        <% if (children.services && children.services.length > 0) { %>
+          <div class="reader__block">
+            <span class="reader__k">Disciplines</span>
+            <div class="tag-row">
+              <% children.services.forEach(function (s) { %>
+                <a class="tag" href="/services/<%= s.slug %>"><%= s.title %></a>
+              <% }); %>
+            </div>
+          </div>
+        <% } %>
+
+        <% if (children.tech && children.tech.length > 0) { %>
+          <div class="reader__block">
+            <span class="reader__k">Technologies</span>
+            <div class="tag-row">
+              <% children.tech.forEach(function (t) { %>
+                <span class="tag"><%= t %></span>
+              <% }); %>
+            </div>
+          </div>
+        <% } %>
+
+        <div class="reader__block">
+          <span class="reader__k">Year &amp; Sector</span>
+          <p class="reader__v"><%= cs.year %> &middot; <%= cs.sector %></p>
+        </div>
+
+        <div class="reader__block">
+          <span class="reader__k">Next steps</span>
+          <p class="reader__v">Have a similar engineering challenge?</p>
+          <a class="btn btn--primary" href="/contact?type=review" style="margin-top: var(--space-4); width: 100%; text-align: center;">Start conversation</a>
+        </div>
+      </aside>
+    </div>
+
+    <% if (related && related.length > 0) { %>
+      <div style="margin-top: var(--space-24); padding-top: var(--space-16); border-top: 1px solid var(--color-border);" data-reveal>
+        <div class="page-head">
+          <p class="chapter__index"><span class="code">MORE WORK</span></p>
+          <h2 class="display display--md">Related case studies</h2>
+        </div>
+        <div class="grid grid--3" style="margin-top: var(--space-8);">
+          <% related.forEach(function (r) { %>
+            <article class="card card--media">
+              <% if (r.cover_path) { %>
+                <a href="/work/<%= r.slug %>" class="card__media" tabindex="-1" aria-hidden="true">
+                  <img src="<%= asset(r.cover_path) %>" alt="<%= r.cover_alt || r.title %>" loading="lazy" />
+                </a>
+              <% } %>
+              <div class="card__body">
+                <span class="card__n code"><%= (r.sector || 'ENGINEERING').toUpperCase() %> &middot; <%= r.year %></span>
+                <h3 class="card__title"><a href="/work/<%= r.slug %>"><%= r.title %></a></h3>
+                <p class="card__summary"><%= r.summary %></p>
+              </div>
+            </article>
+          <% }); %>
+        </div>
+      </div>
+    <% } %>
+  </div>
+</article>
+
+<%- include('../partials/foot') %>

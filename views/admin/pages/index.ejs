@@ -1,0 +1,48 @@
+<% if (items && items.length > 0) { %>
+  <div class="admin-table-wrap">
+    <table class="admin-table">
+      <thead>
+        <tr>
+          <th>Title</th>
+          <th>Slug</th>
+          <th>Template</th>
+          <th>Status</th>
+          <th style="text-align: right;">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% items.forEach(function (p) { %>
+          <tr>
+            <td>
+              <div class="admin-table__title">
+                <a href="/admin/pages/<%= p.id %>/edit"><%= p.title %></a>
+              </div>
+              <small style="color: var(--color-text-faint);"><%= p.heading || 'No heading' %></small>
+            </td>
+            <td><code>/<%= p.slug %></code></td>
+            <td><span class="badge badge--draft"><%= p.template %></span></td>
+            <td>
+              <span class="badge <%= p.status === 'published' ? 'badge--published' : 'badge--draft' %>">
+                <%= p.status %>
+              </span>
+            </td>
+            <td>
+              <div class="admin-table__actions">
+                <a href="/<%= p.slug %>" target="_blank" title="View live">Live &nearr;</a>
+                <a href="/admin/pages/<%= p.id %>/edit">Edit</a>
+                <form method="POST" action="/admin/pages/<%= p.id %>/delete" style="display: inline;" onsubmit="return confirm('Delete this page?');">
+                  <% if (locals.csrfToken) { %><input type="hidden" name="_csrf" value="<%= csrfToken %>" /><% } %>
+                  <button type="submit" class="danger" style="background:none; border:none; cursor:pointer; font-family:inherit; font-size:inherit;">Delete</button>
+                </form>
+              </div>
+            </td>
+          </tr>
+        <% }); %>
+      </tbody>
+    </table>
+  </div>
+<% } else { %>
+  <div class="note note--quiet">
+    <p>No pages created yet. <a href="/admin/pages/new">Create a page &rarr;</a></p>
+  </div>
+<% } %>

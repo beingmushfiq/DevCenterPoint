@@ -1,0 +1,101 @@
+<%- include('../partials/head', { pageType: 'index', bodyClass: 'page-service' }) %>
+
+<article class="chapter chapter--flow chapter--lead">
+  <div class="wrap">
+    <%- include('../partials/breadcrumbs', {
+      crumbs: [
+        { label: 'Services', url: '/services' },
+        { label: service.title }
+      ]
+    }) %>
+
+    <header class="page-head page-head--wide" data-reveal>
+      <div class="card__icon" style="width: 36px; height: 36px; margin-bottom: var(--space-6);">
+        <%- include('../partials/icon', { key: service.icon_key }) %>
+      </div>
+      <p class="chapter__index"><span class="code">DISCIPLINE</span> <%= service.tagline || 'ENGINEERING' %></p>
+      <h1 class="display display--md"><%= service.title %></h1>
+      <p class="body body--lead page-head__lede"><%= service.summary %></p>
+      <div class="page-head__rule"></div>
+    </header>
+
+    <div class="reader" style="margin-top: var(--space-12);">
+      <div class="reader__main">
+        <% if (service.body) { %>
+          <div class="prose" data-reveal>
+            <%- md(service.body) %>
+          </div>
+        <% } %>
+
+        <% if (deliverables && deliverables.length > 0) { %>
+          <section style="margin-top: var(--space-16); padding-top: var(--space-12); border-top: 1px solid var(--color-border);" data-reveal>
+            <p class="chapter__index"><span class="code">DELIVERABLES</span></p>
+            <h2 class="display display--sm" style="margin-bottom: var(--space-6);">What ships with this discipline</h2>
+            <div class="grid grid--2">
+              <% deliverables.forEach(function (d) { %>
+                <div class="card" style="padding: var(--space-5) var(--space-6);">
+                  <span class="marker"><strong><%= d %></strong></span>
+                </div>
+              <% }); %>
+            </div>
+          </section>
+        <% } %>
+      </div>
+
+      <aside class="reader__aside" data-reveal>
+        <div class="reader__block">
+          <span class="reader__k">Engagement</span>
+          <p class="reader__v">Available as standalone discovery or integrated delivery.</p>
+        </div>
+
+        <div class="reader__block">
+          <span class="reader__k">Direct access</span>
+          <p class="reader__v">Senior technical leads only. No junior bench, no project managers in between.</p>
+        </div>
+
+        <div class="reader__block">
+          <span class="reader__k">Start here</span>
+          <a class="btn btn--primary" href="/contact?type=review" style="width: 100%; text-align: center;">Request review</a>
+        </div>
+      </aside>
+    </div>
+
+    <% if (related && related.length > 0) { %>
+      <div style="margin-top: var(--space-24); padding-top: var(--space-16); border-top: 1px solid var(--color-border);" data-reveal>
+        <div class="page-head">
+          <p class="chapter__index"><span class="code">EVIDENCE</span></p>
+          <h2 class="display display--md">Related case studies</h2>
+        </div>
+        <div class="grid grid--3" style="margin-top: var(--space-8);">
+          <% related.forEach(function (cs) { %>
+            <article class="card card--media">
+              <% if (cs.cover_path) { %>
+                <a href="/work/<%= cs.slug %>" class="card__media" tabindex="-1" aria-hidden="true">
+                  <img src="<%= asset(cs.cover_path) %>" alt="<%= cs.cover_alt || cs.title %>" loading="lazy" />
+                </a>
+              <% } %>
+              <div class="card__body">
+                <span class="card__n code"><%= (cs.sector || 'WORK').toUpperCase() %></span>
+                <h3 class="card__title"><a href="/work/<%= cs.slug %>"><%= cs.title %></a></h3>
+                <p class="card__summary"><%= cs.summary %></p>
+              </div>
+            </article>
+          <% }); %>
+        </div>
+      </div>
+    <% } %>
+
+    <% if (others && others.length > 0) { %>
+      <div style="margin-top: var(--space-20); padding-top: var(--space-12); border-top: 1px solid var(--color-border);" data-reveal>
+        <p class="chapter__index"><span class="code">OTHER DISCIPLINES</span></p>
+        <div class="tag-row" style="margin-top: var(--space-4);">
+          <% others.forEach(function (o) { %>
+            <a class="tag" href="/services/<%= o.slug %>"><%= o.title %></a>
+          <% }); %>
+        </div>
+      </div>
+    <% } %>
+  </div>
+</article>
+
+<%- include('../partials/foot') %>

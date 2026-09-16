@@ -1,0 +1,66 @@
+<div style="display: flex; align-items: center; gap: var(--space-4); margin-bottom: var(--space-6);">
+  <form method="GET" action="/admin/posts" style="display: flex; gap: var(--space-3); flex: 1; max-width: 500px;">
+    <input type="text" name="search" value="<%= search || '' %>" placeholder="Search insights..." style="background: var(--carbon-900); border: 1px solid var(--color-border); padding: 6px 12px; border-radius: var(--radius-xs); color: var(--color-text); flex: 1;" />
+    <select name="status" style="background: var(--carbon-900); border: 1px solid var(--color-border); padding: 6px 12px; border-radius: var(--radius-xs); color: var(--color-text);">
+      <option value="">All Statuses</option>
+      <option value="published" <%= status === 'published' ? 'selected' : '' %>>Published</option>
+      <option value="draft" <%= status === 'draft' ? 'selected' : '' %>>Draft</option>
+    </select>
+    <button class="btn btn--ghost" type="submit" style="padding: 6px 12px; font-size: 0.75rem;">Filter</button>
+  </form>
+</div>
+
+<% if (items && items.length > 0) { %>
+  <div class="admin-table-wrap">
+    <table class="admin-table">
+      <thead>
+        <tr>
+          <th>Title</th>
+          <th>Author</th>
+          <th>Status</th>
+          <th>Reading Time</th>
+          <th>Published</th>
+          <th style="text-align: right;">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% items.forEach(function (p) { %>
+          <tr>
+            <td>
+              <div class="admin-table__title">
+                <a href="/admin/posts/<%= p.id %>/edit"><%= p.title %></a>
+              </div>
+              <small style="color: var(--color-text-faint);">
+                Slug: <code><%= p.slug %></code>
+              </small>
+            </td>
+            <td><%= p.author_name || 'Admin' %></td>
+            <td>
+              <span class="badge <%= p.status === 'published' ? 'badge--published' : 'badge--draft' %>">
+                <%= p.status %>
+              </span>
+            </td>
+            <td><%= p.reading_time || 4 %> min</td>
+            <td style="font-family: var(--font-mono); font-size: 0.75rem;">
+              <%= formatDate(p.published_at, 'short') || '—' %>
+            </td>
+            <td>
+              <div class="admin-table__actions">
+                <a href="/insights/<%= p.slug %>" target="_blank" title="View live">Live &nearr;</a>
+                <a href="/admin/posts/<%= p.id %>/edit">Edit</a>
+                <form method="POST" action="/admin/posts/<%= p.id %>/delete" style="display: inline;" onsubmit="return confirm('Delete this article?');">
+                  <% if (locals.csrfToken) { %><input type="hidden" name="_csrf" value="<%= csrfToken %>" /><% } %>
+                  <button type="submit" class="danger" style="background:none; border:none; cursor:pointer; font-family:inherit; font-size:inherit;">Delete</button>
+                </form>
+              </div>
+            </td>
+          </tr>
+        <% }); %>
+      </tbody>
+    </table>
+  </div>
+<% } else { %>
+  <div class="note note--quiet">
+    <p>No articles found. <a href="/admin/posts/new">Write the first insight &rarr;</a></p>
+  </div>
+<% } %>

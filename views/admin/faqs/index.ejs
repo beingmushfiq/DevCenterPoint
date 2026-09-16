@@ -1,0 +1,47 @@
+<% if (items && items.length > 0) { %>
+  <div class="admin-table-wrap">
+    <table class="admin-table">
+      <thead>
+        <tr>
+          <th>Order</th>
+          <th>Question</th>
+          <th>Category</th>
+          <th>Status</th>
+          <th style="text-align: right;">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% items.forEach(function (f) { %>
+          <tr>
+            <td style="font-family: var(--font-mono); font-size: 0.8125rem;"><%= f.sort_order %></td>
+            <td>
+              <div class="admin-table__title">
+                <a href="/admin/faqs/<%= f.id %>/edit"><%= f.question %></a>
+              </div>
+              <small style="color: var(--color-text-faint);"><%= truncate(f.answer, 80) %></small>
+            </td>
+            <td><span class="badge badge--draft"><%= f.category %></span></td>
+            <td>
+              <span class="badge <%= f.status === 'active' ? 'badge--published' : 'badge--draft' %>">
+                <%= f.status %>
+              </span>
+            </td>
+            <td>
+              <div class="admin-table__actions">
+                <a href="/admin/faqs/<%= f.id %>/edit">Edit</a>
+                <form method="POST" action="/admin/faqs/<%= f.id %>/delete" style="display: inline;" onsubmit="return confirm('Delete this FAQ?');">
+                  <% if (locals.csrfToken) { %><input type="hidden" name="_csrf" value="<%= csrfToken %>" /><% } %>
+                  <button type="submit" class="danger" style="background:none; border:none; cursor:pointer; font-family:inherit; font-size:inherit;">Delete</button>
+                </form>
+              </div>
+            </td>
+          </tr>
+        <% }); %>
+      </tbody>
+    </table>
+  </div>
+<% } else { %>
+  <div class="note note--quiet">
+    <p>No FAQs added yet. <a href="/admin/faqs/new">Add an FAQ &rarr;</a></p>
+  </div>
+<% } %>

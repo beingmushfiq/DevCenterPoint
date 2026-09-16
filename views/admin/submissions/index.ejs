@@ -1,0 +1,60 @@
+<% if (items && items.length > 0) { %>
+  <div class="admin-table-wrap">
+    <table class="admin-table">
+      <thead>
+        <tr>
+          <th>Sender</th>
+          <th>Type</th>
+          <th>Budget</th>
+          <th>Message Excerpt</th>
+          <th>Received</th>
+          <th style="text-align: right;">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% items.forEach(function (sub) { %>
+          <tr style="<%= !sub.is_read ? 'background: rgb(255 77 28 / 0.04); font-weight: 500;' : '' %>">
+            <td>
+              <div class="admin-table__title">
+                <a href="/admin/submissions/<%= sub.id %>"><%= sub.name %></a>
+                <% if (!sub.is_read) { %>
+                  <span class="badge badge--featured" style="margin-left: 6px; font-size: 0.5rem;">New</span>
+                <% } %>
+              </div>
+              <small style="color: var(--color-text-faint);"><%= sub.email %><% if (sub.company) { %> &middot; <%= sub.company %><% } %></small>
+            </td>
+            <td><span class="badge badge--draft"><%= sub.enquiry_type %></span></td>
+            <td><%= sub.budget_range || '—' %></td>
+            <td>
+              <p style="font-size: 0.8125rem; max-width: 44ch; color: var(--color-text-muted);"><%= truncate(sub.message, 80) %></p>
+            </td>
+            <td style="font-family: var(--font-mono); font-size: 0.75rem; white-space: nowrap;">
+              <%= formatDate(sub.created_at, 'short') %>
+            </td>
+            <td>
+              <div class="admin-table__actions">
+                <a href="/admin/submissions/<%= sub.id %>">Review</a>
+                <form method="POST" action="/admin/submissions/<%= sub.id %>/delete" style="display: inline;" onsubmit="return confirm('Delete this enquiry?');">
+                  <% if (locals.csrfToken) { %><input type="hidden" name="_csrf" value="<%= csrfToken %>" /><% } %>
+                  <button type="submit" class="danger" style="background:none; border:none; cursor:pointer; font-family:inherit; font-size:inherit;">Delete</button>
+                </form>
+              </div>
+            </td>
+          </tr>
+        <% }); %>
+      </tbody>
+    </table>
+  </div>
+
+  <% if (pages > 1) { %>
+    <div style="display: flex; gap: var(--space-2); margin-top: var(--space-8); justify-content: center;">
+      <% for (let p = 1; p <= pages; p++) { %>
+        <a class="btn btn--ghost" href="/admin/submissions?page=<%= p %>" style="<%= p === page ? 'border-color: var(--color-primary); color: var(--color-primary);' : '' %>"><%= p %></a>
+      <% } %>
+    </div>
+  <% } %>
+<% } else { %>
+  <div class="note note--quiet">
+    <p>No enquiries received yet.</p>
+  </div>
+<% } %>

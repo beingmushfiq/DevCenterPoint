@@ -1,0 +1,45 @@
+<%
+  /* ============================================================
+     DISCIPLINE ICON
+
+     Inline SVG keyed by `services.icon_key`. Deliberately not an
+     icon font and not a sprite fetch: six shapes of hairline
+     geometry cost less as markup than any request would.
+
+     Lines are drawn on a 24-unit grid with square caps so they
+     read as drafting marks rather than illustration.
+
+     Usage: include('icon', { key: service.icon_key })
+     An unknown key falls through to a neutral mark so a CMS typo
+     degrades to a plain glyph instead of an empty box.
+     ============================================================ */
+
+  const GLYPHS = {
+    stack:
+      '<path d="M12 2.75 3 7.25l9 4.5 9-4.5-9-4.5Z"/>' +
+      '<path d="M3 12.25l9 4.5 9-4.5"/>' +
+      '<path d="M3 16.75l9 4.5 9-4.5"/>',
+    compass:
+      '<circle cx="12" cy="12" r="9.25"/>' +
+      '<path d="M15.75 8.25l-2.1 5.4-5.4 2.1 2.1-5.4 5.4-2.1Z"/>',
+    sprint:
+      '<path d="M3.5 7h9"/><path d="M3.5 12h13"/><path d="M3.5 17h7"/>' +
+      '<path d="M14.5 9.25 18.25 12l-3.75 2.75"/>',
+    migrate:
+      '<path d="M4 8h12"/><path d="M13 5.25 15.75 8 13 10.75"/>' +
+      '<path d="M20 16H8"/><path d="M11 13.25 8.25 16 11 18.75"/>',
+    pulse:
+      '<path d="M2.5 12h3.75l2.5-6.25 4.5 12.5 2.5-6.25h5.75"/>',
+    partners:
+      '<circle cx="8.75" cy="12" r="4.75"/>' +
+      '<circle cx="15.25" cy="12" r="4.75"/>',
+    mark:
+      '<path d="M12 3.5 20.5 12 12 20.5 3.5 12 12 3.5Z"/>' +
+      '<path d="M12 8.25 15.75 12 12 15.75 8.25 12 12 8.25Z"/>',
+  };
+
+  const glyphKey = (typeof key === 'string' && GLYPHS[key]) ? key : 'mark';
+%>
+<svg class="icon icon--<%= glyphKey %>" viewBox="0 0 24 24" fill="none"
+     stroke="currentColor" stroke-width="1.25" stroke-linecap="square"
+     stroke-linejoin="miter" aria-hidden="true" focusable="false"><%- GLYPHS[glyphKey] %></svg>

@@ -1,0 +1,80 @@
+<%- include('../partials/head', { pageType: 'index', bodyClass: 'page-insights' }) %>
+
+<section class="chapter chapter--flow chapter--lead">
+  <div class="wrap">
+    <%- include('../partials/breadcrumbs', { crumbs: [{ label: 'Insights' }] }) %>
+
+    <div class="page-head page-head--wide" data-reveal>
+      <p class="chapter__index"><span class="code">03 / FIELD NOTES</span></p>
+      <h1 class="display display--md">Engineering notes, architecture analysis, and <em>lessons from production.</em></h1>
+      <p class="body body--lead page-head__lede">Direct observations on performance, system design, and the cost of making the wrong trade-offs.</p>
+    </div>
+
+    <% if (tags && tags.length > 0) { %>
+      <div class="filters" data-reveal>
+        <a class="filter <%= !tagSlug ? 'is-active' : '' %>" href="/insights">All topics</a>
+        <% tags.forEach(function (t) { %>
+          <a class="filter <%= tagSlug === t.slug ? 'is-active' : '' %>" href="/insights?tag=<%= encodeURIComponent(t.slug) %>"><%= t.name %></a>
+        <% }); %>
+        <span class="filters__count"><strong><%= total %></strong> articles</span>
+      </div>
+    <% } %>
+
+    <% if (posts && posts.length > 0) { %>
+      <div class="grid grid--3" style="margin-top: var(--space-12);">
+        <% posts.forEach(function (p) { %>
+          <article class="card card--media" data-reveal>
+            <% if (p.cover_path) { %>
+              <a href="/insights/<%= p.slug %>" class="card__media" tabindex="-1" aria-hidden="true">
+                <img src="<%= asset(p.cover_path) %>" alt="<%= p.cover_alt || p.title %>" loading="lazy" />
+              </a>
+            <% } %>
+            <div class="card__body">
+              <span class="card__n code"><%= formatDate(p.published_at, 'short') %> &middot; <%= p.reading_time || 4 %> MIN READ</span>
+              <h2 class="card__title"><a href="/insights/<%= p.slug %>"><%= p.title %></a></h2>
+              <p class="card__summary"><%= p.excerpt || truncate(p.body, 140) %></p>
+              <% if (p.tags && p.tags.length > 0) { %>
+                <div class="card__foot">
+                  <div class="tag-row">
+                    <% p.tags.forEach(function (t) { %>
+                      <span class="tag"><%= typeof t === 'string' ? t : t.name %></span>
+                    <% }); %>
+                  </div>
+                </div>
+              <% } %>
+            </div>
+          </article>
+        <% }); %>
+      </div>
+
+      <% if (pages > 1) { %>
+        <nav class="pager" aria-label="Pagination">
+          <% if (page > 1) { %>
+            <a class="btn btn--ghost pager__prev" href="/insights?page=<%= page - 1 %><%= tagSlug ? '&tag=' + encodeURIComponent(tagSlug) : '' %>">&larr; Previous</a>
+          <% } else { %>
+            <span class="btn btn--ghost" style="opacity: 0.4; pointer-events: none;">&larr; Previous</span>
+          <% } %>
+
+          <div class="pager__pages">
+            <% for (let i = 1; i <= pages; i++) { %>
+              <a class="pager__link" href="/insights?page=<%= i %><%= tagSlug ? '&tag=' + encodeURIComponent(tagSlug) : '' %>" <% if (i === page) { %>aria-current="page"<% } %>><%= i %></a>
+            <% } %>
+          </div>
+
+          <% if (page < pages) { %>
+            <a class="btn btn--ghost pager__next" href="/insights?page=<%= page + 1 %><%= tagSlug ? '&tag=' + encodeURIComponent(tagSlug) : '' %>">Next &rarr;</a>
+          <% } else { %>
+            <span class="btn btn--ghost" style="opacity: 0.4; pointer-events: none;">Next &rarr;</span>
+          <% } %>
+        </nav>
+      <% } %>
+
+    <% } else { %>
+      <div class="note note--quiet" style="margin-top: var(--space-12);" data-reveal>
+        <p>No articles found for this topic yet. <a href="/insights">View all insights &rarr;</a></p>
+      </div>
+    <% } %>
+  </div>
+</section>
+
+<%- include('../partials/foot') %>

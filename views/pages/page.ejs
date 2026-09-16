@@ -1,0 +1,22 @@
+<%- include('../partials/head', { pageType: 'detail', bodyClass: bodyClass || 'page-generic' }) %>
+
+<article class="chapter chapter--flow chapter--lead">
+  <div class="wrap wrap--narrow">
+    <%- include('../partials/breadcrumbs', { crumbs: [{ label: page.title }] }) %>
+
+    <header class="page-head" data-reveal>
+      <p class="chapter__index"><span class="code">DOCUMENT</span> <%= page.slug.toUpperCase() %></p>
+      <h1 class="display display--md"><%= page.title %></h1>
+      <% if (page.lede) { %>
+        <p class="body body--lead page-head__lede"><%= page.lede %></p>
+      <% } %>
+      <div class="page-head__rule"></div>
+    </header>
+
+    <div class="prose" style="margin-top: var(--space-12);" data-reveal>
+      <%- md(page.body) %>
+    </div>
+  </div>
+</article>
+
+<%- include('../partials/foot') %>

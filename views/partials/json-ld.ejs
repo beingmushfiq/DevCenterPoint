@@ -1,0 +1,3 @@
+<% if (locals.schemaData) { %>
+<script type="application/ld+json" nonce="<%= nonce %>"><%- jsonLd(schemaData) %></script>
+<% } %>

@@ -1,0 +1,53 @@
+<div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--color-border); padding-bottom: var(--space-4); margin-bottom: var(--space-6);">
+  <div>
+    <h2 style="font-family: var(--font-display); font-size: 1.25rem;"><%= sub.name %></h2>
+    <small style="color: var(--color-text-faint); font-family: var(--font-mono);">
+      Received: <%= sub.created_at %> &middot; Source: <code><%= sub.source_path || '/' %></code>
+    </small>
+  </div>
+  <div style="display: flex; gap: var(--space-3);">
+    <a class="btn btn--ghost" href="/admin/submissions">&larr; Back to list</a>
+    <a class="btn btn--primary" href="mailto:<%= sub.email %>?subject=DevCenterPoint%20Project%20Enquiry">Reply via Email &rarr;</a>
+  </div>
+</div>
+
+<div class="wrap--split" style="gap: var(--space-8);">
+  <div style="flex: 2;">
+    <div style="background: var(--carbon-900); border: 1px solid var(--color-border); border-radius: var(--radius-sm); padding: var(--space-6);">
+      <span class="field__label" style="display: block; margin-bottom: var(--space-4);">Message</span>
+      <div style="font-size: 1rem; line-height: 1.7; white-space: pre-wrap; color: var(--color-text);"><%= sub.message %></div>
+    </div>
+  </div>
+
+  <div style="flex: 1;">
+    <div class="specs" style="background: var(--carbon-900); border: 1px solid var(--color-border); border-radius: var(--radius-sm); padding: var(--space-5);">
+      <div class="spec">
+        <span class="spec__k">Email</span>
+        <span class="spec__v"><a href="mailto:<%= sub.email %>" style="color: var(--color-primary);"><%= sub.email %></a></span>
+      </div>
+      <% if (sub.phone) { %>
+        <div class="spec">
+          <span class="spec__k">Phone</span>
+          <span class="spec__v"><a href="tel:<%= sub.phone %>"><%= sub.phone %></a></span>
+        </div>
+      <% } %>
+      <div class="spec">
+        <span class="spec__k">Company</span>
+        <span class="spec__v"><%= sub.company || 'Not provided' %></span>
+      </div>
+      <div class="spec">
+        <span class="spec__k">Enquiry Type</span>
+        <span class="spec__v"><span class="badge badge--draft"><%= sub.enquiry_type %></span></span>
+      </div>
+      <div class="spec">
+        <span class="spec__k">Budget</span>
+        <span class="spec__v"><%= sub.budget_range || 'Not specified' %></span>
+      </div>
+    </div>
+
+    <form method="POST" action="/admin/submissions/<%= sub.id %>/delete" style="margin-top: var(--space-6);" onsubmit="return confirm('Delete this enquiry permanently?');">
+      <% if (locals.csrfToken) { %><input type="hidden" name="_csrf" value="<%= csrfToken %>" /><% } %>
+      <button type="submit" class="btn btn--ghost" style="color: var(--vermilion-400); width: 100%; justify-content: center;">Delete Enquiry</button>
+    </form>
+  </div>
+</div>

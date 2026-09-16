@@ -1,0 +1,74 @@
+<form class="admin-form" method="POST" action="<%= page.id ? `/admin/pages/${page.id}/edit` : '/admin/pages/new' %>">
+  <% if (locals.csrfToken) { %><input type="hidden" name="_csrf" value="<%= csrfToken %>" /><% } %>
+
+  <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--color-border); padding-bottom: var(--space-4);">
+    <h2 style="font-family: var(--font-display); font-size: 1.25rem;"><%= page.id ? 'Edit Page' : 'Create Page' %></h2>
+    <div style="display: flex; gap: var(--space-3);">
+      <a class="btn btn--ghost" href="/admin/pages">Cancel</a>
+      <button class="btn btn--primary" type="submit">Save Page</button>
+    </div>
+  </div>
+
+  <div class="admin-form__row">
+    <div class="field">
+      <label class="field__label" for="title">Page Title <span class="req">*</span></label>
+      <input type="text" id="title" name="title" required value="<%= page.title || '' %>" placeholder="Privacy Policy" />
+    </div>
+
+    <div class="field">
+      <label class="field__label" for="slug">Slug <span class="req">*</span></label>
+      <input type="text" id="slug" name="slug" required value="<%= page.slug || '' %>" placeholder="privacy" />
+      <span class="field__hint">URL path: /{slug}</span>
+    </div>
+  </div>
+
+  <div class="field field--full">
+    <label class="field__label" for="heading">Primary Heading</label>
+    <input type="text" id="heading" name="heading" value="<%= page.heading || '' %>" placeholder="Our commitment to your privacy" />
+  </div>
+
+  <div class="field field--full">
+    <label class="field__label" for="lede">Lede / Standfirst</label>
+    <textarea id="lede" name="lede" rows="2" placeholder="Introductory paragraph..."><%= page.lede || '' %></textarea>
+  </div>
+
+  <div class="field field--full">
+    <label class="field__label" for="body">Content (Markdown)</label>
+    <textarea id="body" name="body" rows="12" placeholder="# Section heading..."><%= page.body || '' %></textarea>
+  </div>
+
+  <div class="admin-form__row">
+    <div class="field">
+      <label class="field__label" for="status">Status</label>
+      <select id="status" name="status">
+        <option value="draft" <%= page.status === 'draft' ? 'selected' : '' %>>Draft</option>
+        <option value="published" <%= page.status === 'published' ? 'selected' : '' %>>Published</option>
+      </select>
+    </div>
+
+    <div class="field">
+      <label class="field__label" for="template">Template</label>
+      <select id="template" name="template">
+        <option value="generic" <%= page.template === 'generic' ? 'selected' : '' %>>Standard Reading Page</option>
+        <option value="about" <%= page.template === 'about' ? 'selected' : '' %>>About Page</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="admin-form__row">
+    <div class="field">
+      <label class="field__label" for="seo_title">SEO Title</label>
+      <input type="text" id="seo_title" name="seo_title" value="<%= page.seo_title || '' %>" placeholder="Defaults to Title — DevCenterPoint" />
+    </div>
+
+    <div class="field">
+      <label class="field__label" for="seo_description">SEO Description</label>
+      <input type="text" id="seo_description" name="seo_description" value="<%= page.seo_description || '' %>" placeholder="Defaults to Lede" />
+    </div>
+  </div>
+
+  <div class="form__foot" style="margin-top: var(--space-8); border-top: 1px solid var(--color-border); padding-top: var(--space-6);">
+    <button class="btn btn--primary" type="submit">Save Page</button>
+    <a class="btn btn--ghost" href="/admin/pages">Cancel</a>
+  </div>
+</form>

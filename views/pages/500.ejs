@@ -1,0 +1,24 @@
+<%- include('../partials/head', { pageType: 'detail', bodyClass: 'page-error' }) %>
+
+<section class="chapter chapter--flow chapter--lead">
+  <div class="wrap wrap--narrow center">
+    <p class="chapter__index" data-reveal><span class="code">500</span> System Error</p>
+    <h1 class="display display--md" data-reveal>Something went <em>wrong.</em></h1>
+    <% if (locals.isDbDown) { %>
+      <div class="note note--quiet" data-reveal>
+        <strong>Database connection issue.</strong> The MySQL service appears to be stopped or unreachable. Please verify Laragon / MySQL is running.
+      </div>
+    <% } else if (locals.message) { %>
+      <div class="note" data-reveal>
+        <p><%= message %></p>
+      </div>
+    <% } else { %>
+      <p class="body body--lead" data-reveal>An unexpected error occurred while generating this page. The issue has been logged.</p>
+    <% } %>
+    <div class="hero__actions center" data-reveal style="margin-top: var(--space-8);">
+      <a class="btn btn--primary" href="/" data-magnetic="0.3">Return to safety <span class="btn__twin" aria-hidden="true">Return to safety</span></a>
+    </div>
+  </div>
+</section>
+
+<%- include('../partials/foot') %>

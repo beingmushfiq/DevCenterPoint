@@ -1,0 +1,311 @@
+<%- include('../partials/head', { pageType: 'home', bodyClass: 'page-home' }) %>
+
+  <div class="rail" aria-hidden="true">
+    <span class="rail__fill" id="railFill"></span>
+  </div>
+  <div class="chapter-dots" id="dots" aria-hidden="true"></div>
+
+<%
+  const sec = (key) => sections.find((s) => s.section_key === key) || {};
+  const hero = sec('hero');
+  const curve = sec('cost-curve');
+  const whatWeAre = sec('what-we-are');
+  const whatWeDo = sec('what-we-do');
+  const howWeWork = sec('how-we-work');
+  const commitments = sec('commitments');
+  const whoBehind = sec('who-stands-behind-it');
+  const startHere = sec('start-here');
+%>
+
+  <!-- ============ 01 · HERO ============ -->
+  <section class="chapter chapter--hero" id="ch-01" data-scene="<%= hero.scene || 'shards' %>">
+    <div class="wrap">
+      <p class="eyebrow" data-reveal><span class="code">DCP / 001</span> <%= hero.eyebrow || 'Product Engineering Studio — Est. 2026' %></p>
+      <h1 class="display" data-split>
+        <span class="line"><%= hero.heading || 'Bring your problems.' %></span>
+        <span class="line"><em><%= hero.heading_emphasis || 'Bring your idea.' %></em></span>
+      </h1>
+      <p class="lede" data-reveal><%= hero.lede || 'We design the system, build it, and stand behind it in production. No slide deck, no handoff, no disappearing act — an engineering partner accountable for what actually ships.' %></p>
+      <div class="hero__actions" data-reveal>
+        <a class="btn btn--primary" href="#ch-08" data-magnetic="0.3">Start a project <span class="btn__twin" aria-hidden="true">Start a project</span></a>
+        <a class="btn btn--ghost" href="#ch-02" data-magnetic="0.2">Why foundations fail</a>
+      </div>
+      <div class="hero__foot" data-reveal>
+        <% if (hero.content && hero.content.credibility) { %>
+          <% hero.content.credibility.forEach(function (c) { %>
+            <span class="hero__foot-item"><%= c.label %></span>
+          <% }); %>
+        <% } else { %>
+          <span class="hero__foot-item">Senior engineers only</span>
+          <span class="hero__foot-item">You own every commit</span>
+          <span class="hero__foot-item">Reply within one business day</span>
+        <% } %>
+      </div>
+    </div>
+    <div class="scroll-hint" aria-hidden="true"><span></span></div>
+  </section>
+
+  <!-- ============ 02 · THE COST CURVE ============ -->
+  <section class="chapter" id="ch-02" data-scene="<%= curve.scene || 'scatter' %>">
+    <div class="wrap">
+      <div class="wrap--split">
+        <div class="col">
+          <p class="chapter__index" data-reveal><span class="code">01</span> <%= curve.eyebrow || 'The Problem' %></p>
+          <h2 class="display display--md" data-reveal><%= curve.heading || 'Software is rarely expensive to build.' %> <em><%= curve.heading_emphasis || 'It is expensive to change.' %></em></h2>
+        </div>
+        <div class="col">
+          <p class="body body--lead" data-reveal><%= curve.lede || 'Every system carries the cost of its own decisions. Made early, a correction is nearly free. Made late — after launch, after your team has built on top of it — the same correction costs orders of magnitude more.' %></p>
+          <p class="body" data-reveal>This is not a metaphor. It is the single most reliable pattern in software delivery, and it is the reason most "successful" launches quietly become unfixable within eighteen months.</p>
+        </div>
+      </div>
+
+      <div class="curve" data-reveal data-curve>
+        <% if (curve.content && curve.content.curve) { %>
+          <% curve.content.curve.forEach(function (c) { %>
+            <div class="curve__cell">
+              <span class="curve__stage"><%= c.stage %></span>
+              <span class="curve__x"><%= c.multiplier %><i>×</i></span>
+              <span class="curve__label"><%= c.label %></span>
+              <span class="curve__bar" aria-hidden="true"></span>
+            </div>
+          <% }); %>
+        <% } else { %>
+          <div class="curve__cell">
+            <span class="curve__stage">In discovery</span>
+            <span class="curve__x">1<i>×</i></span>
+            <span class="curve__label">Redraw the architecture on a whiteboard. Cost: a conversation.</span>
+            <span class="curve__bar" aria-hidden="true"></span>
+          </div>
+          <div class="curve__cell">
+            <span class="curve__stage">During build</span>
+            <span class="curve__x">10<i>×</i></span>
+            <span class="curve__label">Refactor the module, migrate the data, re-test the surface.</span>
+            <span class="curve__bar" aria-hidden="true"></span>
+          </div>
+          <div class="curve__cell">
+            <span class="curve__stage">In production</span>
+            <span class="curve__x">100<i>×</i></span>
+            <span class="curve__label">Coordinate a migration, absorb downtime, apologise to customers, rebuild trust.</span>
+            <span class="curve__bar" aria-hidden="true"></span>
+          </div>
+        <% } %>
+      </div>
+
+      <p class="body body--wide" data-reveal><%= (curve.content && curve.content.closing) || 'We exist to make the expensive decisions while they are still cheap to make — and to build the kind of foundation that does not force you back here.' %></p>
+    </div>
+  </section>
+
+  <!-- ============ 03 · WHAT WE ARE ============ -->
+  <section class="chapter" id="ch-03" data-scene="<%= whatWeAre.scene || 'converge' %>">
+    <div class="wrap wrap--split">
+      <div class="col">
+        <p class="chapter__index" data-reveal><span class="code">02</span> <%= whatWeAre.eyebrow || 'What We Are' %></p>
+        <h2 class="display display--md" data-reveal><%= whatWeAre.heading || 'An engineering partner,' %> <em><%= whatWeAre.heading_emphasis || 'not a vendor.' %></em></h2>
+        <p class="body" data-reveal>The name is the model, literally: a <strong>dev centre</strong> that holds every discipline under one roof, and a <strong>single point</strong> of contact you can hold accountable.</p>
+        <p class="scramble code" data-scramble="DEV·CENTER·POINT" aria-hidden="true">DEV-CENTER-POINT</p>
+      </div>
+      <div class="col">
+        <% if (whatWeAre.content && whatWeAre.content.paragraphs) { %>
+          <% whatWeAre.content.paragraphs.forEach(function (p, i) { %>
+            <p class="body <%= i === 0 ? 'body--lead' : '' %>" data-reveal><%- p %></p>
+          <% }); %>
+        <% } else { %>
+          <p class="body body--lead" data-reveal>A vendor takes your specification, builds exactly what it says, and is finished the moment it compiles. That is a transaction, and it is why so much software arrives complete and unusable.</p>
+          <p class="body" data-reveal>We work the other way around. We interrogate the problem until the right scope is obvious, then commit to it in writing. <strong>The person who scopes your project is the person who architects it.</strong></p>
+        <% } %>
+        <div class="specs">
+          <% if (whatWeAre.content && whatWeAre.content.specs) { %>
+            <% whatWeAre.content.specs.forEach(function (s) { %>
+              <div class="spec" data-reveal>
+                <span class="spec__k"><%= s.k %></span>
+                <span class="spec__v"><%- s.v %></span>
+              </div>
+            <% }); %>
+          <% } else { %>
+            <div class="spec" data-reveal>
+              <span class="spec__k">Engagement</span>
+              <span class="spec__v">Discovery, architecture and delivery as one continuous engagement.</span>
+            </div>
+            <div class="spec" data-reveal>
+              <span class="spec__k">Who writes the code</span>
+              <span class="spec__v">Senior engineers, the same ones in every call. <strong>No silent handoff.</strong></span>
+            </div>
+          <% } %>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 04 · DISCIPLINES ============ -->
+  <section class="chapter" id="ch-04" data-scene="<%= whatWeDo.scene || 'build' %>">
+    <div class="wrap">
+      <div class="wrap--split" style="margin-bottom: var(--space-8);">
+        <div>
+          <p class="chapter__index" data-reveal><span class="code">03</span> <%= whatWeDo.eyebrow || 'What We Do' %></p>
+          <h2 class="display display--md" data-reveal><%= whatWeDo.heading || 'Six disciplines,' %> <em><%= whatWeDo.heading_emphasis || 'one system.' %></em></h2>
+        </div>
+        <div>
+          <p class="body" data-reveal><%= whatWeDo.lede || 'Most problems do not respect team boundaries. We staff across disciplines so the interface between them — where projects usually rot — is our problem, not yours.' %></p>
+          <a class="btn btn--ghost" href="/services" style="margin-top: var(--space-4);" data-reveal>Explore all services &rarr;</a>
+        </div>
+      </div>
+
+      <ul class="cap">
+        <% if (services && services.length > 0) { %>
+          <% services.forEach(function (s, i) { %>
+            <li class="cap__item" data-reveal>
+              <span class="cap__n code"><%= String(i + 1).padStart(2, '0') %> / <%= (s.icon_key || s.slug || 'SPEC').toUpperCase() %></span>
+              <h3><a href="/services/<%= s.slug %>" style="color: inherit; text-decoration: none;"><%= s.title %></a></h3>
+              <p><%= s.summary %></p>
+              <% if (s.tagline) { %>
+                <div class="cap__tags"><span><%= s.tagline %></span></div>
+              <% } %>
+            </li>
+          <% }); %>
+        <% } %>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ============ 05 · HOW WE WORK ============ -->
+  <section class="chapter" id="ch-05" data-scene="<%= howWeWork.scene || 'name' %>">
+    <div class="wrap">
+      <p class="chapter__index" data-reveal><span class="code">04</span> <%= howWeWork.eyebrow || 'How We Work' %></p>
+      <h2 class="display display--md" data-reveal><%= howWeWork.heading || 'Five non-negotiables,' %> <em><%= howWeWork.heading_emphasis || 'held on every project.' %></em></h2>
+      <p class="body body--wide" data-reveal><%= howWeWork.lede || 'These are not values on a wall. They are operating rules, and they are the first things we are willing to be judged on.' %></p>
+
+      <div class="method">
+        <% if (howWeWork.content && howWeWork.content.method) { %>
+          <% howWeWork.content.method.forEach(function (m) { %>
+            <div class="method__row" data-reveal>
+              <span class="method__n"><%= m.n %></span>
+              <h3 class="method__t"><%= m.title %></h3>
+              <p class="method__d"><%= m.body %></p>
+            </div>
+          <% }); %>
+        <% } %>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 06 · GUARANTEES ============ -->
+  <section class="chapter" id="ch-06" data-scene="<%= commitments.scene || 'leap' %>">
+    <div class="wrap">
+      <p class="chapter__index" data-reveal><span class="code">05</span> <%= commitments.eyebrow || 'What We Commit To' %></p>
+      <h2 class="display display--md" data-reveal><%= commitments.heading || 'Terms you can hold us to,' %> <em><%= commitments.heading_emphasis || 'in writing.' %></em></h2>
+      <p class="body body--wide" data-reveal><%= commitments.lede || 'Confidence is cheap. These are the specific commitments we put into the first proposal, so you are never relying on our good intentions.' %></p>
+
+      <div class="metrics">
+        <% if (commitments.content && commitments.content.metrics) { %>
+          <% commitments.content.metrics.forEach(function (m) { %>
+            <div class="metric" data-reveal>
+              <span class="metric__v" data-count="<%= m.value %>" <% if (m.unit && m.unit.includes('%')) { %>data-suffix="%"<% } %>><%= m.value %></span>
+              <span class="metric__l"><%= m.label %></span>
+            </div>
+          <% }); %>
+        <% } %>
+      </div>
+
+      <div class="specs">
+        <% if (commitments.content && commitments.content.specs) { %>
+          <% commitments.content.specs.forEach(function (s) { %>
+            <div class="spec" data-reveal>
+              <span class="spec__k"><%= s.k %></span>
+              <span class="spec__v"><%- s.v %></span>
+            </div>
+          <% }); %>
+        <% } %>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 07 · WHO STANDS BEHIND IT ============ -->
+  <section class="chapter" id="ch-07" data-scene="<%= whoBehind.scene || 'merge' %>">
+    <div class="wrap wrap--narrow center">
+      <p class="chapter__index" data-reveal><span class="code">06</span> <%= whoBehind.eyebrow || 'Who Stands Behind It' %></p>
+      <h2 class="display display--hero" data-split>
+        <span class="line"><%= whoBehind.heading || 'There is no' %></span>
+        <span class="line"><em><%= whoBehind.heading_emphasis || '“I” in the code we hand you.' %></em></span>
+      </h2>
+      <% if (whoBehind.content && whoBehind.content.paragraphs) { %>
+        <% whoBehind.content.paragraphs.forEach(function (p, idx) { %>
+          <p class="body <%= idx === 0 ? 'body--lead' : '' %>" data-reveal><%- p %></p>
+        <% }); %>
+      <% } else { %>
+        <p class="body body--lead" data-reveal>Teams fail software far more often than code does. So we removed the gaps where that usually happens: no sales layer between you and the engineer, no architect who never sees production, no ticket queue that swallows context.</p>
+        <p class="body" data-reveal>The people who scope your project are the people who build it — and the people who answer when it breaks. A system is only ever as dependable as the specific humans who promised it, so we make ours accountable <strong>by name.</strong></p>
+      <% } %>
+
+      <% if (whoBehind.content && whoBehind.content.quote) { %>
+        <blockquote class="quote" data-reveal>
+          <p>“<%= whoBehind.content.quote %>”</p>
+          <cite>DevCenterPoint — working principle</cite>
+        </blockquote>
+      <% } %>
+
+      <% if (testimonials && testimonials.length > 0) { %>
+        <div class="voice" data-reveal style="margin-top: var(--space-16); text-align: left;">
+          <blockquote>
+            <p>“<%= testimonials[0].quote %>”</p>
+          </blockquote>
+          <cite class="voice__by">
+            <%= testimonials[0].attribution || testimonials[0].author_name %> — <%= testimonials[0].role || testimonials[0].author_role %><% if (testimonials[0].company || testimonials[0].company_name) { %>, <%= testimonials[0].company || testimonials[0].company_name %><% } %>
+          </cite>
+        </div>
+      <% } %>
+    </div>
+  </section>
+
+  <!-- ============ 08 · START ============ -->
+  <section class="chapter chapter--cta" id="ch-08" data-scene="<%= startHere.scene || 'expand' %>">
+    <div class="wrap wrap--narrow center">
+      <p class="chapter__index" data-reveal><span class="code">07</span> <%= startHere.eyebrow || 'Start Here' %></p>
+      <h2 class="display display--md" data-reveal><%= startHere.heading || 'Bring us the thing you are' %> <em><%= startHere.heading_emphasis || 'not sure is possible.' %></em></h2>
+      <p class="body" data-reveal><%= startHere.lede || 'Describe the problem in plain language — the messy version, not the polished one. We will tell you what it genuinely takes, what we would build first, and what we would refuse to build at all. In writing, before you commit to anything.' %></p>
+    </div>
+
+    <div class="wrap">
+      <div class="paths">
+        <% if (startHere.content && startHere.content.paths) { %>
+          <% startHere.content.paths.forEach(function (p, i) { %>
+            <div class="path <%= i === 0 ? 'path--first' : '' %>" data-reveal>
+              <span class="path__flag"><%= p.promise || 'Engagement' %></span>
+              <h3 class="path__t"><%= p.name %></h3>
+              <p class="path__d"><%= p.body %></p>
+              <a class="btn btn--ghost" href="<%= p.url || '/contact' %>" style="margin-top: var(--space-4);">Get started &rarr;</a>
+            </div>
+          <% }); %>
+        <% } else { %>
+          <div class="path path--first" data-reveal>
+            <span class="path__flag">Start narrow</span>
+            <h3 class="path__t">Architecture review</h3>
+            <p class="path__d">Hand us the system you already have. We read the code, then tell you where it will break, what it will cost to keep, and the three changes with the highest return.</p>
+          </div>
+          <div class="path" data-reveal>
+            <span class="path__flag">Validate the idea</span>
+            <h3 class="path__t">Design sprint</h3>
+            <p class="path__d">For an idea that has not been built yet. We pressure-test the premise, cut it to the smallest version worth shipping, and cost the whole thing before you commit a budget.</p>
+          </div>
+          <div class="path" data-reveal>
+            <span class="path__flag">Build it</span>
+            <h3 class="path__t">Full delivery</h3>
+            <p class="path__d">Discovery through production, run by the same engineers who scoped it. Delivered in slices you can use, so value lands long before the final invoice does.</p>
+          </div>
+        <% } %>
+      </div>
+    </div>
+
+    <div class="wrap wrap--narrow center" style="margin-top: var(--space-12);">
+      <p class="body" data-reveal><%= (startHere.content && startHere.content.closing) || 'Every engagement begins the same way: a conversation about the problem, not a pitch about us.' %></p>
+      <div class="hero__actions center" data-reveal>
+        <a class="btn btn--primary btn--lg" href="/contact" data-magnetic="0.32">Start a project <span class="btn__twin" aria-hidden="true">Start a project</span></a>
+        <a class="btn btn--ghost btn--lg" href="/contact?type=review" data-magnetic="0.22">Request an architecture review</a>
+      </div>
+      <div class="hero__foot hero__foot--center" data-reveal>
+        <span class="hero__foot-item"><%= site.email %></span>
+        <span class="hero__foot-item">Reply within one business day</span>
+      </div>
+    </div>
+  </section>
+
+<%- include('../partials/foot') %>

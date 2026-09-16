@@ -1,0 +1,15 @@
+<%
+  /* The boot overlay exists only on the homepage. Every other page
+     sets `window.__dcpReady` immediately and paints on the first
+     frame — a progress bar in front of a case study is theatre. */
+%>
+<% if (locals.pageType === 'home') { %>
+  <div id="boot" class="boot" role="status" aria-live="polite">
+    <p class="boot__mark"><%= site.name %></p>
+    <div class="boot__bar"><span id="bootFill" class="boot__fill"></span></div>
+    <div class="boot__meta">
+      <span>Initialising</span>
+      <span id="bootPct">0%</span>
+    </div>
+  </div>
+<% } %>

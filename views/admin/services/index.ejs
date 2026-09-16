@@ -1,0 +1,52 @@
+<% if (items && items.length > 0) { %>
+  <div class="admin-table-wrap">
+    <table class="admin-table">
+      <thead>
+        <tr>
+          <th>Order</th>
+          <th>Discipline / Title</th>
+          <th>Icon</th>
+          <th>Status</th>
+          <th>Featured</th>
+          <th style="text-align: right;">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% items.forEach(function (s) { %>
+          <tr>
+            <td style="font-family: var(--font-mono); font-size: 0.8125rem;"><%= s.sort_order %></td>
+            <td>
+              <div class="admin-table__title">
+                <a href="/admin/services/<%= s.id %>/edit"><%= s.title %></a>
+              </div>
+              <small style="color: var(--color-text-faint);">
+                Tagline: <%= s.tagline || '—' %> &middot; Slug: <code><%= s.slug %></code>
+              </small>
+            </td>
+            <td><code><%= s.icon_key || 'mark' %></code></td>
+            <td>
+              <span class="badge <%= s.status === 'published' ? 'badge--published' : 'badge--draft' %>">
+                <%= s.status %>
+              </span>
+            </td>
+            <td><%= s.is_featured ? 'Yes' : 'No' %></td>
+            <td>
+              <div class="admin-table__actions">
+                <a href="/services/<%= s.slug %>" target="_blank" title="View live">Live &nearr;</a>
+                <a href="/admin/services/<%= s.id %>/edit">Edit</a>
+                <form method="POST" action="/admin/services/<%= s.id %>/delete" style="display: inline;" onsubmit="return confirm('Delete this discipline?');">
+                  <% if (locals.csrfToken) { %><input type="hidden" name="_csrf" value="<%= csrfToken %>" /><% } %>
+                  <button type="submit" class="danger" style="background:none; border:none; cursor:pointer; font-family:inherit; font-size:inherit;">Delete</button>
+                </form>
+              </div>
+            </td>
+          </tr>
+        <% }); %>
+      </tbody>
+    </table>
+  </div>
+<% } else { %>
+  <div class="note note--quiet">
+    <p>No services found. <a href="/admin/services/new">Create a discipline &rarr;</a></p>
+  </div>
+<% } %>

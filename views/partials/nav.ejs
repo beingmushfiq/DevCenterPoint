@@ -1,0 +1,27 @@
+<%
+  /* Primary navigation comes from `nav_items` via the globals
+     middleware, so the CMS owns the order and the labels. The
+     contact CTA is fixed — it is the one link that must always be
+     present regardless of what an editor does to the nav table. */
+%>
+  <header class="nav" id="nav">
+    <a class="nav__brand" href="/">
+      <span class="nav__glyph" aria-hidden="true"></span>
+      <span class="nav__name"><%= site.name %></span>
+    </a>
+
+    <nav class="nav__links" id="nav-links" aria-label="Primary">
+      <% nav.primary.forEach(function (item) { %>
+        <a href="<%= item.url %>"<% if (isActive(item.url)) { %> aria-current="page"<% } %>><%= item.label %></a>
+      <% }); %>
+    </nav>
+
+    <div class="nav__end">
+      <a class="btn btn--ghost nav__cta" href="/contact">Start a project</a>
+      <button class="nav__toggle" type="button" data-nav-toggle
+              aria-expanded="false" aria-controls="nav-links">
+        <span class="nav__toggle-label">Menu</span>
+        <span class="nav__bars" aria-hidden="true"><i></i><i></i></span>
+      </button>
+    </div>
+  </header>

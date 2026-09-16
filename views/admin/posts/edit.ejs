@@ -1,0 +1,81 @@
+<form class="admin-form" method="POST" action="<%= post.id ? `/admin/posts/${post.id}/edit` : '/admin/posts/new' %>">
+  <% if (locals.csrfToken) { %><input type="hidden" name="_csrf" value="<%= csrfToken %>" /><% } %>
+
+  <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--color-border); padding-bottom: var(--space-4);">
+    <h2 style="font-family: var(--font-display); font-size: 1.25rem;"><%= post.id ? 'Edit Insight' : 'Write Insight' %></h2>
+    <div style="display: flex; gap: var(--space-3);">
+      <a class="btn btn--ghost" href="/admin/posts">Cancel</a>
+      <button class="btn btn--primary" type="submit">Save Article</button>
+    </div>
+  </div>
+
+  <div class="admin-form__row">
+    <div class="field">
+      <label class="field__label" for="title">Title <span class="req">*</span></label>
+      <input type="text" id="title" name="title" required value="<%= post.title || '' %>" placeholder="Why the 100× cost curve is real" />
+    </div>
+
+    <div class="field">
+      <label class="field__label" for="slug">Slug <span class="req">*</span></label>
+      <input type="text" id="slug" name="slug" required value="<%= post.slug || '' %>" placeholder="why-the-cost-curve-is-real" />
+      <span class="field__hint">URL path: /insights/{slug}</span>
+    </div>
+  </div>
+
+  <div class="field field--full">
+    <label class="field__label" for="excerpt">Excerpt / Standfirst</label>
+    <textarea id="excerpt" name="excerpt" rows="2" placeholder="Brief summary displayed on the card and search previews..."><%= post.excerpt || '' %></textarea>
+  </div>
+
+  <div class="field field--full">
+    <label class="field__label" for="body">Article Body (Markdown) <span class="req">*</span></label>
+    <textarea id="body" name="body" required rows="14" placeholder="# The argument for getting foundations right..."><%= post.body || '' %></textarea>
+  </div>
+
+  <div class="form-section">
+    <h3 class="form-section__label">Metadata, Topics &amp; Media</h3>
+  </div>
+
+  <div class="field field--full">
+    <label class="field__label" for="tags">Topics / Tags (Comma separated)</label>
+    <input type="text" id="tags" name="tags" value="<%= (post.tags || []).join(', ') %>" placeholder="architecture, performance, reliability" />
+  </div>
+
+  <div class="admin-form__row">
+    <div class="field">
+      <label class="field__label" for="cover_media_id">Cover Image</label>
+      <select id="cover_media_id" name="cover_media_id">
+        <option value="">No cover image</option>
+        <% (mediaList || []).forEach(function (m) { %>
+          <option value="<%= m.id %>" <%= post.cover_media_id === m.id ? 'selected' : '' %>><%= m.original_name %> (<%= m.path %>)</option>
+        <% }); %>
+      </select>
+    </div>
+
+    <div class="field">
+      <label class="field__label" for="status">Publication Status</label>
+      <select id="status" name="status">
+        <option value="draft" <%= post.status === 'draft' ? 'selected' : '' %>>Draft</option>
+        <option value="published" <%= post.status === 'published' ? 'selected' : '' %>>Published</option>
+        <option value="archived" <%= post.status === 'archived' ? 'selected' : '' %>>Archived</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="admin-form__row">
+    <div class="field">
+      <label class="field__label" for="seo_title">SEO Title</label>
+      <input type="text" id="seo_title" name="seo_title" value="<%= post.seo_title || '' %>" placeholder="Defaults to Title — DevCenterPoint" />
+    </div>
+
+    <div class="field">
+      <label class="field__label" for="seo_description">SEO Description</label>
+      <input type="text" id="seo_description" name="seo_description" value="<%= post.seo_description || '' %>" placeholder="Defaults to Excerpt" />
+    </div>
+  </div>
+
+  <div class="form__foot" style="margin-top: var(--space-8); border-top: 1px solid var(--color-border); padding-top: var(--space-6);">
+    <button class="btn btn--primary" type="submit">Save Article</button>
+    <a class="btn btn--ghost" href="/admin/posts">Cancel</a>
+  </div>
+</form>

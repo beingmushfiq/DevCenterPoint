@@ -1,0 +1,79 @@
+<%- include('../partials/head', { pageType: 'index', bodyClass: 'page-services' }) %>
+
+<section class="chapter chapter--flow chapter--lead">
+  <div class="wrap">
+    <%- include('../partials/breadcrumbs', { crumbs: [{ label: 'Services' }] }) %>
+
+    <div class="page-head page-head--wide" data-reveal>
+      <p class="chapter__index"><span class="code">02 / DISCIPLINES</span></p>
+      <h1 class="display display--md">Engineering capabilities, <em>delivered as one system.</em></h1>
+      <p class="body body--lead page-head__lede">Product engineering, architecture review, platform modernisation, and embedded partnership. Senior engineers who own the problem end-to-end.</p>
+    </div>
+
+    <% if (services && services.length > 0) { %>
+      <div class="grid grid--3" style="margin-top: var(--space-12);">
+        <% services.forEach(function (s, i) { %>
+          <% const delivs = (deliverables && deliverables[s.id]) || []; %>
+          <article class="card card--service" data-reveal>
+            <div class="card__icon">
+              <%- include('../partials/icon', { key: s.icon_key }) %>
+            </div>
+            <span class="card__n code"><%= String(i + 1).padStart(2, '0') %> / <%= (s.slug || 'DISCIPLINE').toUpperCase() %></span>
+            <h2 class="card__title"><a href="/services/<%= s.slug %>"><%= s.title %></a></h2>
+            <p class="card__summary"><%= s.summary %></p>
+
+            <% if (delivs.length > 0) { %>
+              <div class="card__foot">
+                <span class="marker" style="margin-bottom: var(--space-3);">Deliverables:</span>
+                <div class="tag-row">
+                  <% delivs.slice(0, 3).forEach(function (d) { %>
+                    <span class="tag"><%= d %></span>
+                  <% }); %>
+                  <% if (delivs.length > 3) { %>
+                    <span class="tag">+<%= delivs.length - 3 %></span>
+                  <% } %>
+                </div>
+              </div>
+            <% } %>
+          </article>
+        <% }); %>
+      </div>
+    <% } %>
+
+    <% if (faqs && faqs.length > 0) { %>
+      <div style="margin-top: var(--space-24); padding-top: var(--space-16); border-top: 1px solid var(--color-border);" data-reveal>
+        <div class="page-head">
+          <p class="chapter__index"><span class="code">QUESTIONS</span></p>
+          <h2 class="display display--md">Frequently asked questions</h2>
+          <p class="body body--lead">How we scope, estimate, and partner on technical deliverables.</p>
+        </div>
+
+        <div class="faq" style="margin-top: var(--space-8);">
+          <% faqs.forEach(function (faq) { %>
+            <div class="faq__item" data-accordion>
+              <button class="faq__q" type="button" aria-expanded="false" data-accordion-trigger>
+                <span><%= faq.question %></span>
+                <span class="faq__sign" aria-hidden="true"></span>
+              </button>
+              <div class="faq__a">
+                <div class="prose">
+                  <%- md(faq.answer) %>
+                </div>
+              </div>
+            </div>
+          <% }); %>
+        </div>
+      </div>
+    <% } %>
+
+    <div class="wrap wrap--narrow center" style="margin-top: var(--space-20);" data-reveal>
+      <h2 class="display display--sm">Bring us your hardest engineering problem.</h2>
+      <p class="body" style="margin-top: var(--space-4);">We will tell you what we think it takes, what we would build first, and what we would refuse to build.</p>
+      <div class="hero__actions center" style="margin-top: var(--space-8);">
+        <a class="btn btn--primary btn--lg" href="/contact" data-magnetic="0.3">Start a project <span class="btn__twin" aria-hidden="true">Start a project</span></a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<%- include('../partials/foot') %>

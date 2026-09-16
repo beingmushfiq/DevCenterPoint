@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title><%= title ? `${title} — ` : '' %>DevCenterPoint Admin</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&display=swap" />
+  <%- assetTags('admin').css %>
+</head>
+<body class="admin">
+  <aside class="sidebar">
+    <a class="sidebar__brand" href="/admin">
+      <span class="nav__glyph" aria-hidden="true"></span>
+      <span>DCP Admin</span>
+      <span class="sidebar__badge">CMS</span>
+    </a>
+
+    <div class="sidebar__section">
+      <span class="sidebar__label">Overview</span>
+      <a class="sidebar__link <%= currentPath === '/admin' ? 'is-active' : '' %>" href="/admin">
+        <span>Dashboard</span>
+      </a>
+      <a class="sidebar__link <%= currentPath.startsWith('/admin/submissions') ? 'is-active' : '' %>" href="/admin/submissions">
+        <span>Enquiries</span>
+      </a>
+    </div>
+
+    <div class="sidebar__section">
+      <span class="sidebar__label">Content</span>
+      <a class="sidebar__link <%= currentPath.startsWith('/admin/cases') ? 'is-active' : '' %>" href="/admin/cases">
+        <span>Case Studies</span>
+      </a>
+      <a class="sidebar__link <%= currentPath.startsWith('/admin/posts') ? 'is-active' : '' %>" href="/admin/posts">
+        <span>Insights</span>
+      </a>
+      <a class="sidebar__link <%= currentPath.startsWith('/admin/services') ? 'is-active' : '' %>" href="/admin/services">
+        <span>Services</span>
+      </a>
+      <a class="sidebar__link <%= currentPath.startsWith('/admin/pages') ? 'is-active' : '' %>" href="/admin/pages">
+        <span>Pages</span>
+      </a>
+    </div>
+
+    <div class="sidebar__section">
+      <span class="sidebar__label">Identity &amp; Proof</span>
+      <a class="sidebar__link <%= currentPath.startsWith('/admin/team') ? 'is-active' : '' %>" href="/admin/team">
+        <span>Team</span>
+      </a>
+      <a class="sidebar__link <%= currentPath.startsWith('/admin/testimonials') ? 'is-active' : '' %>" href="/admin/testimonials">
+        <span>Testimonials</span>
+      </a>
+      <a class="sidebar__link <%= currentPath.startsWith('/admin/faqs') ? 'is-active' : '' %>" href="/admin/faqs">
+        <span>FAQs</span>
+      </a>
+    </div>
+
+    <div class="sidebar__section">
+      <span class="sidebar__label">System</span>
+      <a class="sidebar__link <%= currentPath.startsWith('/admin/media') ? 'is-active' : '' %>" href="/admin/media">
+        <span>Media Library</span>
+      </a>
+      <a class="sidebar__link <%= currentPath.startsWith('/admin/nav') ? 'is-active' : '' %>" href="/admin/nav">
+        <span>Navigation</span>
+      </a>
+      <a class="sidebar__link <%= currentPath.startsWith('/admin/settings') ? 'is-active' : '' %>" href="/admin/settings">
+        <span>Settings</span>
+      </a>
+    </div>
+
+    <div class="sidebar__foot">
+      <a class="sidebar__link" href="/" target="_blank">
+        <span>View Live Site &nearr;</span>
+      </a>
+      <a class="sidebar__link" href="/admin/logout" style="color: var(--vermilion-400);">
+        <span>Sign Out</span>
+      </a>
+    </div>
+  </aside>
+
+  <div class="admin-main">
+    <header class="topbar">
+      <div class="topbar__breadcrumb">
+        <a href="/admin">Admin</a>
+        <% if (locals.breadcrumb) { %>
+          <span aria-hidden="true">/</span>
+          <span><%= breadcrumb %></span>
+        <% } %>
+      </div>
+
+      <div class="topbar__actions">
+        <% if (locals.topActions) { %>
+          <%- topActions %>
+        <% } %>
+      </div>
+    </header>
+
+    <main class="admin-body">
+      <% if (locals.flash) { %>
+        <div class="flash-msg flash-msg--<%= flash.type || 'info' %>">
+          <span><%= flash.message %></span>
+        </div>
+      <% } else if (locals.query && query.msg) { %>
+        <div class="flash-msg flash-msg--<%= query.status === 'error' ? 'error' : 'ok' %>">
+          <span><%= query.msg %></span>
+        </div>
+      <% } %>
+
+      <%- body %>
+    </main>
+  </div>
+
+  <%- assetTags('admin').js %>
+</body>
+</html>

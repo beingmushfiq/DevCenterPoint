@@ -1,0 +1,80 @@
+<%- include('../partials/head', { pageType: 'index', bodyClass: 'page-work' }) %>
+
+<section class="chapter chapter--flow chapter--lead">
+  <div class="wrap">
+    <%- include('../partials/breadcrumbs', { crumbs: [{ label: 'Work' }] }) %>
+
+    <div class="page-head page-head--wide" data-reveal>
+      <p class="chapter__index"><span class="code">01 / SELECTED WORK</span></p>
+      <h1 class="display display--md">Systems we designed, shipped, and <em>stand behind.</em></h1>
+      <p class="body body--lead page-head__lede">What the problem was, what we did about it, and what measurable outcomes changed as a result. Real software in production.</p>
+    </div>
+
+    <div class="filters" data-filters data-reveal>
+      <a class="filter <%= !sector ? 'is-active' : '' %>" href="/work" data-filter="all" role="button" aria-pressed="<%= !sector %>">All sectors</a>
+      <% (sectors || []).forEach(function (s) { %>
+        <a class="filter <%= sector === s ? 'is-active' : '' %>" href="/work?sector=<%= encodeURIComponent(s) %>" data-filter="<%= s %>" role="button" aria-pressed="<%= sector === s %>"><%= s %></a>
+      <% }); %>
+      <span class="filters__count"><strong data-work-count><%= total %></strong> projects</span>
+    </div>
+
+    <% if (items && items.length > 0) { %>
+      <div class="grid grid--3">
+        <% items.forEach(function (cs) { %>
+          <%
+            const displayClient = cs.client_visibility === 'named'
+              ? cs.client_name
+              : (cs.client_label || 'Confidential Client');
+          %>
+          <article class="card card--media" data-work-item data-sector="<%= cs.sector %>" data-reveal>
+            <% if (cs.cover_path) { %>
+              <a href="/work/<%= cs.slug %>" class="card__media" tabindex="-1" aria-hidden="true">
+                <img src="<%= asset(cs.cover_path) %>" alt="<%= cs.cover_alt || cs.title %>" loading="lazy" />
+              </a>
+            <% } %>
+            <div class="card__body">
+              <span class="card__n code"><%= (cs.sector || 'ENGINEERING').toUpperCase() %> &middot; <%= cs.year %></span>
+              <h2 class="card__title"><a href="/work/<%= cs.slug %>"><%= cs.title %></a></h2>
+              <p class="card__summary"><%= cs.summary %></p>
+              <div class="card__foot">
+                <span class="marker">Client: <strong><%= displayClient %></strong></span>
+                <% if (cs.duration) { %>
+                  <span class="marker" style="margin-top: 4px;">Duration: <strong><%= cs.duration %></strong></span>
+                <% } %>
+              </div>
+            </div>
+          </article>
+        <% }); %>
+      </div>
+
+      <% if (pages > 1) { %>
+        <nav class="pager" aria-label="Pagination">
+          <% if (page > 1) { %>
+            <a class="btn btn--ghost pager__prev" href="/work?page=<%= page - 1 %><%= sector ? '&sector=' + encodeURIComponent(sector) : '' %>">&larr; Previous</a>
+          <% } else { %>
+            <span class="btn btn--ghost" style="opacity: 0.4; pointer-events: none;">&larr; Previous</span>
+          <% } %>
+
+          <div class="pager__pages">
+            <% for (let p = 1; p <= pages; p++) { %>
+              <a class="pager__link" href="/work?page=<%= p %><%= sector ? '&sector=' + encodeURIComponent(sector) : '' %>" <% if (p === page) { %>aria-current="page"<% } %>><%= p %></a>
+            <% } %>
+          </div>
+
+          <% if (page < pages) { %>
+            <a class="btn btn--ghost pager__next" href="/work?page=<%= page + 1 %><%= sector ? '&sector=' + encodeURIComponent(sector) : '' %>">Next &rarr;</a>
+          <% } else { %>
+            <span class="btn btn--ghost" style="opacity: 0.4; pointer-events: none;">Next &rarr;</span>
+          <% } %>
+        </nav>
+      <% } %>
+
+    <% } else { %>
+      <div class="note note--quiet" style="margin-top: var(--space-12);" data-reveal>
+        <p>No case studies found in this sector yet. <a href="/work">View all projects &rarr;</a></p>
+      </div>
+    <% } %>
+  </div>
+</section>
+
+<%- include('../partials/foot') %>

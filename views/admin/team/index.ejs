@@ -1,0 +1,49 @@
+<% if (items && items.length > 0) { %>
+  <div class="admin-table-wrap">
+    <table class="admin-table">
+      <thead>
+        <tr>
+          <th>Order</th>
+          <th>Member</th>
+          <th>Role</th>
+          <th>Location</th>
+          <th>Status</th>
+          <th style="text-align: right;">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% items.forEach(function (m) { %>
+          <tr>
+            <td style="font-family: var(--font-mono); font-size: 0.8125rem;"><%= m.sort_order %></td>
+            <td>
+              <div class="admin-table__title">
+                <a href="/admin/team/<%= m.id %>/edit"><%= m.name %></a>
+              </div>
+              <small style="color: var(--color-text-faint);"><%= m.email || 'No email' %></small>
+            </td>
+            <td><%= m.role %></td>
+            <td><%= m.location || '—' %></td>
+            <td>
+              <span class="badge <%= m.status === 'active' ? 'badge--published' : 'badge--draft' %>">
+                <%= m.status %>
+              </span>
+            </td>
+            <td>
+              <div class="admin-table__actions">
+                <a href="/admin/team/<%= m.id %>/edit">Edit</a>
+                <form method="POST" action="/admin/team/<%= m.id %>/delete" style="display: inline;" onsubmit="return confirm('Remove this team member?');">
+                  <% if (locals.csrfToken) { %><input type="hidden" name="_csrf" value="<%= csrfToken %>" /><% } %>
+                  <button type="submit" class="danger" style="background:none; border:none; cursor:pointer; font-family:inherit; font-size:inherit;">Delete</button>
+                </form>
+              </div>
+            </td>
+          </tr>
+        <% }); %>
+      </tbody>
+    </table>
+  </div>
+<% } else { %>
+  <div class="note note--quiet">
+    <p>No team members added yet. <a href="/admin/team/new">Add a member &rarr;</a></p>
+  </div>
+<% } %>

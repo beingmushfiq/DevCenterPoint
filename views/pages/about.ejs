@@ -1,0 +1,111 @@
+<%- include('../partials/head', { pageType: 'index', bodyClass: 'page-about' }) %>
+
+<section class="chapter chapter--flow chapter--lead">
+  <div class="wrap">
+    <%- include('../partials/breadcrumbs', { crumbs: [{ label: 'About' }] }) %>
+
+    <div class="page-head page-head--wide" data-reveal>
+      <p class="chapter__index"><span class="code">ABOUT DEVCENTERPOINT</span></p>
+      <h1 class="display display--md"><%= page.title || 'Engineering partner, not a vendor.' %></h1>
+      <% if (page.lede) { %>
+        <p class="body body--lead page-head__lede"><%= page.lede %></p>
+      <% } %>
+      <div class="page-head__rule"></div>
+    </div>
+
+    <% if (page.body) { %>
+      <div class="prose" style="margin-top: var(--space-12);" data-reveal>
+        <%- md(page.body) %>
+      </div>
+    <% } %>
+
+    <% if (team && team.length > 0) { %>
+      <div style="margin-top: var(--space-24); padding-top: var(--space-16); border-top: 1px solid var(--color-border);" data-reveal>
+        <div class="page-head">
+          <p class="chapter__index"><span class="code">THE PEOPLE</span></p>
+          <h2 class="display display--md">Senior engineers only. No silent handoffs.</h2>
+          <p class="body body--lead">The engineers you meet in discovery are the ones writing the commits and carrying the pager.</p>
+        </div>
+
+        <div class="grid grid--3" style="margin-top: var(--space-12);">
+          <% team.forEach(function (m) { %>
+            <div class="card person" data-reveal>
+              <div class="person__photo">
+                <% if (m.photo_path) { %>
+                  <img src="<%= asset(m.photo_path) %>" alt="<%= m.name %>" loading="lazy" />
+                <% } else { %>
+                  <div class="person__initial"><%= m.name.charAt(0) %></div>
+                <% } %>
+              </div>
+              <h3 class="person__name"><%= m.name %></h3>
+              <p class="person__role"><%= m.role %></p>
+              <% if (m.bio) { %>
+                <p class="person__bio"><%= m.bio %></p>
+              <% } %>
+              <% if (m.location) { %>
+                <p class="person__where"><%= m.location %></p>
+              <% } %>
+            </div>
+          <% }); %>
+        </div>
+      </div>
+    <% } %>
+
+    <% if (testimonials && testimonials.length > 0) { %>
+      <div style="margin-top: var(--space-24); padding-top: var(--space-16); border-top: 1px solid var(--color-border);" data-reveal>
+        <div class="page-head">
+          <p class="chapter__index"><span class="code">ENDORSEMENTS</span></p>
+          <h2 class="display display--md">What our partners say</h2>
+        </div>
+
+        <div class="grid grid--3" style="margin-top: var(--space-12);">
+          <% testimonials.forEach(function (t) { %>
+            <div class="card voice--card">
+              <blockquote>
+                <p>“<%= t.quote %>”</p>
+              </blockquote>
+              <cite class="voice__by">
+                <%= t.author_name %> — <%= t.author_role %><% if (t.company_name) { %>, <%= t.company_name %><% } %>
+              </cite>
+            </div>
+          <% }); %>
+        </div>
+      </div>
+    <% } %>
+
+    <% if (faqs && faqs.length > 0) { %>
+      <div style="margin-top: var(--space-24); padding-top: var(--space-16); border-top: 1px solid var(--color-border);" data-reveal>
+        <div class="page-head">
+          <p class="chapter__index"><span class="code">HOW WE WORK</span></p>
+          <h2 class="display display--md">Frequently asked questions</h2>
+        </div>
+
+        <div class="faq" style="margin-top: var(--space-8);">
+          <% faqs.forEach(function (faq) { %>
+            <div class="faq__item" data-accordion>
+              <button class="faq__q" type="button" aria-expanded="false" data-accordion-trigger>
+                <span><%= faq.question %></span>
+                <span class="faq__sign" aria-hidden="true"></span>
+              </button>
+              <div class="faq__a">
+                <div class="prose">
+                  <%- md(faq.answer) %>
+                </div>
+              </div>
+            </div>
+          <% }); %>
+        </div>
+      </div>
+    <% } %>
+
+    <div class="wrap wrap--narrow center" style="margin-top: var(--space-24);" data-reveal>
+      <h2 class="display display--sm">Ready to build something that lasts?</h2>
+      <p class="body" style="margin-top: var(--space-4);">We'd love to hear about your architecture or project.</p>
+      <div class="hero__actions center" style="margin-top: var(--space-8);">
+        <a class="btn btn--primary btn--lg" href="/contact" data-magnetic="0.3">Start a project <span class="btn__twin" aria-hidden="true">Start a project</span></a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<%- include('../partials/foot') %>
