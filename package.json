@@ -5,6 +5,7 @@
   "type": "module",
   "description": "DevCenterPoint — a 3D storytelling marketing site with a MySQL-backed content management system",
   "scripts": {
+    "start": "node server/index.js --prod",
     "dev": "node server/index.js",
     "build": "vite build",
     "preview": "node server/index.js --prod",

@@ -97,11 +97,11 @@ export const config = {
 /* Guard rails that only matter in production. Checked here so the
    failure surfaces at boot rather than at the first login. */
 if (isProd) {
-  if (config.session.secret.includes('dev-only')) {
-    fail('SESSION_SECRET must be set to a real value when running in production.');
+  if (!config.session.secret || config.session.secret.includes('dev-only') || config.session.secret.includes('replace-me')) {
+    fail('SESSION_SECRET must be set to a secure random string when running in production.');
   }
   if (!config.admin.password) {
-    fail('ADMIN_PASSWORD must be set in production so the owner account can be seeded.');
+    console.warn('  · Note: ADMIN_PASSWORD is empty in .env. (Required only when seeding via npm run db:setup).');
   }
 }
 

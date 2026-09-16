@@ -1,0 +1,31 @@
+# ============================================================
+# SECURITY GUARD: uploads directory
+# Prevent execution of any scripts uploaded to this directory.
+# ============================================================
+
+# Disable script engines
+<IfModule mod_php.c>
+  php_flag engine off
+</IfModule>
+<IfModule mod_php7.c>
+  php_flag engine off
+</IfModule>
+<IfModule mod_php8.c>
+  php_flag engine off
+</IfModule>
+
+# Forbid execution of any script handlers
+Options -ExecCGI -Indexes
+RemoveHandler .php .phtml .php3 .php4 .php5 .phps .phar .cgi .pl .py .sh .bash .jsp .asp
+
+# Block access to potentially dangerous files directly
+<FilesMatch "\.(php|phtml|php3|php4|php5|phps|phar|cgi|pl|py|sh|bash|exe|cmd|bat|js|jsp|asp|aspx|html|htm|shtml)$">
+  Order Allow,Deny
+  Deny from all
+</FilesMatch>
+
+# Force download or default handling for allowed static assets
+<FilesMatch "\.(jpe?g|png|webp|gif|svg|pdf)$">
+  Order Deny,Allow
+  Allow from all
+</FilesMatch>

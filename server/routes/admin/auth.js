@@ -4,10 +4,29 @@
 
 import { Router } from 'express';
 import bcryptjs from 'bcryptjs';
+import rateLimit from 'express-rate-limit';
 import * as Admin from '../../models/admin.js';
 import { requireGuest } from '../../middleware/auth.js';
 
 export const authRouter = Router();
+
+/* Protect admin login against automated credential stuffing and brute-force attacks.
+   Only counts failed requests toward the limit. */
+const loginLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 5,
+  standardHeaders: true,
+  legacyHeaders: false,
+  skipSuccessfulRequests: true,
+  handler(req, res) {
+    res.status(429).render('admin/login', {
+      error: 'Too many failed login attempts from this address. Please try again in 15 minutes.',
+      email: String(req.body?.email || '').trim().toLowerCase(),
+      next: req.body?.next || '/admin',
+      layout: false,
+    });
+  },
+});
 
 authRouter.get('/login', requireGuest, (req, res) => {
   res.render('admin/login', {
@@ -18,7 +37,7 @@ authRouter.get('/login', requireGuest, (req, res) => {
   });
 });
 
-authRouter.post('/login', requireGuest, async (req, res, next) => {
+authRouter.post('/login', requireGuest, loginLimiter, async (req, res, next) => {
   try {
     const email = String(req.body.email || '').trim().toLowerCase();
     const password = String(req.body.password || '');
@@ -28,6 +47,15 @@ authRouter.post('/login', requireGuest, async (req, res, next) => {
     if (!user) {
       return res.status(401).render('admin/login', {
         error: 'Invalid credentials. Please check your email and password.',
+        email,
+        next: nextUrl,
+        layout: false,
+      });
+    }
+
+    if (user.failed_attempts >= 10) {
+      return res.status(403).render('admin/login', {
+        error: 'This account is temporarily locked due to excessive failed attempts. Please contact an administrator.',
         email,
         next: nextUrl,
         layout: false,

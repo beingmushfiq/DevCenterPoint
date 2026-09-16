@@ -154,13 +154,30 @@ async function main() {
   app.set('views', config.paths.views);
   app.set('trust proxy', 1);
 
-  /* Static files. Uploads are served before assets so a media file
-     named like a bundle never shadows one. */
+  /* Static files:
+     1. Uploads (served at /uploads)
+     2. Public root assets (favicon.svg, brand marks, robots.txt)
+     3. Production compiled bundles from dist/ (immutable hashed assets) */
   app.use('/uploads', express.static(config.paths.uploads, {
     maxAge: config.isProd ? '30d' : 0,
     index: false,
     dotfiles: 'deny',
   }));
+
+  app.use(express.static(config.paths.public, {
+    maxAge: config.isProd ? '7d' : 0,
+    index: false,
+    dotfiles: 'deny',
+  }));
+
+  if (config.isProd) {
+    app.use(express.static(config.paths.dist, {
+      maxAge: '1y',
+      immutable: true,
+      index: false,
+      dotfiles: 'deny',
+    }));
+  }
 
   /* Health endpoint for uptime checks and for confirming the
      server is live without touching a rendered page. */

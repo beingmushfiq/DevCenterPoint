@@ -1,0 +1,42 @@
+# ============================================================
+# DEVCENTERPOINT — CPANEL & APACHE PRODUCTION CONFIGURATION
+# ============================================================
+
+# 1. Block access to sensitive source files, dotfiles, and databases
+<FilesMatch "^\.(env|git|gitignore|eslintrc|editorconfig)|package(-lock)?\.json|\.(md|sql|log|sh)$">
+  Order Allow,Deny
+  Deny from all
+</FilesMatch>
+
+# 2. Block access to backend internal directories if web root points to project root
+RedirectMatch 403 ^/(server|views|migrations|node_modules)/
+
+# 3. Security Headers
+<IfModule mod_headers.c>
+  Header always set X-Content-Type-Options "nosniff"
+  Header always set X-Frame-Options "DENY"
+  Header always set X-XSS-Protection "1; mode=block"
+  Header always set Referrer-Policy "strict-origin-when-cross-origin"
+  # Enforce HTTPS (Uncomment once SSL is active on your domain)
+  # Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
+</IfModule>
+
+# 4. HTTPS Force Redirect
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+
+  # Redirect HTTP to HTTPS
+  RewriteCond %{HTTPS} off
+  RewriteCond %{HTTP:X-Forwarded-Proto} !https
+  RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+</IfModule>
+
+# 5. Phusion Passenger (CloudLinux cPanel Node.js Selector)
+# Usually configured automatically by cPanel, but included here for completeness:
+<IfModule mod_passenger.c>
+  PassengerAppRoot "/"
+  PassengerBaseURI "/"
+  PassengerNodejs "/usr/bin/node"
+  PassengerAppType node
+  PassengerStartupFile app.js
+</IfModule>

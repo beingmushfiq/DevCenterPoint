@@ -28,16 +28,33 @@ const storage = multer.diskStorage({
   },
 });
 
+const ALLOWED_MIME_TYPES = new Set([
+  'image/jpeg',
+  'image/png',
+  'image/webp',
+  'image/svg+xml',
+  'image/gif',
+  'application/pdf',
+]);
+
+const ALLOWED_EXTENSIONS = new Set(['jpeg', 'jpg', 'png', 'webp', 'svg', 'gif', 'pdf']);
+const DANGEROUS_EXTENSIONS = /\.(php|phtml|php3|php4|php5|phps|phar|cgi|pl|py|sh|bash|exe|cmd|bat|js|jsp|asp|aspx)$/i;
+
 const upload = multer({
   storage,
   limits: { fileSize: 10 * 1024 * 1024 }, // 10MB
   fileFilter(req, file, cb) {
-    const allowed = /jpeg|jpg|png|webp|svg|gif|pdf/;
-    const ext = path.extname(file.originalname).toLowerCase().slice(1);
-    if (allowed.test(ext) || allowed.test(file.mimetype)) {
+    const rawExt = path.extname(file.originalname).toLowerCase();
+    const ext = rawExt.slice(1);
+
+    if (DANGEROUS_EXTENSIONS.test(file.originalname)) {
+      return cb(new Error('Executable file uploads are strictly forbidden for security reasons.'));
+    }
+
+    if (ALLOWED_EXTENSIONS.has(ext) && ALLOWED_MIME_TYPES.has(file.mimetype.toLowerCase())) {
       cb(null, true);
     } else {
-      cb(new Error('Only images (JPEG, PNG, WebP, SVG, GIF) and PDF are allowed.'));
+      cb(new Error('Only safe images (JPEG, PNG, WebP, SVG, GIF) and PDF documents are allowed.'));
     }
   },
 });
