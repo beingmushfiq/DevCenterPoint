@@ -475,11 +475,11 @@ a.tag:hover, .tag.is-active {
   font-family: var(--font-display); font-weight: 700;
   letter-spacing: -0.02em; color: var(--color-text);
 }
-.foot__note { color: var(--color-text-faint) !important; font-size: 0.8125rem !important; }
+.foot__note { color: var(--color-text-subtle) !important; font-size: 0.8125rem !important; line-height: 1.5; }
 .foot__static { font-size: 0.9375rem; color: var(--color-text-subtle); }
 .foot__legal { display: flex; gap: var(--space-6); }
-.foot__legal a { transition: color var(--motion-fast); }
-.foot__legal a:hover { color: var(--color-text); }
+.foot__legal a { color: var(--color-text-faint); transition: color var(--motion-fast); }
+.foot__legal a:hover { color: var(--color-primary); }
 
 /* ============ ERROR PAGES ============ */
 .err {

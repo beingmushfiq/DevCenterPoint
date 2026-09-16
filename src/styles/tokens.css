@@ -103,6 +103,7 @@
 
   --color-success: var(--signal-ok);
   --color-nav-bg: rgb(10 9 8 / 0.82);
+  --color-foot-bg: rgb(7 9 14 / 0.88);
 }
 
 /* ============================================================
@@ -144,6 +145,7 @@
   --color-success: var(--signal-ok);
   --color-focus: var(--blue-400);
   --color-nav-bg: rgb(10 9 8 / 0.82);
+  --color-foot-bg: rgb(7 9 14 / 0.88);
 }
 
 /* Light theme — calibrated for 100% visibility, crisp contrast, and precision engineering */
@@ -184,6 +186,7 @@
   --color-success: #059669;
   --color-focus: #2563eb;
   --color-nav-bg: rgb(255 255 255 / 0.88);
+  --color-foot-bg: rgb(255 255 255 / 0.96);
 }
 
 /* ============================================================
