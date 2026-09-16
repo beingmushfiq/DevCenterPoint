@@ -1003,7 +1003,11 @@ export async function runSeed() {
   await seedPages();
 }
 
-if (import.meta.url === `file://${process.argv[1].replace(/\\/g, '/')}`) {
+import { fileURLToPath } from 'node:url';
+import path from 'node:path';
+
+const isMain = process.argv[1] && fileURLToPath(import.meta.url) === path.resolve(process.argv[1]);
+if (isMain) {
   console.log('\n  Seeding database…\n');
   runSeed()
     .then(() => { console.log('\n  ✓ Seed complete.\n'); process.exit(0); })

@@ -108,8 +108,11 @@ export async function runMigrations({ quiet = false } = {}) {
   }
 }
 
+import { fileURLToPath } from 'node:url';
+
 /* Allow direct execution: `npm run db:migrate` */
-if (import.meta.url === `file://${process.argv[1].replace(/\\/g, '/')}`) {
+const isMain = process.argv[1] && fileURLToPath(import.meta.url) === path.resolve(process.argv[1]);
+if (isMain) {
   console.log('\n  Running migrations…\n');
   runMigrations()
     .then(() => process.exit(0))
