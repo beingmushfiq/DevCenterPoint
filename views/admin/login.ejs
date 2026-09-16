@@ -63,9 +63,8 @@
 </head>
 <body class="login-page">
   <div class="login-box">
-    <div class="login-brand">
-      <div class="login-glyph" aria-hidden="true"></div>
-      <span class="login-title"><%= site.name %></span>
+    <div class="login-brand" style="margin-bottom: var(--space-4);">
+      <%- include('../partials/logo', { variant: 'header' }) %>
     </div>
     <p class="login-sub">Control Console &middot; Restricted Access</p>
 

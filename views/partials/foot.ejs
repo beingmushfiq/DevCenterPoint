@@ -4,14 +4,13 @@
     <div class="wrap">
       <div class="foot__grid">
         <div class="foot__brand">
-          <span class="nav__glyph" aria-hidden="true"></span>
-          <div>
-            <p class="foot__name"><%= site.name %></p>
+          <%- include('./logo', { variant: 'footer' }) %>
+          <div style="margin-top: var(--space-4);">
             <% if (settings['company.tagline']) { %>
-              <p><%= settings['company.tagline'] %></p>
+              <p style="font-size: 0.875rem; color: var(--color-text-muted);"><%= settings['company.tagline'] %></p>
             <% } %>
             <% if (settings['footer.note']) { %>
-              <p class="foot__note"><%= settings['footer.note'] %></p>
+              <p class="foot__note" style="margin-top: var(--space-2);"><%= settings['footer.note'] %></p>
             <% } %>
           </div>
         </div>

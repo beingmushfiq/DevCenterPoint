@@ -1,50 +1,49 @@
 /* ============================================================
    LAYER 1 — PRIMITIVE TOKENS
-   Raw values. Named for what they ARE, never for their role.
-
-   PALETTE: "Carbon & Signal"
-   ------------------------------------------------------------
-   Warm carbon black, bone paper, and a single hot signal.
-   Deliberately NOT the violet-on-navy gradient look: the greys
-   are warm (yellow-shifted), the accent is vermilion, and the
-   only cool hue in the system is steel — reserved for structure.
+   Palette: Obsidian Carbon & Electric Cobalt Signal
    ============================================================ */
 :root {
-  /* Warm carbon — yellow-shifted blacks read as ink, not space. */
-  --carbon-950: #0a0908;
-  --carbon-900: #100e0c;
-  --carbon-850: #16130f;
-  --carbon-800: #1c1814;
-  --carbon-700: #262118;
-  --carbon-600: #332c21;
+  /* Obsidian Carbon — deep high-tech blacks matching the logo backdrop */
+  --carbon-950: #07090e;
+  --carbon-900: #0c101a;
+  --carbon-850: #111724;
+  --carbon-800: #182030;
+  --carbon-700: #222d42;
+  --carbon-600: #2f3d57;
 
-  /* Bone — the paper side of the system. */
-  --bone-100: #f6f2ea;
-  --bone-200: #e6ded0;
-  --bone-300: #c9bfad;
-  --bone-400: #9a9082;
-  --bone-500: #6f675c;
-  --bone-600: #4a443b;
+  /* Bone / Slate White — high-legibility clean type */
+  --bone-100: #f8fafc;
+  --bone-200: #e2e8f0;
+  --bone-300: #cbd5e1;
+  --bone-400: #94a3b8;
+  --bone-500: #64748b;
+  --bone-600: #475569;
 
-  /* Vermilion — the signal. Heat, deadlines, attention. */
-  --vermilion-400: #ff6a3d;
-  --vermilion-500: #ff4d1c;
-  --vermilion-600: #e63d10;
-  --vermilion-700: #b82f0b;
+  /* Electric Cobalt — The primary brand signal from the logo */
+  --blue-300: #93c5fd;
+  --blue-400: #3b82f6;
+  --blue-500: #2563eb;
+  --blue-600: #1d4ed8;
+  --blue-700: #1e40af;
 
-  /* Amber — the second heat step, for emphasis and metrics. */
-  --amber-400: #f5b864;
-  --amber-500: #f0a94e;
-  --amber-600: #d1892f;
+  /* Backward compatibility aliases */
+  --vermilion-400: var(--blue-400);
+  --vermilion-500: var(--blue-500);
+  --vermilion-600: var(--blue-600);
+  --vermilion-700: var(--blue-700);
 
-  /* Steel — the ONLY cool hue. Structural lines, blueprint, data. */
-  --steel-400: #8fa9bd;
-  --steel-500: #6e8ca0;
-  --steel-600: #4f6a7d;
+  /* Cyan & Steel accents */
+  --amber-400: #38bdf8;
+  --amber-500: #0ea5e9;
+  --amber-600: #0284c7;
 
-  /* Status. */
-  --signal-ok: #7fc08a;
-  --signal-warn: var(--amber-500);
+  --steel-400: #94a3b8;
+  --steel-500: #64748b;
+  --steel-600: #475569;
+
+  /* Status */
+  --signal-ok: #10b981;
+  --signal-warn: #f59e0b;
 
   --space-1: 4px;   --space-2: 8px;   --space-3: 12px;
   --space-4: 16px;  --space-5: 20px;  --space-6: 24px;
@@ -52,63 +51,61 @@
   --space-16: 64px; --space-20: 80px; --space-24: 96px;
   --space-32: 128px; --space-40: 160px; --space-48: 200px;
 
-  /* Near-sharp. Engineered, not pill-shaped. */
-  --radius-xs: 2px;  --radius-sm: 3px;  --radius-md: 4px;
-  --radius-lg: 6px;  --radius-xl: 8px;  --radius-2xl: 12px;
+  /* Engineered border radius */
+  --radius-xs: 2px;  --radius-sm: 4px;  --radius-md: 6px;
+  --radius-lg: 8px;  --radius-xl: 12px; --radius-2xl: 16px;
   --radius-full: 9999px;
 
   --font-display: 'Archivo', 'Helvetica Neue', sans-serif;
   --font-body: 'IBM Plex Sans', system-ui, sans-serif;
-  --font-serif: 'Instrument Serif', Georgia, serif;
-  --font-mono: 'IBM Plex Mono', ui-monospace, monospace;
+  --font-mono: 'IBM Plex Mono', monospace;
+  --font-quote: 'Instrument Serif', Georgia, serif;
 }
 
 /* ============================================================
    LAYER 2 — SEMANTIC TOKENS
-   Role-based. The ONLY layer components read.
    ============================================================ */
 :root {
   --color-bg: var(--carbon-950);
-  --color-bg-deep: #060505;
+  --color-bg-deep: #04060a;
   --color-surface: var(--carbon-900);
   --color-surface-raised: var(--carbon-850);
   --color-surface-sunken: var(--carbon-800);
-  /* New: elevated surface for modals/hovers */
   --color-surface-float: var(--carbon-700);
 
-  /* Warm hairlines — the structural grammar of the whole page. */
-  --color-border: rgb(246 242 234 / 0.10);
-  --color-border-strong: rgb(246 242 234 / 0.20);
-  --color-border-hover: rgb(246 242 234 / 0.32);
-  --color-rule: rgb(246 242 234 / 0.07);
+  /* Cool subtle structural borders */
+  --color-border: rgb(248 250 252 / 0.10);
+  --color-border-strong: rgb(248 250 252 / 0.20);
+  --color-border-hover: rgb(37 99 235 / 0.40);
+  --color-rule: rgb(248 250 252 / 0.07);
 
   --color-text: var(--bone-100);
   --color-text-muted: var(--bone-300);
   --color-text-subtle: var(--bone-400);
   --color-text-faint: var(--bone-500);
 
-  --color-primary: var(--vermilion-500);
-  --color-primary-hover: var(--vermilion-400);
-  --color-primary-deep: var(--vermilion-600);
-  --color-primary-soft: var(--amber-400);
-  --color-accent: var(--amber-500);
+  --color-primary: var(--blue-500);
+  --color-primary-hover: var(--blue-400);
+  --color-primary-deep: var(--blue-600);
+  --color-primary-soft: var(--blue-300);
+  --color-accent: #0ea5e9;
   --color-structure: var(--steel-500);
 
-  /* Atmosphere — pre-composited with alpha. */
-  --color-ember: rgb(184 47 11 / 0.30);
-  --color-blueprint: rgb(79 106 125 / 0.20);
+  /* Atmosphere */
+  --color-ember: rgb(29 78 216 / 0.30);
+  --color-blueprint: rgb(37 99 235 / 0.20);
 
-  /* Glow tokens — for interactive depth and focus rings. */
-  --glow-primary: 0 0 16px -2px rgb(255 77 28 / 0.45);
-  --glow-primary-strong: 0 0 28px -4px rgb(255 77 28 / 0.60);
-  --glow-amber: 0 0 16px -2px rgb(245 184 100 / 0.40);
-  --glow-subtle: 0 4px 24px rgb(0 0 0 / 0.40);
+  /* Glow tokens in Electric Cobalt Blue */
+  --glow-primary: 0 0 20px -2px rgb(37 99 235 / 0.50);
+  --glow-primary-strong: 0 0 32px -4px rgb(37 99 235 / 0.70);
+  --glow-amber: 0 0 20px -2px rgb(14 165 233 / 0.45);
+  --glow-subtle: 0 4px 24px rgb(0 0 0 / 0.50);
 
   --color-success: var(--signal-ok);
-  --color-focus: var(--vermilion-400);
+  --color-focus: var(--blue-400);
 }
 
-/* Dark is the native mode. */
+/* Dark is native */
 [data-theme='dark'] {
   --color-bg: var(--carbon-950);
   --color-surface: var(--carbon-900);
@@ -131,21 +128,19 @@
 
 /* ============================================================
    LAYER 4 — MOTION TOKENS
-   Entrances are slower than exits. Transform + opacity only.
-   Spring easing for mechanical feel without bouncing.
    ============================================================ */
 :root {
   --motion-instant: 80ms;
-  --motion-fast: 150ms;
-  --motion-base: 240ms;
-  --motion-slow: 380ms;
+  --motion-fast: 160ms;
+  --motion-base: 280ms;
+  --motion-slow: 480ms;
+  --motion-enter: 640ms;
   --motion-deliberate: 700ms;
 
   --ease-standard: cubic-bezier(0.2, 0, 0, 1);
   --ease-entrance: cubic-bezier(0.05, 0.7, 0.1, 1);
   --ease-exit: cubic-bezier(0.3, 0, 0.8, 0.15);
   --ease-emphasis: cubic-bezier(0.3, 0, 0, 1);
-  /* Mechanical spring: overshoot without bounce. */
   --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
@@ -155,6 +150,7 @@
     --motion-fast: 1ms;
     --motion-base: 1ms;
     --motion-slow: 1ms;
+    --motion-enter: 1ms;
     --motion-deliberate: 1ms;
   }
 }

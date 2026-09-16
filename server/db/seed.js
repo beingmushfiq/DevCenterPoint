@@ -72,7 +72,7 @@ async function seedSettings() {
   const settings = [
     ['company.name', 'DevCenterPoint', 'text'],
     ['company.short_name', 'DCP', 'text'],
-    ['company.tagline', 'Engineering partner, not vendor.', 'text'],
+    ['company.tagline', 'Code. Build. Deploy. Scale.', 'text'],
     ['company.email', 'hello@devcenterpoint.com', 'text'],
     ['company.phone', '', 'text'],
     ['company.location', 'Dhaka, Bangladesh', 'text'],
@@ -89,11 +89,11 @@ async function seedSettings() {
     ['contact.budget_ranges', JSON.stringify([
       'Under $10k', '$10k – $25k', '$25k – $75k', '$75k – $150k', '$150k+', 'Not sure yet',
     ]), 'json'],
-    ['seo.default_title', 'DevCenterPoint — Software that survives contact with production', 'text'],
+    ['seo.default_title', 'DevCenterPoint — Code. Build. Deploy. Scale.', 'text'],
     ['seo.default_description',
-      'An engineering partner for teams who need software that holds up. We design, build and hand over systems you own outright.',
+      'DevCenterPoint is an elite engineering consultancy. We code, build, deploy, and scale high-performance platforms, cloud architecture, and mission-critical software.',
       'text'],
-    ['seo.og_image', '', 'text'],
+    ['seo.og_image', '/brand/og-image.svg', 'text'],
     ['social.linkedin', '', 'text'],
     ['social.github', '', 'text'],
     ['social.x', '', 'text'],

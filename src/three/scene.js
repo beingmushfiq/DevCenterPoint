@@ -15,10 +15,10 @@ function glowTexture(size = 128) {
   c.width = c.height = size;
   const ctx = c.getContext('2d');
   const g = ctx.createRadialGradient(size / 2, size / 2, 0, size / 2, size / 2, size / 2);
-  /* Warm ember falloff — matches the vermilion "signal" of the UI. */
-  g.addColorStop(0.0, 'rgba(255,240,225,1)');
-  g.addColorStop(0.18, 'rgba(255,170,110,0.75)');
-  g.addColorStop(0.45, 'rgba(255,77,28,0.26)');
+  /* Electric cobalt falloff — matches the brand signal of the UI. */
+  g.addColorStop(0.0, 'rgba(240,248,255,1)');
+  g.addColorStop(0.18, 'rgba(96,165,250,0.85)');
+  g.addColorStop(0.45, 'rgba(37,99,235,0.32)');
   g.addColorStop(1.0, 'rgba(0,0,0,0)');
   ctx.fillStyle = g;
   ctx.fillRect(0, 0, size, size);
@@ -56,7 +56,7 @@ export class Scene {
     this.renderer.setPixelRatio(this.dpr);
 
     this.scene = new THREE.Scene();
-    this.scene.fog = new THREE.FogExp2(0x0a0908, 0.05);
+    this.scene.fog = new THREE.FogExp2(0x07090e, 0.05);
 
     this.camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 200);
     this.camera.position.set(0, 0, 14);
@@ -78,21 +78,19 @@ export class Scene {
   /* ---------- MORPH STATE DEFINITIONS ----------
      Each chapter defines how the whole system is shaped.
 
-     NOTE ON `hue`: values stay inside a narrow warm band (~0.02–0.11)
-     on purpose. The loop interpolates hue linearly, so a wide jump
-     would rainbow through green on the way and betray the palette.
-     Warm ember = the work; the steel cool note lives in the cage and
-     ribbons, which are coloured directly rather than interpolated. */
+     NOTE ON `hue`: values stay inside the cool electric cobalt
+     and cyan band (~0.58–0.63). The loop interpolates hue linearly
+     so the aesthetic remains cohesive with the brand system. */
   get shapeStates() {
     return [
-      { name: 'shards',   spread: 3.4, radius: 2.0, wire: 0.0, swarm: 0.9, hue: 0.045, spin: 0.10, cage: 0.10, orbit: 3.6, bond: 0.10 },
-      { name: 'scatter',  spread: 6.5, radius: 1.6, wire: 0.0, swarm: 1.6, hue: 0.060, spin: 0.16, cage: 0.06, orbit: 3.9, bond: 0.16 },
-      { name: 'converge', spread: 2.2, radius: 2.4, wire: 0.2, swarm: 0.7, hue: 0.032, spin: 0.20, cage: 0.22, orbit: 3.3, bond: 0.30 },
-      { name: 'build',    spread: 1.4, radius: 2.7, wire: 1.0, swarm: 0.5, hue: 0.020, spin: 0.24, cage: 0.62, orbit: 3.0, bond: 0.52 },
-      { name: 'name',     spread: 1.0, radius: 2.9, wire: 0.7, swarm: 0.4, hue: 0.105, spin: 0.28, cage: 0.44, orbit: 2.8, bond: 0.42 },
-      { name: 'leap',     spread: 3.0, radius: 2.2, wire: 0.4, swarm: 1.0, hue: 0.038, spin: 0.34, cage: 0.30, orbit: 3.4, bond: 0.28 },
-      { name: 'merge',    spread: 0.7, radius: 3.1, wire: 0.3, swarm: 0.3, hue: 0.055, spin: 0.30, cage: 0.78, orbit: 1.4, bond: 0.90 },
-      { name: 'expand',   spread: 9.0, radius: 3.4, wire: 0.0, swarm: 1.2, hue: 0.085, spin: 0.14, cage: 0.20, orbit: 4.4, bond: 0.14 },
+      { name: 'shards',   spread: 3.4, radius: 2.0, wire: 0.0, swarm: 0.9, hue: 0.600, spin: 0.10, cage: 0.10, orbit: 3.6, bond: 0.10 },
+      { name: 'scatter',  spread: 6.5, radius: 1.6, wire: 0.0, swarm: 1.6, hue: 0.620, spin: 0.16, cage: 0.06, orbit: 3.9, bond: 0.16 },
+      { name: 'converge', spread: 2.2, radius: 2.4, wire: 0.2, swarm: 0.7, hue: 0.590, spin: 0.20, cage: 0.22, orbit: 3.3, bond: 0.30 },
+      { name: 'build',    spread: 1.4, radius: 2.7, wire: 1.0, swarm: 0.5, hue: 0.580, spin: 0.24, cage: 0.62, orbit: 3.0, bond: 0.52 },
+      { name: 'name',     spread: 1.0, radius: 2.9, wire: 0.7, swarm: 0.4, hue: 0.610, spin: 0.28, cage: 0.44, orbit: 2.8, bond: 0.42 },
+      { name: 'leap',     spread: 3.0, radius: 2.2, wire: 0.4, swarm: 1.0, hue: 0.590, spin: 0.34, cage: 0.30, orbit: 3.4, bond: 0.28 },
+      { name: 'merge',    spread: 0.7, radius: 3.1, wire: 0.3, swarm: 0.3, hue: 0.600, spin: 0.30, cage: 0.78, orbit: 1.4, bond: 0.90 },
+      { name: 'expand',   spread: 9.0, radius: 3.4, wire: 0.0, swarm: 1.2, hue: 0.630, spin: 0.14, cage: 0.20, orbit: 4.4, bond: 0.14 },
     ];
   }
 
@@ -145,7 +143,7 @@ export class Scene {
       uRadius: { value: 2 },
       uSwarm: { value: 0.5 },
       uWire: { value: 0 },
-      uHue: { value: 0.72 },
+      uHue: { value: 0.60 },
       uPixel: { value: 700 },
       uPointScale: { value: 0.012 },
       uVelocity: { value: 0 },   // scroll velocity → turbulence + stretch
@@ -261,8 +259,8 @@ export class Scene {
   buildCage() {
     this.cages = [];
     const specs = [
-      { r: 3.15, detail: 1, color: 0xff4d1c, op: 0.20, speed: 0.10 },
-      { r: 3.95, detail: 0, color: 0x6e8ca0, op: 0.13, speed: -0.07 },
+      { r: 3.15, detail: 1, color: 0x2563eb, op: 0.26, speed: 0.10 },
+      { r: 3.95, detail: 0, color: 0x38bdf8, op: 0.16, speed: -0.07 },
     ];
     specs.forEach((s) => {
       const geo = new THREE.IcosahedronGeometry(s.r, s.detail);
@@ -282,7 +280,7 @@ export class Scene {
      velocity — the visual "spark" from the story. */
   buildSingularity() {
     const mat = new THREE.SpriteMaterial({
-      map: this.glowTex, color: 0xffb37a, transparent: true,
+      map: this.glowTex, color: 0x60a5fa, transparent: true,
       opacity: 0, blending: THREE.AdditiveBlending, depthWrite: false,
     });
     this.singularity = new THREE.Sprite(mat);
@@ -309,7 +307,7 @@ export class Scene {
     this.nodeBase = [];
 
     const nodeMat = new THREE.SpriteMaterial({
-      map: this.glowTex, color: 0xff8a4d, transparent: true,
+      map: this.glowTex, color: 0x38bdf8, transparent: true,
       opacity: 0.9, blending: THREE.AdditiveBlending, depthWrite: false,
     });
 
@@ -354,7 +352,7 @@ export class Scene {
         uniform float uOpacity;
         varying float vA;
         void main() {
-          vec3 col = mix(vec3(1.0, 0.42, 0.16), vec3(0.96, 0.66, 0.29), vA);
+          vec3 col = mix(vec3(0.14, 0.38, 0.96), vec3(0.22, 0.74, 0.96), vA);
           gl_FragColor = vec4(col, vA * uOpacity);
         }
       `,
@@ -369,7 +367,7 @@ export class Scene {
   /* ---------- AURORA RIBBONS ---------- */
   buildAurora() {
     this.ribbons = [];
-    const colors = [0xff4d1c, 0x6e8ca0, 0xf0a94e];
+    const colors = [0x1d4ed8, 0x2563eb, 0x06b6d4];
     for (let r = 0; r < 3; r++) {
       const geo = new THREE.PlaneGeometry(26, 240, 12, 120);
       const pos = geo.attributes.position;
@@ -409,7 +407,7 @@ export class Scene {
     }
     g.setAttribute('position', new THREE.BufferAttribute(p, 3));
     this.stars = new THREE.Points(g, new THREE.PointsMaterial({
-      size: 0.22, color: 0x9a9082, transparent: true, opacity: 0.45,
+      size: 0.22, color: 0x94a3b8, transparent: true, opacity: 0.45,
       blending: THREE.AdditiveBlending, depthWrite: false,
     }));
     this.scene.add(this.stars);

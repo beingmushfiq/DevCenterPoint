@@ -5,9 +5,8 @@
      present regardless of what an editor does to the nav table. */
 %>
   <header class="nav" id="nav">
-    <a class="nav__brand" href="/">
-      <span class="nav__glyph" aria-hidden="true"></span>
-      <span class="nav__name"><%= site.name %></span>
+    <a class="nav__brand" href="/" aria-label="DevCenterPoint Home">
+      <%- include('./logo', { variant: 'header' }) %>
     </a>
 
     <nav class="nav__links" id="nav-links" aria-label="Primary">

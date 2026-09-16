@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 440 90" width="100%" height="100%">
+  <defs>
+    <linearGradient id="dcp-h-blue" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#2563EB" />
+      <stop offset="60%" stop-color="#1D4ED8" />
+      <stop offset="100%" stop-color="#3B82F6" />
+    </linearGradient>
+    <linearGradient id="dcp-h-core" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#3B82F6" />
+      <stop offset="100%" stop-color="#1E40AF" />
+    </linearGradient>
+    <linearGradient id="dcp-h-text" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#3B82F6" />
+      <stop offset="100%" stop-color="#2563EB" />
+    </linearGradient>
+  </defs>
+
+  <!-- Left Compact Emblem (scaled and translated) -->
+  <g transform="translate(10, 5) scale(0.24)">
+    <!-- D -->
+    <path d="M 40 40 L 160 40 C 175 40, 185 46, 192 55 C 172 68, 155 90, 145 115 L 105 115 L 105 245 L 170 245 C 185 245, 205 235, 220 220 L 220 270 C 200 305, 160 320, 115 320 L 40 320 Z" fill="#F8FAFC" />
+    <!-- P -->
+    <path d="M 168 58 C 185 58, 205 62, 225 72 C 255 88, 275 118, 275 158 C 275 202, 250 235, 212 250 L 168 250 L 168 355 L 168 290 L 168 250 C 152 235, 138 215, 130 192 C 140 178, 148 162, 152 145 C 155 130, 155 115, 152 100 C 155 85, 160 72, 168 58 Z" fill="url(#dcp-h-blue)" />
+    <!-- Code symbol </> -->
+    <g fill="none" stroke="#FFFFFF" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" transform="translate(205, 85)">
+      <polyline points="14,10 4,20 14,30" />
+      <line x1="22" y1="8" x2="16" y2="32" stroke-width="7" />
+      <polyline points="24,10 34,20 24,30" />
+    </g>
+    <!-- Center bullseye -->
+    <circle cx="168" cy="175" r="58" fill="#FFFFFF" />
+    <circle cx="168" cy="175" r="58" fill="none" stroke="#0D111A" stroke-width="4" />
+    <circle cx="168" cy="175" r="32" fill="url(#dcp-h-core)" />
+    <circle cx="162" cy="168" r="8" fill="#60A5FA" opacity="0.6" />
+  </g>
+
+  <!-- Wordmark Text -->
+  <text x="105" y="47" font-family="'Archivo', 'Inter', system-ui, sans-serif" font-weight="700" font-size="28" letter-spacing="-0.025em">
+    <tspan fill="url(#dcp-h-text)">Dev</tspan><tspan fill="#F8FAFC">Center</tspan><tspan fill="url(#dcp-h-text)">Point</tspan>
+  </text>
+
+  <!-- Tagline Text -->
+  <text x="107" y="68" font-family="'IBM Plex Mono', monospace" font-weight="500" font-size="9.5" letter-spacing="0.26em" fill="#94A3B8">
+    CODE. BUILD. DEPLOY. SCALE.
+  </text>
+</svg>
