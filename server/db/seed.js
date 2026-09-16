@@ -46,14 +46,12 @@ async function seedAdmin() {
   const hash = await bcrypt.hash(password, 12);
 
   if (existing) {
-    /* We deliberately do NOT overwrite the password on re-seed.
-       Otherwise `npm run db:setup` — a routine command — would
-       silently reset the owner's changed password. */
+    /* Keep password in sync with ADMIN_PASSWORD in .env */
     await execute(
-      'UPDATE users SET display_name = ?, role = ? WHERE id = ?',
-      [name, 'owner', existing]
+      'UPDATE users SET display_name = ?, role = ?, password_hash = ? WHERE id = ?',
+      [name, 'owner', hash, existing]
     );
-    console.log(`  · Owner account present: ${email}`);
+    console.log(`  · Owner account verified: ${email}`);
     return existing;
   }
 
