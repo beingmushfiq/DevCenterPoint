@@ -1,0 +1,74 @@
+<%- include('../partials/head', { pageType: 'index', bodyClass: 'page-updates' }) %>
+
+<section class="chapter chapter--flow chapter--lead">
+  <div class="wrap">
+    <%- include('../partials/breadcrumbs', { crumbs: [{ label: 'Updates & Milestones' }] }) %>
+
+    <div class="page-head page-head--wide" data-reveal>
+      <p class="chapter__index"><span class="code">NEWSFEED</span> PRODUCT &amp; COMPANY UPDATES</p>
+      <h1 class="display display--md">What we’re building, shipping, and improving.</h1>
+      <p class="body body--lead page-head__lede">
+        A continuous public log of platform upgrades, performance milestones, and company announcements.
+      </p>
+
+      <div class="tag-row" style="margin-top: var(--space-8);">
+        <a class="tag <%= (!category || category === 'all') ? 'is-active' : '' %>" href="/updates">All Updates</a>
+        <a class="tag <%= category === 'feature' ? 'is-active' : '' %>" href="/updates?category=feature">New Features</a>
+        <a class="tag <%= category === 'milestone' ? 'is-active' : '' %>" href="/updates?category=milestone">Milestones</a>
+        <a class="tag <%= category === 'improvement' ? 'is-active' : '' %>" href="/updates?category=improvement">Speed &amp; Quality</a>
+        <a class="tag <%= category === 'security' ? 'is-active' : '' %>" href="/updates?category=security">Security</a>
+      </div>
+
+      <div class="page-head__rule"></div>
+    </div>
+
+    <% if (items && items.length > 0) { %>
+      <div class="updates-timeline" style="margin-top: var(--space-16); display: flex; flex-direction: column; gap: var(--space-12);">
+        <% items.forEach(function (entry) { %>
+          <article class="update-card" id="<%= entry.slug %>" data-reveal style="position: relative; padding: var(--space-8); background: var(--color-surface); border: 1px solid var(--color-border); border-left: 3px solid var(--color-primary); border-radius: var(--radius-sm);">
+            <div style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--space-4); margin-bottom: var(--space-4);">
+              <div style="display: flex; align-items: center; gap: var(--space-3); flex-wrap: wrap;">
+                <span class="badge" style="background: var(--carbon-850); border: 1px solid var(--color-border); color: var(--color-primary); font-family: var(--font-mono); font-size: 0.6875rem; text-transform: uppercase;">
+                  <%= entry.category %>
+                </span>
+                <% if (entry.version_tag) { %>
+                  <span class="badge" style="background: var(--carbon-900); border: 1px solid var(--color-primary); color: var(--bone-100); font-family: var(--font-mono); font-size: 0.6875rem;">
+                    <%= entry.version_tag %>
+                  </span>
+                <% } %>
+                <% if (entry.is_featured) { %>
+                  <span class="badge badge--featured" style="font-size: 0.6875rem;">Key Milestone</span>
+                <% } %>
+              </div>
+              <time style="font-family: var(--font-mono); font-size: 0.75rem; color: var(--color-text-faint);">
+                <%= new Date(entry.published_at).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }) %>
+              </time>
+            </div>
+
+            <h2 class="display display--sm" style="font-size: 1.5rem; margin-bottom: var(--space-4); line-height: 1.3;">
+              <a href="#<%= entry.slug %>" style="color: var(--color-text); text-decoration: none;"><%= entry.title %></a>
+            </h2>
+
+            <% if (entry.summary) { %>
+              <p class="body" style="font-size: 1.0625rem; color: var(--color-text); margin-bottom: var(--space-6); line-height: 1.6;">
+                <%= entry.summary %>
+              </p>
+            <% } %>
+
+            <% if (entry.body) { %>
+              <div class="prose" style="border-top: 1px solid var(--color-rule); padding-top: var(--space-6); margin-top: var(--space-6); font-size: 0.9375rem;">
+                <%- md(entry.body) %>
+              </div>
+            <% } %>
+          </article>
+        <% }); %>
+      </div>
+    <% } else { %>
+      <div class="note note--quiet" style="margin-top: var(--space-16);">
+        <p>No updates published under this category yet. Check back soon for announcements!</p>
+      </div>
+    <% } %>
+  </div>
+</section>
+
+<%- include('../partials/foot') %>

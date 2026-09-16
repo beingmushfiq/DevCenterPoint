@@ -58,6 +58,27 @@
     </div>
   </div>
 
+  <div class="form-section" style="margin-top: var(--space-8);">
+    <h3 class="form-section__label">Live Preview</h3>
+    <p style="font-size: 0.8125rem; color: var(--color-text-faint); margin-bottom: var(--space-4);">
+      How this endorsement will render on the public website:
+    </p>
+    <div class="card voice--card" id="testimonialPreviewCard" style="background: var(--carbon-900); border: 1px solid var(--color-border); border-left: 3px solid var(--color-primary); padding: var(--space-6); max-width: 600px;">
+      <blockquote style="font-size: 1rem; line-height: 1.6; color: var(--color-text); margin-bottom: var(--space-4);">
+        <p id="previewQuote">“<%= testimonial.quote || 'Quote will appear here as you type...' %>”</p>
+      </blockquote>
+      <div style="display: flex; align-items: center; gap: var(--space-3);">
+        <div id="previewAvatar" style="width: 32px; height: 32px; border-radius: 50%; background: var(--carbon-800); border: 1px solid var(--color-border); display: flex; align-items: center; justify-content: center; font-family: var(--font-mono); font-size: 0.75rem; font-weight: 600; color: var(--color-primary);">
+          <%= (testimonial.attribution || 'A').charAt(0).toUpperCase() %>
+        </div>
+        <div>
+          <strong id="previewAttribution" style="display: block; font-size: 0.875rem; color: var(--color-text);"><%= testimonial.attribution || 'Author Name' %></strong>
+          <small id="previewRoleCompany" style="color: var(--color-text-faint); font-size: 0.75rem;"><%= testimonial.role || 'Role' %><% if (testimonial.company) { %>, <%= testimonial.company %><% } %></small>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <div class="form__foot" style="margin-top: var(--space-8); border-top: 1px solid var(--color-border); padding-top: var(--space-6);">
     <button class="btn btn--primary" type="submit">Save Testimonial</button>
     <a class="btn btn--ghost" href="/admin/testimonials">Cancel</a>

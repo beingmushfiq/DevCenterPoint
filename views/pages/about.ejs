@@ -54,19 +54,34 @@
     <% if (testimonials && testimonials.length > 0) { %>
       <div style="margin-top: var(--space-24); padding-top: var(--space-16); border-top: 1px solid var(--color-border);" data-reveal>
         <div class="page-head">
-          <p class="chapter__index"><span class="code">ENDORSEMENTS</span></p>
+          <p class="chapter__index"><span class="code">ENDORSEMENTS</span> VERIFIED CLIENT EXPERIENCES</p>
           <h2 class="display display--md">What our partners say</h2>
+          <p class="body body--lead">Direct accounts from technical founders, VPs of engineering, and enterprise delivery partners.</p>
         </div>
 
         <div class="grid grid--3" style="margin-top: var(--space-12);">
           <% testimonials.forEach(function (t) { %>
-            <div class="card voice--card">
-              <blockquote>
-                <p>“<%= t.quote %>”</p>
-              </blockquote>
-              <cite class="voice__by">
-                <%= t.author_name %> — <%= t.author_role %><% if (t.company_name) { %>, <%= t.company_name %><% } %>
-              </cite>
+            <div class="card voice--card" style="padding: var(--space-8); display: flex; flex-direction: column; justify-content: space-between; border-left: 2px solid var(--color-primary);">
+              <div>
+                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: var(--space-4);">
+                  <span style="font-size: 1.5rem; color: var(--color-primary); line-height: 1; font-family: var(--font-display);">“</span>
+                  <span class="badge" style="font-size: 0.625rem; background: rgb(16 185 129 / 0.1); color: #10b981; border: 1px solid rgb(16 185 129 / 0.3);">Verified Client</span>
+                </div>
+                <blockquote style="font-size: 0.9375rem; line-height: 1.65; color: var(--color-text); margin-bottom: var(--space-6);">
+                  <p><%= t.quote %></p>
+                </blockquote>
+              </div>
+              <div style="display: flex; align-items: center; gap: var(--space-3); border-top: 1px solid var(--color-rule); padding-top: var(--space-4);">
+                <div style="width: 32px; height: 32px; border-radius: 50%; background: var(--carbon-850); border: 1px solid var(--color-border); display: flex; align-items: center; justify-content: center; font-family: var(--font-mono); font-size: 0.75rem; color: var(--color-primary); flex: none; font-weight: 600;">
+                  <%= (t.author_name || 'A').charAt(0).toUpperCase() %>
+                </div>
+                <div>
+                  <strong style="display: block; font-size: 0.875rem; color: var(--color-text);"><%= t.author_name %></strong>
+                  <span style="font-size: 0.75rem; color: var(--color-text-faint); display: block;">
+                    <%= t.author_role %><% if (t.company_name) { %>, <%= t.company_name %><% } %>
+                  </span>
+                </div>
+              </div>
             </div>
           <% }); %>
         </div>

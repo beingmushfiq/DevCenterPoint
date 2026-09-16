@@ -727,3 +727,71 @@ export async function deleteMedia(id, userId) {
   await audit(userId, 'delete', 'media', id, `Deleted media: ${m?.original_name || id}`);
   return m;
 }
+
+/* ---------------------------------------------------------------
+   UPDATES & NEWSFEED
+   --------------------------------------------------------------- */
+
+export async function listAdminUpdates({ limit = 50, offset = 0 } = {}) {
+  return execute(
+    `SELECT * FROM updates_entries
+      ORDER BY published_at DESC, id DESC
+      LIMIT ${Number(limit)} OFFSET ${Number(offset)}`
+  );
+}
+
+export async function getUpdateById(id) {
+  return one('SELECT * FROM updates_entries WHERE id = ? LIMIT 1', [id]);
+}
+
+export async function createUpdate(data, userId) {
+  const [res] = await execute(
+    `INSERT INTO updates_entries (
+       version_tag, title, slug, category, summary, body, published_at, is_featured, sort_order, status
+     ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+    [
+      data.version_tag || null,
+      data.title,
+      data.slug,
+      data.category || 'feature',
+      data.summary || '',
+      data.body || '',
+      data.published_at || new Date(),
+      data.is_featured ? 1 : 0,
+      Number(data.sort_order || 0),
+      data.status || 'published',
+    ]
+  );
+  await audit(userId, 'create', 'update', res.insertId, `Created update: ${data.title}`);
+  return res.insertId;
+}
+
+export async function updateUpdate(id, data, userId) {
+  await execute(
+    `UPDATE updates_entries SET
+       version_tag = ?, title = ?, slug = ?, category = ?, summary = ?,
+       body = ?, published_at = ?, is_featured = ?, sort_order = ?, status = ?
+     WHERE id = ?`,
+    [
+      data.version_tag || null,
+      data.title,
+      data.slug,
+      data.category || 'feature',
+      data.summary || '',
+      data.body || '',
+      data.published_at || new Date(),
+      data.is_featured ? 1 : 0,
+      Number(data.sort_order || 0),
+      data.status || 'published',
+      id,
+    ]
+  );
+  await audit(userId, 'update', 'update', id, `Updated update: ${data.title}`);
+}
+
+export async function deleteUpdate(id, userId) {
+  const existing = await getUpdateById(id);
+  await execute('DELETE FROM updates_entries WHERE id = ?', [id]);
+  await audit(userId, 'delete', 'update', id, `Deleted update: ${existing?.title || id}`);
+}
+

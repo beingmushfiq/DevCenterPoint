@@ -14,17 +14,26 @@
         <% items.forEach(function (t) { %>
           <tr>
             <td>
-              <div class="admin-table__title">
-                <a href="/admin/testimonials/<%= t.id %>/edit"><%= t.attribution %></a>
+              <div style="display: flex; align-items: center; gap: var(--space-3);">
+                <div class="table-avatar" style="width: 32px; height: 32px; border-radius: 50%; background: var(--carbon-800); border: 1px solid var(--color-border); display: flex; align-items: center; justify-content: center; font-family: var(--font-mono); font-size: 0.75rem; font-weight: 600; color: var(--color-primary); flex: none;">
+                  <%= (t.attribution || 'A').charAt(0).toUpperCase() %>
+                </div>
+                <div>
+                  <div class="admin-table__title">
+                    <a href="/admin/testimonials/<%= t.id %>/edit"><%= t.attribution %></a>
+                  </div>
+                  <small style="color: var(--color-text-faint);"><%= t.role %></small>
+                </div>
               </div>
-              <small style="color: var(--color-text-faint);"><%= t.role %></small>
             </td>
             <td>
-              <p style="font-size: 0.8125rem; font-style: italic; max-width: 42ch;">“<%= truncate(t.quote, 90) %>”</p>
+              <p style="font-size: 0.8125rem; font-style: italic; max-width: 44ch; color: var(--color-text-muted);">“<%= truncate(t.quote, 95) %>”</p>
             </td>
-            <td><%= t.company || '—' %></td>
             <td>
-              <span class="badge <%= t.status === 'active' ? 'badge--published' : 'badge--draft' %>">
+              <span class="badge" style="background: var(--carbon-850); border: 1px solid var(--color-border); color: var(--color-text); font-size: 0.75rem;"><%= t.company || '—' %></span>
+            </td>
+            <td>
+              <span class="badge <%= t.status === 'active' || t.status === 'published' ? 'badge--published' : 'badge--draft' %>">
                 <%= t.status %>
               </span>
             </td>

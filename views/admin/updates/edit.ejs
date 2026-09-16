@@ -1,0 +1,74 @@
+<form class="admin-form" method="POST" action="<%= entry.id ? `/admin/updates/${entry.id}/edit` : '/admin/updates/new' %>">
+  <% if (locals.csrfToken) { %><input type="hidden" name="_csrf" value="<%= csrfToken %>" /><% } %>
+
+  <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--color-border); padding-bottom: var(--space-4);">
+    <h2 style="font-family: var(--font-display); font-size: 1.25rem;"><%= entry.id ? 'Edit Update' : 'New Company Update' %></h2>
+    <div style="display: flex; gap: var(--space-3);">
+      <a class="btn btn--ghost" href="/admin/updates">Cancel</a>
+      <button class="btn btn--primary" type="submit">Save Update</button>
+    </div>
+  </div>
+
+  <div class="admin-form__row">
+    <div class="field">
+      <label class="field__label" for="title">Title <span class="req">*</span></label>
+      <input type="text" id="title" name="title" required value="<%= entry.title || '' %>" placeholder="DevCenterPoint 2.0 Release: Architecture Overhaul" data-slug-source="#slug" />
+    </div>
+
+    <div class="field">
+      <label class="field__label" for="slug">Slug <span class="req">*</span></label>
+      <input type="text" id="slug" name="slug" required value="<%= entry.slug || '' %>" placeholder="architecture-overhaul-release" />
+      <span class="field__hint">URL anchor: /updates#{slug}</span>
+    </div>
+  </div>
+
+  <div class="admin-form__row">
+    <div class="field">
+      <label class="field__label" for="category">Category</label>
+      <select id="category" name="category">
+        <option value="feature" <%= entry.category === 'feature' ? 'selected' : '' %>>Feature (New Capability)</option>
+        <option value="milestone" <%= entry.category === 'milestone' ? 'selected' : '' %>>Milestone (Company News)</option>
+        <option value="improvement" <%= entry.category === 'improvement' ? 'selected' : '' %>>Improvement (Performance &amp; Speed)</option>
+        <option value="security" <%= entry.category === 'security' ? 'selected' : '' %>>Security &amp; Hardening</option>
+        <option value="announcement" <%= entry.category === 'announcement' ? 'selected' : '' %>>General Announcement</option>
+      </select>
+    </div>
+
+    <div class="field">
+      <label class="field__label" for="version_tag">Version or Release Tag (Optional)</label>
+      <input type="text" id="version_tag" name="version_tag" value="<%= entry.version_tag || '' %>" placeholder="v2.4.0 or Q3-MILESTONE" />
+    </div>
+  </div>
+
+  <div class="field field--full">
+    <label class="field__label" for="summary">Summary / Lead-in</label>
+    <textarea id="summary" name="summary" rows="2" placeholder="Brief 1-2 sentence overview of what is new or what changed..."><%= entry.summary || '' %></textarea>
+  </div>
+
+  <div class="field field--full">
+    <label class="field__label" for="body">Details &amp; Notes (Markdown) <span class="req">*</span></label>
+    <textarea id="body" name="body" required rows="10" placeholder="### What we shipped&#10;- Improved database connection pooling&#10;- Reduced cold-start latency by 45%"><%= entry.body || '' %></textarea>
+  </div>
+
+  <div class="admin-form__row">
+    <div class="field">
+      <label class="field__label" for="published_at">Publication Date</label>
+      <input type="date" id="published_at" name="published_at" value="<%= entry.published_at || '' %>" />
+    </div>
+
+    <div class="field">
+      <label class="field__label" for="status">Status</label>
+      <select id="status" name="status">
+        <option value="published" <%= entry.status === 'published' ? 'selected' : '' %>>Published (Visible on site)</option>
+        <option value="draft" <%= entry.status === 'draft' ? 'selected' : '' %>>Draft (Hidden)</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="field" style="margin-top: var(--space-4);">
+    <label style="display: inline-flex; align-items: center; gap: var(--space-2); cursor: pointer;">
+      <input type="checkbox" name="is_featured" value="1" <%= entry.is_featured ? 'checked' : '' %> />
+      <span>Feature this update at the top of the newsfeed</span>
+    </label>
+  </div>
+</form>

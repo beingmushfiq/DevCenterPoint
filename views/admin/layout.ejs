@@ -35,6 +35,9 @@
       <a class="sidebar__link <%= currentPath.startsWith('/admin/posts') ? 'is-active' : '' %>" href="/admin/posts">
         <span>Insights</span>
       </a>
+      <a class="sidebar__link <%= currentPath.startsWith('/admin/updates') ? 'is-active' : '' %>" href="/admin/updates">
+        <span>Updates</span>
+      </a>
       <a class="sidebar__link <%= currentPath.startsWith('/admin/services') ? 'is-active' : '' %>" href="/admin/services">
         <span>Services</span>
       </a>
@@ -67,6 +70,9 @@
       <a class="sidebar__link <%= currentPath.startsWith('/admin/settings') ? 'is-active' : '' %>" href="/admin/settings">
         <span>Settings</span>
       </a>
+      <a class="sidebar__link" href="/status" target="_blank">
+        <span>System Health &nearr;</span>
+      </a>
     </div>
 
     <div class="sidebar__foot">
@@ -79,8 +85,15 @@
     </div>
   </aside>
 
+  <!-- Mobile backdrop -->
+  <div class="sidebar-backdrop" id="sidebarBackdrop" aria-hidden="true"></div>
+
   <div class="admin-main">
     <header class="topbar">
+      <button class="topbar__menu-toggle" id="sidebarToggle" type="button" aria-label="Toggle navigation menu">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+      </button>
+
       <div class="topbar__breadcrumb">
         <a href="/admin">Admin</a>
         <% if (locals.breadcrumb) { %>
@@ -98,18 +111,23 @@
 
     <main class="admin-body">
       <% if (locals.flash) { %>
-        <div class="flash-msg flash-msg--<%= flash.type || 'info' %>">
+        <div class="toast-message toast-message--<%= flash.type || 'info' %>" data-toast>
+          <div class="toast-message__icon"></div>
           <span><%= flash.message %></span>
+          <button class="toast-message__close" type="button" aria-label="Dismiss notification">&times;</button>
         </div>
       <% } else if (locals.query && query.msg) { %>
-        <div class="flash-msg flash-msg--<%= query.status === 'error' ? 'error' : 'ok' %>">
+        <div class="toast-message toast-message--<%= query.status === 'error' ? 'error' : 'ok' %>" data-toast>
+          <div class="toast-message__icon"></div>
           <span><%= query.msg %></span>
+          <button class="toast-message__close" type="button" aria-label="Dismiss notification">&times;</button>
         </div>
       <% } %>
 
       <%- body %>
     </main>
   </div>
+
 
   <%- assetTags('admin').js %>
 </body>

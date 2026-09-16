@@ -464,10 +464,103 @@ publicRoutes.get('/rss.xml', async (req, res, next) => {
 });
 
 /* ---------------------------------------------------------------
+   UPDATES & NEWSFEED
+   --------------------------------------------------------------- */
+
+publicRoutes.get('/changelog', (req, res) => res.redirect(301, '/updates'));
+
+publicRoutes.get('/updates', async (req, res, next) => {
+  try {
+    const category = typeof req.query.category === 'string' ? req.query.category : 'all';
+    const items = await Content.listUpdates({ category, limit: 30 });
+
+    res.locals.seo.title = 'Company Updates & Milestones — DevCenterPoint';
+    res.locals.seo.description = 'Latest platform releases, engineering upgrades, and milestones from DevCenterPoint.';
+
+    res.render('pages/updates', {
+      pageType: 'index',
+      items,
+      category,
+      bodyClass: 'page-updates',
+    });
+  } catch (err) { next(err); }
+});
+
+/* ---------------------------------------------------------------
+   LIVE SYSTEM HEALTH & STATUS
+   --------------------------------------------------------------- */
+
+publicRoutes.get('/status', async (req, res, next) => {
+  try {
+    const telemetry = await Content.getSystemTelemetry();
+
+    res.locals.seo.title = 'System Status & Operational Health — DevCenterPoint';
+    res.locals.seo.description = 'Real-time operational status, service uptime, and infrastructure latency indicators.';
+
+    res.render('pages/status', {
+      pageType: 'detail',
+      telemetry,
+      bodyClass: 'page-status',
+    });
+  } catch (err) { next(err); }
+});
+
+/* ---------------------------------------------------------------
+   INSTANT SEARCH API (COMMAND PALETTE)
+   --------------------------------------------------------------- */
+
+publicRoutes.get('/api/search', async (req, res) => {
+  try {
+    const q = String(req.query.q || '').trim().toLowerCase();
+    if (!q || q.length < 2) {
+      return res.json({ results: [] });
+    }
+
+    const [cases, posts, services, updates] = await Promise.all([
+      Content.listCaseStudies({ limit: 20 }),
+      Content.listPosts({ limit: 20 }),
+      Content.listServices({ limit: 10 }),
+      Content.listUpdates({ limit: 20 })
+    ]);
+
+    const results = [];
+
+    services.forEach((s) => {
+      if (s.title.toLowerCase().includes(q) || (s.summary && s.summary.toLowerCase().includes(q))) {
+        results.push({ type: 'Service', title: s.title, url: `/services/${s.slug}`, snippet: s.summary || s.tagline });
+      }
+    });
+
+    cases.forEach((c) => {
+      if (c.title.toLowerCase().includes(q) || (c.summary && c.summary.toLowerCase().includes(q)) || (c.sector && c.sector.toLowerCase().includes(q))) {
+        results.push({ type: 'Project', title: c.title, url: `/work/${c.slug}`, snippet: c.summary });
+      }
+    });
+
+    posts.forEach((p) => {
+      if (p.title.toLowerCase().includes(q) || (p.excerpt && p.excerpt.toLowerCase().includes(q))) {
+        results.push({ type: 'Article', title: p.title, url: `/insights/${p.slug}`, snippet: p.excerpt });
+      }
+    });
+
+    updates.forEach((u) => {
+      if (u.title.toLowerCase().includes(q) || (u.summary && u.summary.toLowerCase().includes(q))) {
+        results.push({ type: 'Update', title: u.title, url: `/updates#${u.slug}`, snippet: u.summary });
+      }
+    });
+
+    res.json({ results: results.slice(0, 10) });
+  } catch {
+    res.status(500).json({ error: 'Search failed' });
+  }
+});
+
+/* ---------------------------------------------------------------
    LEGAL / GENERIC PAGES
    --------------------------------------------------------------- */
 
 publicRoutes.get('/:slug', async (req, res, next) => {
+
   try {
     const page = await Content.getPageBySlug(req.params.slug);
     if (!page) return next();

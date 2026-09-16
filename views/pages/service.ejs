@@ -10,10 +10,15 @@
     }) %>
 
     <header class="page-head page-head--wide" data-reveal>
-      <div class="card__icon" style="width: 36px; height: 36px; margin-bottom: var(--space-6);">
-        <%- include('../partials/icon', { key: service.icon_key }) %>
+      <div style="display: flex; align-items: center; gap: var(--space-4); margin-bottom: var(--space-6); flex-wrap: wrap;">
+        <div class="card__icon" style="width: 40px; height: 40px; margin-bottom: 0;">
+          <%- include('../partials/icon', { key: service.icon_key }) %>
+        </div>
+        <span class="badge" style="background: rgb(16 185 129 / 0.1); border: 1px solid rgb(16 185 129 / 0.3); color: #10b981; font-family: var(--font-mono); font-size: 0.6875rem;">
+          ACTIVE DISCIPLINE &middot; SENIOR LEAD ONLY
+        </span>
       </div>
-      <p class="chapter__index"><span class="code">DISCIPLINE</span> <%= service.tagline || 'ENGINEERING' %></p>
+      <p class="chapter__index"><span class="code">DISCIPLINE</span> <%= service.tagline || 'CORE ENGINEERING' %></p>
       <h1 class="display display--md"><%= service.title %></h1>
       <p class="body body--lead page-head__lede"><%= service.summary %></p>
       <div class="page-head__rule"></div>
@@ -27,14 +32,55 @@
           </div>
         <% } %>
 
+        <!-- 4-Phase Delivery Process -->
+        <section class="service-pipeline" style="margin-top: var(--space-16); padding-top: var(--space-12); border-top: 1px solid var(--color-border);" data-reveal>
+          <p class="chapter__index"><span class="code">HOW WE WORK</span> STEP-BY-STEP PROCESS</p>
+          <h2 class="display display--sm" style="margin-bottom: var(--space-6);">From first discovery to final production handover</h2>
+
+          <div class="pipeline-grid" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-4); margin-top: var(--space-6);">
+            <div class="card" style="padding: var(--space-6); border-left: 2px solid var(--color-primary);">
+              <span class="marker" style="color: var(--color-primary); font-weight: 600;">PHASE 01</span>
+              <h3 style="font-size: 1.125rem; font-family: var(--font-display); margin: var(--space-2) 0 var(--space-3); color: var(--color-text);">Discovery &amp; Blueprint</h3>
+              <p style="font-size: 0.875rem; color: var(--color-text-muted); line-height: 1.6;">
+                We analyze your constraints, audit existing bottlenecks, and produce an ironclad technical roadmap with zero ambiguity.
+              </p>
+            </div>
+
+            <div class="card" style="padding: var(--space-6); border-left: 2px solid var(--color-primary);">
+              <span class="marker" style="color: var(--color-primary); font-weight: 600;">PHASE 02</span>
+              <h3 style="font-size: 1.125rem; font-family: var(--font-display); margin: var(--space-2) 0 var(--space-3); color: var(--color-text);">Rapid Prototype &amp; Test</h3>
+              <p style="font-size: 0.875rem; color: var(--color-text-muted); line-height: 1.6;">
+                We build working end-to-end prototypes early so you can touch, test, and benchmark actual software before scaling up.
+              </p>
+            </div>
+
+            <div class="card" style="padding: var(--space-6); border-left: 2px solid var(--color-primary);">
+              <span class="marker" style="color: var(--color-primary); font-weight: 600;">PHASE 03</span>
+              <h3 style="font-size: 1.125rem; font-family: var(--font-display); margin: var(--space-2) 0 var(--space-3); color: var(--color-text);">Hardening &amp; Quality Check</h3>
+              <p style="font-size: 0.875rem; color: var(--color-text-muted); line-height: 1.6;">
+                Security threat modeling, latency stress testing, and edge-case validation to ensure your product withstands real production loads.
+              </p>
+            </div>
+
+            <div class="card" style="padding: var(--space-6); border-left: 2px solid var(--color-primary);">
+              <span class="marker" style="color: var(--color-primary); font-weight: 600;">PHASE 04</span>
+              <h3 style="font-size: 1.125rem; font-family: var(--font-display); margin: var(--space-2) 0 var(--space-3); color: var(--color-text);">Launch &amp; Knowledge Transfer</h3>
+              <p style="font-size: 0.875rem; color: var(--color-text-muted); line-height: 1.6;">
+                Seamless production deployment with automated monitoring, runbooks, and thorough pairing sessions with your internal team.
+              </p>
+            </div>
+          </div>
+        </section>
+
         <% if (deliverables && deliverables.length > 0) { %>
           <section style="margin-top: var(--space-16); padding-top: var(--space-12); border-top: 1px solid var(--color-border);" data-reveal>
-            <p class="chapter__index"><span class="code">DELIVERABLES</span></p>
-            <h2 class="display display--sm" style="margin-bottom: var(--space-6);">What ships with this discipline</h2>
+            <p class="chapter__index"><span class="code">DELIVERABLES</span> WHAT YOU RECEIVE</p>
+            <h2 class="display display--sm" style="margin-bottom: var(--space-6);">Artifacts and assets delivered directly into your repository</h2>
             <div class="grid grid--2">
               <% deliverables.forEach(function (d) { %>
-                <div class="card" style="padding: var(--space-5) var(--space-6);">
-                  <span class="marker"><strong><%= d %></strong></span>
+                <div class="card card--deliverable" style="padding: var(--space-5) var(--space-6); display: flex; align-items: center; justify-content: space-between; gap: var(--space-4);">
+                  <span class="marker"><strong style="color: var(--color-text);"><%= d %></strong></span>
+                  <span class="badge" style="background: rgb(255 77 28 / 0.1); color: var(--color-primary); border: 1px solid rgb(255 77 28 / 0.25); font-size: 0.625rem;">VERIFIED</span>
                 </div>
               <% }); %>
             </div>
@@ -42,20 +88,22 @@
         <% } %>
       </div>
 
-      <aside class="reader__aside" data-reveal>
-        <div class="reader__block">
-          <span class="reader__k">Engagement</span>
-          <p class="reader__v">Available as standalone discovery or integrated delivery.</p>
-        </div>
+      <aside class="reader__aside" data-reveal style="position: sticky; top: calc(var(--nav-height) + var(--space-8)); align-self: flex-start;">
+        <div class="reader__block" style="background: var(--color-surface); padding: var(--space-6); border: 1px solid var(--color-border); border-radius: var(--radius-sm); margin-bottom: var(--space-6);">
+          <div style="display: flex; align-items: center; gap: var(--space-2); margin-bottom: var(--space-4);">
+            <span style="width: 8px; height: 8px; border-radius: 50%; background: #10b981;"></span>
+            <span style="font-family: var(--font-mono); font-size: 0.6875rem; color: #10b981; text-transform: uppercase;">Accepting New Projects</span>
+          </div>
 
-        <div class="reader__block">
-          <span class="reader__k">Direct access</span>
-          <p class="reader__v">Senior technical leads only. No junior bench, no project managers in between.</p>
-        </div>
+          <span class="reader__k">Direct Leadership</span>
+          <p class="reader__v" style="margin-top: var(--space-1); margin-bottom: var(--space-4);">Senior technical leads only. No junior bench, no project managers in between.</p>
 
-        <div class="reader__block">
-          <span class="reader__k">Start here</span>
-          <a class="btn btn--primary" href="/contact?type=review" style="width: 100%; text-align: center;">Request review</a>
+          <span class="reader__k">Engagement Models</span>
+          <p class="reader__v" style="margin-top: var(--space-1); margin-bottom: var(--space-6);">Standalone architecture sprints or dedicated embedded squad.</p>
+
+          <a class="btn btn--primary" href="/contact?type=review" style="width: 100%; text-align: center; display: block;">
+            Request Discovery Call &rarr;
+          </a>
         </div>
       </aside>
     </div>

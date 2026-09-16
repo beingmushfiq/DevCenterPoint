@@ -20,7 +20,92 @@ document.addEventListener('DOMContentLoaded', () => {
   initSidebar();
   initReorder();
   initMediaPicker();
+  initToasts();
+  initTestimonialPreview();
 });
+
+/* ---- admin sidebar (mobile drawer) --------------------------- */
+function initSidebar() {
+  const toggle = document.getElementById('sidebarToggle') || document.querySelector('[data-admin-menu]');
+  const sidebar = document.querySelector('.sidebar') || document.querySelector('.admin__sidebar');
+  const backdrop = document.getElementById('sidebarBackdrop');
+  if (!sidebar) return;
+
+  const closeSidebar = () => {
+    sidebar.classList.remove('is-open');
+    if (backdrop) backdrop.classList.remove('is-active');
+  };
+
+  const openSidebar = () => {
+    sidebar.classList.add('is-open');
+    if (backdrop) backdrop.classList.add('is-active');
+  };
+
+  if (toggle) {
+    toggle.addEventListener('click', (e) => {
+      e.stopPropagation();
+      if (sidebar.classList.contains('is-open')) closeSidebar();
+      else openSidebar();
+    });
+  }
+
+  if (backdrop) backdrop.addEventListener('click', closeSidebar);
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') closeSidebar();
+  });
+}
+
+/* ---- auto-dismiss toast alerts ------------------------------- */
+function initToasts() {
+  document.querySelectorAll('[data-toast]').forEach((toast) => {
+    const closeBtn = toast.querySelector('.toast-message__close');
+    const dismiss = () => {
+      toast.style.opacity = '0';
+      toast.style.transform = 'translateY(-10px)';
+      toast.style.transition = 'all 0.3s ease';
+      setTimeout(() => toast.remove(), 300);
+    };
+    if (closeBtn) closeBtn.addEventListener('click', dismiss);
+    setTimeout(dismiss, 5000);
+  });
+}
+
+/* ---- live testimonial preview -------------------------------- */
+function initTestimonialPreview() {
+  const quoteInput = document.getElementById('quote');
+  const attrInput = document.getElementById('attribution');
+  const roleInput = document.getElementById('role');
+  const compInput = document.getElementById('company');
+
+  const pQuote = document.getElementById('previewQuote');
+  const pAttr = document.getElementById('previewAttribution');
+  const pRoleComp = document.getElementById('previewRoleCompany');
+  const pAvatar = document.getElementById('previewAvatar');
+
+  if (!quoteInput || !pQuote) return;
+
+  const update = () => {
+    const q = quoteInput.value.trim();
+    const a = attrInput ? attrInput.value.trim() : '';
+    const r = roleInput ? roleInput.value.trim() : '';
+    const c = compInput ? compInput.value.trim() : '';
+
+    pQuote.textContent = q ? `“${q}”` : '“Quote will appear here as you type...”';
+    if (pAttr) pAttr.textContent = a || 'Author Name';
+    if (pRoleComp) {
+      if (r && c) pRoleComp.textContent = `${r}, ${c}`;
+      else pRoleComp.textContent = r || c || 'Role / Company';
+    }
+    if (pAvatar) {
+      pAvatar.textContent = (a || 'A').charAt(0).toUpperCase();
+    }
+  };
+
+  [quoteInput, attrInput, roleInput, compInput].forEach((el) => {
+    if (el) el.addEventListener('input', update);
+  });
+}
+
 
 /* ---- slug derivation ----------------------------------------
    Types a slug from the title until the author edits the slug
@@ -100,16 +185,7 @@ function initTabs() {
   });
 }
 
-/* ---- admin sidebar (mobile) ---------------------------------- */
-function initSidebar() {
-  const toggle = document.querySelector('[data-admin-menu]');
-  const sidebar = document.querySelector('.admin__sidebar');
-  if (!toggle || !sidebar) return;
-  toggle.addEventListener('click', () => {
-    const open = sidebar.classList.toggle('is-open');
-    toggle.setAttribute('aria-expanded', String(open));
-  });
-}
+
 
 /* ---- reorder rows -------------------------------------------
    Up/down controls rather than drag-and-drop. Drag is nicer with a

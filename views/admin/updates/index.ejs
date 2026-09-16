@@ -1,0 +1,59 @@
+<% if (items && items.length > 0) { %>
+  <div class="admin-table-wrap">
+    <table class="admin-table">
+      <thead>
+        <tr>
+          <th>Update Title</th>
+          <th>Category</th>
+          <th>Version</th>
+          <th>Status</th>
+          <th>Published Date</th>
+          <th style="text-align: right;">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% items.forEach(function (entry) { %>
+          <tr>
+            <td>
+              <div class="admin-table__title">
+                <a href="/admin/updates/<%= entry.id %>/edit"><%= entry.title %></a>
+              </div>
+              <small style="color: var(--color-text-faint);">
+                Slug: <code><%= entry.slug %></code>
+                <% if (entry.summary) { %>&middot; <%= truncate(entry.summary, 70) %><% } %>
+              </small>
+            </td>
+            <td>
+              <span class="badge badge--draft" style="text-transform: capitalize;"><%= entry.category %></span>
+            </td>
+            <td>
+              <span style="font-family: var(--font-mono); font-size: 0.8125rem; color: var(--color-primary);"><%= entry.version_tag || '—' %></span>
+            </td>
+            <td>
+              <span class="badge <%= entry.status === 'published' ? 'badge--published' : 'badge--draft' %>">
+                <%= entry.status %>
+              </span>
+            </td>
+            <td style="font-family: var(--font-mono); font-size: 0.8125rem; color: var(--color-text-muted);">
+              <%= new Date(entry.published_at).toLocaleDateString('en-GB') %>
+            </td>
+            <td>
+              <div class="admin-table__actions">
+                <a href="/updates#<%= entry.slug %>" target="_blank" title="View live">Live &nearr;</a>
+                <a href="/admin/updates/<%= entry.id %>/edit">Edit</a>
+                <form method="POST" action="/admin/updates/<%= entry.id %>/delete" style="display: inline;" onsubmit="return confirm('Delete this update?');">
+                  <% if (locals.csrfToken) { %><input type="hidden" name="_csrf" value="<%= csrfToken %>" /><% } %>
+                  <button type="submit" class="danger" style="background:none; border:none; cursor:pointer; font-family:inherit; font-size:inherit;">Delete</button>
+                </form>
+              </div>
+            </td>
+          </tr>
+        <% }); %>
+      </tbody>
+    </table>
+  </div>
+<% } else { %>
+  <div class="note note--quiet">
+    <p>No company updates posted yet. <a href="/admin/updates/new">Create the first update &rarr;</a></p>
+  </div>
+<% } %>

@@ -1,4 +1,4 @@
-﻿/* ============================================================
+/* ============================================================
    DEVCENTERPOINT — ADMIN PANEL
    ------------------------------------------------------------
    A stripped-down operational surface. The same Carbon & Signal
@@ -467,14 +467,125 @@ tr.is-dragging { opacity: 0.4; }
 /* ============ HONEYPOT ============ */
 .hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
 
-/* ============ RESPONSIVE ============ */
+/* ============ TOAST NOTIFICATIONS ============ */
+.toast-message {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-4) var(--space-5);
+  background: var(--carbon-900);
+  border: 1px solid var(--color-border);
+  border-left: 3px solid var(--color-primary);
+  border-radius: var(--radius-sm);
+  margin-bottom: var(--space-6);
+  box-shadow: 0 8px 24px -4px rgb(0 0 0 / 0.5);
+  animation: toastSlideIn 0.25s var(--ease-spring);
+  font-size: 0.875rem;
+  color: var(--color-text);
+  position: relative;
+}
+.toast-message--ok, .toast-message--success {
+  border-left-color: #10b981;
+}
+.toast-message--error {
+  border-left-color: var(--vermilion-500);
+}
+.toast-message__close {
+  margin-left: auto;
+  background: none;
+  border: none;
+  color: var(--color-text-faint);
+  cursor: pointer;
+  font-size: 1.25rem;
+  line-height: 1;
+  padding: 0 var(--space-1);
+}
+.toast-message__close:hover {
+  color: var(--color-text);
+}
+
+@keyframes toastSlideIn {
+  from { opacity: 0; transform: translateY(-8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ============ RESPONSIVE & MOBILE DRAWER ============ */
+.topbar__menu-toggle {
+  display: none;
+  background: none;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-xs);
+  color: var(--color-text);
+  padding: 6px;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  margin-right: var(--space-3);
+}
+.topbar__menu-toggle:hover {
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+}
+
+.sidebar-backdrop {
+  display: none;
+}
+
 @media (max-width: 900px) {
-  .sidebar { width: 180px; }
-  .admin-main { margin-left: 180px; }
+  .topbar__menu-toggle {
+    display: inline-flex;
+  }
+
+  .sidebar {
+    width: 260px;
+    transform: translateX(-100%);
+    transition: transform var(--motion-base) var(--ease-spring);
+    box-shadow: none;
+    z-index: 1000;
+  }
+
+  .sidebar.is-open {
+    transform: translateX(0);
+    box-shadow: 16px 0 48px rgb(0 0 0 / 0.8);
+  }
+
+  .sidebar-backdrop {
+    display: block;
+    position: fixed;
+    inset: 0;
+    background: rgb(0 0 0 / 0.65);
+    backdrop-filter: blur(4px);
+    z-index: 999;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity var(--motion-base);
+  }
+
+  .sidebar-backdrop.is-active {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .admin-main {
+    margin-left: 0;
+    width: 100%;
+  }
+
+  .admin-form__row {
+    grid-template-columns: 1fr;
+  }
+
+  .stat-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
 }
-@media (max-width: 640px) {
-  .sidebar { display: none; }
-  .admin-main { margin-left: 0; }
-  .admin-form__row { grid-template-columns: 1fr; }
-  .stat-grid { grid-template-columns: repeat(2, 1fr); }
+
+@media (max-width: 600px) {
+  .stat-grid {
+    grid-template-columns: 1fr;
+  }
+  .admin-body {
+    padding: var(--space-4);
+  }
 }
+

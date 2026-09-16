@@ -20,6 +20,7 @@ import { submissionsRouter } from './submissions.js';
 import { mediaRouter } from './media.js';
 import { settingsRouter } from './settings.js';
 import { navRouter } from './nav.js';
+import { updatesRouter } from './updates.js';
 
 export const adminRoutes = Router();
 
@@ -44,3 +45,5 @@ adminRoutes.use('/submissions', submissionsRouter);
 adminRoutes.use('/media', mediaRouter);
 adminRoutes.use('/settings', settingsRouter);
 adminRoutes.use('/nav', navRouter);
+adminRoutes.use('/updates', updatesRouter);
+

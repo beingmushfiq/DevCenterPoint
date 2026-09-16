@@ -1,0 +1,92 @@
+<%- include('../partials/head', { pageType: 'detail', bodyClass: 'page-status' }) %>
+
+<section class="chapter chapter--flow chapter--lead">
+  <div class="wrap">
+    <%- include('../partials/breadcrumbs', { crumbs: [{ label: 'System Health & Status' }] }) %>
+
+    <div class="page-head page-head--wide" data-reveal>
+      <div style="display: inline-flex; align-items: center; gap: var(--space-3); padding: 6px 14px; background: rgb(16 185 129 / 0.12); border: 1px solid rgb(16 185 129 / 0.35); border-radius: var(--radius-full); margin-bottom: var(--space-6);">
+        <span class="pulse-dot" style="width: 8px; height: 8px; border-radius: 50%; background: #10b981; box-shadow: 0 0 10px #10b981; animation: pulseGlow 2s infinite;"></span>
+        <span style="font-family: var(--font-mono); font-size: 0.6875rem; font-weight: 600; letter-spacing: 0.12em; color: #10b981; text-transform: uppercase;">
+          <%= telemetry.status === 'ALL_SYSTEMS_OPERATIONAL' ? 'All Systems Operational' : 'Degraded Performance' %>
+        </span>
+      </div>
+
+      <h1 class="display display--md">Live System Health &amp; Telemetry</h1>
+      <p class="body body--lead page-head__lede">
+        Real-time operational indicators, database response times, and service reliability guarantees for partners.
+      </p>
+      <div class="page-head__rule"></div>
+    </div>
+
+    <!-- Quick Stats Grid -->
+    <div class="grid grid--3" style="margin-top: var(--space-12);" data-reveal>
+      <div class="card" style="padding: var(--space-6);">
+        <span class="marker"><strong>SYSTEM UPTIME</strong></span>
+        <div class="display display--sm" style="font-size: 1.75rem; margin-top: var(--space-3); color: var(--color-text);">
+          <%= telemetry.uptime %>
+        </div>
+        <p style="font-size: 0.8125rem; color: var(--color-text-faint); margin-top: var(--space-2);">Zero unplanned interruptions</p>
+      </div>
+
+      <div class="card" style="padding: var(--space-6);">
+        <span class="marker"><strong>DATABASE LATENCY</strong></span>
+        <div class="display display--sm" style="font-size: 1.75rem; margin-top: var(--space-3); color: #10b981;">
+          <%= telemetry.db.latency %>
+        </div>
+        <p style="font-size: 0.8125rem; color: var(--color-text-faint); margin-top: var(--space-2);">Engine: <%= telemetry.db.engine %></p>
+      </div>
+
+      <div class="card" style="padding: var(--space-6);">
+        <span class="marker"><strong>ACTIVE SECURITY</strong></span>
+        <div class="display display--sm" style="font-size: 1.75rem; margin-top: var(--space-3); color: var(--color-primary);">
+          TLS 1.3 / CSP
+        </div>
+        <p style="font-size: 0.8125rem; color: var(--color-text-faint); margin-top: var(--space-2);">Hardened headers &amp; rate-limiting active</p>
+      </div>
+    </div>
+
+    <!-- Services Status Matrix -->
+    <div style="margin-top: var(--space-16); padding: var(--space-8); background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--radius-sm);" data-reveal>
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-6); border-bottom: 1px solid var(--color-rule); padding-bottom: var(--space-4);">
+        <h2 class="display display--sm" style="font-size: 1.25rem;">Core Service Operations</h2>
+        <span style="font-family: var(--font-mono); font-size: 0.75rem; color: var(--color-text-faint);">Automatic Health Check: Active</span>
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: var(--space-4);">
+        <% telemetry.services.forEach(function (svc) { %>
+          <div style="display: flex; justify-content: space-between; align-items: center; padding: var(--space-4); background: var(--carbon-900); border: 1px solid var(--color-border); border-radius: var(--radius-xs); flex-wrap: wrap; gap: var(--space-3);">
+            <div>
+              <strong style="color: var(--color-text); font-size: 0.9375rem;"><%= svc.name %></strong>
+              <div style="font-size: 0.75rem; color: var(--color-text-faint); font-family: var(--font-mono); margin-top: 2px;">
+                Latency: <%= svc.latency %> &middot; Historical: <%= svc.uptime %>
+              </div>
+            </div>
+            <div style="display: flex; align-items: center; gap: var(--space-2);">
+              <span style="width: 8px; height: 8px; border-radius: 50%; background: #10b981;"></span>
+              <span style="font-family: var(--font-mono); font-size: 0.75rem; color: #10b981; font-weight: 500;"><%= svc.status %></span>
+            </div>
+          </div>
+        <% }); %>
+      </div>
+    </div>
+
+    <!-- Service Level Guarantee -->
+    <div style="margin-top: var(--space-12); padding: var(--space-6); border-left: 2px solid var(--color-primary); background: rgb(255 77 28 / 0.04);" data-reveal>
+      <h3 style="font-size: 0.9375rem; color: var(--color-text); font-family: var(--font-display); margin-bottom: var(--space-2);">Production SLA &amp; Security Commitment</h3>
+      <p style="font-size: 0.875rem; color: var(--color-text-muted); line-height: 1.6;">
+        All engineering platforms delivered by DevCenterPoint adhere to zero-downtime deployment pipelines, continuous data replication, and strict automated rate-limiting. For enterprise SLA reviews or custom telemetry configurations, please contact our lead engineering team.
+      </p>
+    </div>
+  </div>
+</section>
+
+<style>
+@keyframes pulseGlow {
+  0% { transform: scale(0.95); opacity: 0.8; }
+  50% { transform: scale(1.15); opacity: 1; }
+  100% { transform: scale(0.95); opacity: 0.8; }
+}
+</style>
+
+<%- include('../partials/foot') %>

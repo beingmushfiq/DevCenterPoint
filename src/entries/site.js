@@ -57,14 +57,16 @@ async function app() {
   initNav();
   initCursor({ reduced: reduceMotion });
   initReveals();
+  initLightInteractions();
+  initCommandPalette();
+  initScopeEstimator();
 
   /* Everything below only applies to pages with the 3D field. */
   if (!WANTS_SCENE) {
-    /* Reveal anything the reveal pass skipped, and we are done. */
     window.__dcpReady = true;
-    initLightInteractions();
     return;
   }
+
 
   const { Scene } = await import('../three/scene.js');
   const { mountSpline } = await import('../three/spline.js');
@@ -203,4 +205,151 @@ function initLightInteractions() {
   });
 }
 
+/* ---- Instant Quick Search (Command Palette) ----------------- */
+function initCommandPalette() {
+  const palette = document.getElementById('commandPalette');
+  const input = document.getElementById('commandPaletteInput');
+  const resultsEl = document.getElementById('commandPaletteResults');
+  const openBtn = document.getElementById('openCommandPalette');
+  const backdrop = document.getElementById('commandPaletteBackdrop');
+  const escBtn = document.getElementById('commandPaletteEsc');
+
+  if (!palette || !input || !resultsEl) return;
+
+  let selectedIndex = -1;
+  let currentResults = [];
+
+  const open = () => {
+    palette.classList.add('is-open');
+    palette.setAttribute('aria-hidden', 'false');
+    input.value = '';
+    selectedIndex = -1;
+    resultsEl.innerHTML = '<div class="command-palette__hint">Type at least 2 characters to search across the entire platform...</div>';
+    setTimeout(() => input.focus(), 50);
+  };
+
+  const close = () => {
+    palette.classList.remove('is-open');
+    palette.setAttribute('aria-hidden', 'true');
+  };
+
+  if (openBtn) openBtn.addEventListener('click', open);
+  if (backdrop) backdrop.addEventListener('click', close);
+  if (escBtn) escBtn.addEventListener('click', close);
+
+  /* Global keyboard shortcut: Cmd+K / Ctrl+K & Escape */
+  document.addEventListener('keydown', (e) => {
+    if ((e.metaKey || e.ctrlKey) && (e.key === 'k' || e.key === 'K')) {
+      e.preventDefault();
+      if (palette.classList.contains('is-open')) close();
+      else open();
+    } else if (e.key === 'Escape' && palette.classList.contains('is-open')) {
+      close();
+    }
+  });
+
+  /* Arrow key navigation & Enter */
+  input.addEventListener('keydown', (e) => {
+    if (!currentResults.length) return;
+
+    if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      selectedIndex = (selectedIndex + 1) % currentResults.length;
+      updateSelection();
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      selectedIndex = (selectedIndex - 1 + currentResults.length) % currentResults.length;
+      updateSelection();
+    } else if (e.key === 'Enter') {
+      e.preventDefault();
+      if (selectedIndex >= 0 && selectedIndex < currentResults.length) {
+        window.location.href = currentResults[selectedIndex].url;
+      }
+    }
+  });
+
+  const updateSelection = () => {
+    const items = resultsEl.querySelectorAll('.command-palette__item');
+    items.forEach((item, idx) => {
+      item.classList.toggle('is-selected', idx === selectedIndex);
+      if (idx === selectedIndex) item.scrollIntoView({ block: 'nearest' });
+    });
+  };
+
+  /* Debounced Search */
+  let timer = 0;
+  input.addEventListener('input', () => {
+    clearTimeout(timer);
+    const q = input.value.trim();
+
+    if (q.length < 2) {
+      currentResults = [];
+      resultsEl.innerHTML = '<div class="command-palette__hint">Type at least 2 characters to search across the entire platform...</div>';
+      return;
+    }
+
+    timer = setTimeout(async () => {
+      try {
+        const res = await fetch(`/api/search?q=${encodeURIComponent(q)}`);
+        const data = await res.json();
+        currentResults = data.results || [];
+        selectedIndex = currentResults.length ? 0 : -1;
+
+        if (!currentResults.length) {
+          resultsEl.innerHTML = `<div class="command-palette__hint">No results found for "${q}".</div>`;
+          return;
+        }
+
+        resultsEl.innerHTML = currentResults.map((item, idx) => `
+          <a class="command-palette__item ${idx === 0 ? 'is-selected' : ''}" href="${item.url}">
+            <div>
+              <div class="command-palette__item-title">${item.title}</div>
+              ${item.snippet ? `<div class="command-palette__item-snippet">${item.snippet.slice(0, 80)}...</div>` : ''}
+            </div>
+            <span class="command-palette__item-badge">${item.type}</span>
+          </a>
+        `).join('');
+      } catch {
+        resultsEl.innerHTML = '<div class="command-palette__hint">Search encountered an error. Please retry.</div>';
+      }
+    }, 200);
+  });
+}
+
+/* ---- Project Timeline & Team Calculator --------------------- */
+function initScopeEstimator() {
+  const scopeSelect = document.getElementById('estimatorScope');
+  const timelineOut = document.getElementById('estimatorTimelineOut');
+  const teamOut = document.getElementById('estimatorTeamOut');
+  const attachBtn = document.getElementById('attachEstimateBtn');
+  const messageArea = document.getElementById('message');
+
+  if (!scopeSelect || !timelineOut || !teamOut) return;
+
+  const update = () => {
+    const opt = scopeSelect.selectedOptions[0];
+    if (!opt) return;
+    timelineOut.textContent = opt.dataset.weeks || '4 to 6 weeks';
+    teamOut.textContent = opt.dataset.team || '1 Lead + 1 Senior';
+  };
+
+  scopeSelect.addEventListener('change', update);
+  update();
+
+  if (attachBtn && messageArea) {
+    attachBtn.addEventListener('click', () => {
+      const opt = scopeSelect.selectedOptions[0];
+      const text = `\n\n--- Project Estimation Parameter ---\nObjective: ${opt.text}\nEstimated Timeline: ${opt.dataset.weeks}\nRecommended Team: ${opt.dataset.team}\n-----------------------------------\n`;
+      if (!messageArea.value.includes(opt.text)) {
+        messageArea.value = (messageArea.value.trim() + text).trim();
+      }
+      messageArea.focus();
+      messageArea.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      attachBtn.textContent = 'Attached to message ✓';
+      setTimeout(() => { attachBtn.textContent = 'Attach estimate to message ↓'; }, 2000);
+    });
+  }
+}
+
 document.addEventListener('DOMContentLoaded', app);
+
