@@ -757,7 +757,13 @@ a { color: inherit; text-decoration: none; }
   border: 1px solid var(--color-border);
   color: var(--color-text);
   cursor: pointer;
-  transition: border-color var(--motion-fast), color var(--motion-fast), background var(--motion-fast), transform var(--motion-fast), box-shadow var(--motion-fast);
+  overflow: hidden;
+  transition:
+    border-color var(--motion-fast),
+    color var(--motion-fast),
+    background var(--motion-fast),
+    transform var(--motion-fast),
+    box-shadow var(--motion-fast);
   position: relative;
   flex: none;
 }
@@ -768,27 +774,44 @@ a { color: inherit; text-decoration: none; }
   box-shadow: var(--glow-primary);
   transform: translateY(-1px);
 }
-.theme-toggle:active {
-  transform: translateY(0);
-}
-.theme-toggle svg {
-  width: 17px;
-  height: 17px;
-  display: block;
-  transition: transform var(--motion-base) var(--ease-spring), opacity var(--motion-fast);
-}
-.theme-toggle__icon-sun {
-  display: none;
-}
+.theme-toggle:active { transform: translateY(0); }
+
+/* Both icons overlap each other in the center; only one is
+   visible at a time. We use opacity + scale so there is no
+   brief moment where both show (display:none has a 1-frame
+   delay through the cascade). */
+.theme-toggle__icon-sun,
 .theme-toggle__icon-moon {
-  display: block;
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%) scale(1);
+  width: 17px; height: 17px;
+  transition:
+    opacity var(--motion-fast),
+    transform var(--motion-base) var(--ease-spring);
 }
 
-[data-theme='light'] .theme-toggle__icon-sun {
-  display: block;
+/* Dark mode default: show moon, hide sun */
+.theme-toggle__icon-sun {
+  opacity: 0;
+  transform: translate(-50%, -50%) scale(0.5) rotate(-30deg);
   color: #f59e0b;
+  pointer-events: none;
+}
+.theme-toggle__icon-moon {
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1) rotate(0deg);
+}
+
+/* Light mode: show sun, hide moon */
+[data-theme='light'] .theme-toggle__icon-sun {
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1) rotate(0deg);
 }
 [data-theme='light'] .theme-toggle__icon-moon {
-  display: none;
+  opacity: 0;
+  transform: translate(-50%, -50%) scale(0.5) rotate(30deg);
+  pointer-events: none;
 }
+
 
