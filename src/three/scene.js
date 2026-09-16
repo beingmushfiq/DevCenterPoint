@@ -7,19 +7,29 @@ function rand(seed) {
   return x - Math.floor(x);
 }
 
-/* Soft radial glow texture, generated once on a canvas.
+/* Soft radial glow texture, generated on a canvas.
    Used for the ignition singularity and the orbiting team-nodes so we
-   get a real bloom-like falloff with zero post-processing cost. */
-function glowTexture(size = 128) {
+   get a real bloom-like falloff with zero post-processing cost.
+   Light mode uses deep cobalt with smooth alpha falloff;
+   Dark mode uses luminous electric blue. */
+function glowTexture(isLight = false, size = 128) {
   const c = document.createElement('canvas');
   c.width = c.height = size;
   const ctx = c.getContext('2d');
   const g = ctx.createRadialGradient(size / 2, size / 2, 0, size / 2, size / 2, size / 2);
-  /* Electric cobalt falloff — matches the brand signal of the UI. */
-  g.addColorStop(0.0, 'rgba(240,248,255,1)');
-  g.addColorStop(0.18, 'rgba(96,165,250,0.85)');
-  g.addColorStop(0.45, 'rgba(37,99,235,0.32)');
-  g.addColorStop(1.0, 'rgba(0,0,0,0)');
+  if (isLight) {
+    /* Blueprint Cobalt falloff for light mode — rich, deep, and distinct on porcelain white */
+    g.addColorStop(0.0, 'rgba(29, 78, 216, 0.95)');
+    g.addColorStop(0.22, 'rgba(37, 99, 235, 0.70)');
+    g.addColorStop(0.50, 'rgba(59, 130, 246, 0.30)');
+    g.addColorStop(1.0, 'rgba(37, 99, 235, 0)');
+  } else {
+    /* Electric cobalt falloff for dark mode — luminous on obsidian carbon */
+    g.addColorStop(0.0, 'rgba(240,248,255,1)');
+    g.addColorStop(0.18, 'rgba(96,165,250,0.85)');
+    g.addColorStop(0.45, 'rgba(37,99,235,0.32)');
+    g.addColorStop(1.0, 'rgba(0,0,0,0)');
+  }
   ctx.fillStyle = g;
   ctx.fillRect(0, 0, size, size);
   const tex = new THREE.CanvasTexture(c);
@@ -59,9 +69,9 @@ export class Scene {
     this.scene.fog = new THREE.FogExp2(0x07090e, 0.05);
 
     this.camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 200);
-    this.camera.position.set(0, 0, 14);
-
-    this.glowTex = glowTexture();
+    this.glowTexDark = glowTexture(false);
+    this.glowTexLight = glowTexture(true);
+    this.glowTex = this.glowTexDark;
 
     this.buildCore();
     this.buildCage();
@@ -151,6 +161,7 @@ export class Scene {
       uPointScale: { value: 0.012 },
       uVelocity: { value: 0 },   // scroll velocity → turbulence + stretch
       uIgnite: { value: 0 },     // 0 = unformed void, 1 = assembled
+      uIsLight: { value: 0.0 },  // 0 = dark mode, 1 = light mode
     };
 
     const mat = new THREE.ShaderMaterial({
@@ -173,6 +184,7 @@ export class Scene {
         uniform float uVelocity;
         uniform float uIgnite;
         uniform float uHue;
+        uniform float uIsLight;
         varying float vAlpha;
         varying float vHue;
 
@@ -195,9 +207,6 @@ export class Scene {
           vec3 p = mix(sphere, aScatter + swirl * 2.0, uSpread);
 
           // ---- Scroll velocity: turbulence that stretches the form.
-          // Fast scrolling smears the cloud along its radial axis and
-          // injects curl, so the page feels physically connected to
-          // the hand on the wheel.
           float vAmt = abs(uVelocity);
           vec3 radial = normalize(p + 1e-4);
           vec3 curl = vec3(
@@ -208,8 +217,6 @@ export class Scene {
           p += radial * vAmt * 1.15 + curl * vAmt * 0.55;
 
           // ---- Ignition: the assembly-from-nothing intro.
-          // At uIgnite = 0 every point is flung far out and dark; as it
-          // rises to 1 the cloud collapses into its true form.
           float born = 1.0 - uIgnite;
           vec3 birthDir = normalize(aScatter + aRandom + 1e-4);
           p += birthDir * born * 34.0;
@@ -217,21 +224,22 @@ export class Scene {
           vec4 mv = modelViewMatrix * vec4(p, 1.0);
           gl_Position = projectionMatrix * mv;
 
-          // Perspective-correct size, clamped so 22k points read as a
-          // form and never bloom into a white smear.
+          // Perspective-correct size
           float perspective = uPixel / max(-mv.z, 0.1);
-          gl_PointSize = clamp(aSize * uPointScale * perspective, 1.0, 4.5);
+          float pSize = clamp(aSize * uPointScale * perspective, 1.0, 4.5);
+          gl_PointSize = uIsLight > 0.5 ? clamp(pSize * 1.3, 1.2, 5.2) : pSize;
 
           // Twinkle keeps the field alive without flicker.
           float twinkle = 0.78 + 0.22 * sin(uTime * 1.6 + aRandom * 40.0);
           vAlpha = mix(0.18, 0.9, 1.0 - uSpread * 0.5)
                  * (0.35 + aRandom * 0.65) * twinkle
-                 * smoothstep(0.0, 0.35, uIgnite);   // fade in during ignition
+                 * smoothstep(0.0, 0.35, uIgnite);
           vHue = fract(uHue + (aRandom - 0.5) * 0.10 + uSpread * 0.02 + vAmt * 0.04);
         }
       `,
       fragmentShader: `
         uniform float uHue;
+        uniform float uIsLight;
         varying float vAlpha;
         varying float vHue;
 
@@ -244,9 +252,21 @@ export class Scene {
           vec2 uv = gl_PointCoord - 0.5;
           float d = length(uv);
           if (d > 0.5) discard;
-          float soft = smoothstep(0.5, 0.05, d);
-          vec3 col = hsl2rgb(vec3(vHue, 0.88, 0.58));
-          gl_FragColor = vec4(col, soft * vAlpha);
+          float soft = smoothstep(0.5, 0.06, d);
+
+          // Dark mode: luminous electric cobalt & cyan glow
+          vec3 darkCol = hsl2rgb(vec3(vHue, 0.88, 0.58));
+
+          // Light mode: rich blueprint royal cobalt & deep sapphire ink
+          vec3 lightCol = hsl2rgb(vec3(vHue, 0.96, 0.35));
+
+          vec3 col = mix(darkCol, lightCol, uIsLight);
+          float alpha = soft * vAlpha;
+          if (uIsLight > 0.5) {
+            alpha = min(alpha * 1.65, 0.95);
+          }
+
+          gl_FragColor = vec4(col, alpha);
         }
       `,
     });
@@ -262,17 +282,17 @@ export class Scene {
   buildCage() {
     this.cages = [];
     const specs = [
-      { r: 3.15, detail: 1, color: 0x2563eb, op: 0.26, speed: 0.10 },
-      { r: 3.95, detail: 0, color: 0x38bdf8, op: 0.16, speed: -0.07 },
+      { r: 3.15, detail: 1, colorDark: 0x2563eb, colorLight: 0x1d4ed8, opDark: 0.26, opLight: 0.55, speed: 0.10 },
+      { r: 3.95, detail: 0, colorDark: 0x38bdf8, colorLight: 0x0284c7, opDark: 0.16, opLight: 0.40, speed: -0.07 },
     ];
     specs.forEach((s) => {
       const geo = new THREE.IcosahedronGeometry(s.r, s.detail);
       const mat = new THREE.MeshBasicMaterial({
-        color: s.color, wireframe: true, transparent: true,
-        opacity: s.op, blending: THREE.AdditiveBlending, depthWrite: false,
+        color: s.colorDark, wireframe: true, transparent: true,
+        opacity: s.opDark, blending: THREE.AdditiveBlending, depthWrite: false,
       });
       const mesh = new THREE.Mesh(geo, mat);
-      mesh.userData.speed = s.speed;
+      mesh.userData = { speed: s.speed, spec: s };
       this.scene.add(mesh);
       this.cages.push(mesh);
     });
@@ -283,7 +303,7 @@ export class Scene {
      velocity — the visual "spark" from the story. */
   buildSingularity() {
     const mat = new THREE.SpriteMaterial({
-      map: this.glowTex, color: 0x60a5fa, transparent: true,
+      map: this.glowTexDark, color: 0x60a5fa, transparent: true,
       opacity: 0, blending: THREE.AdditiveBlending, depthWrite: false,
     });
     this.singularity = new THREE.Sprite(mat);
@@ -292,7 +312,7 @@ export class Scene {
 
     // A tighter, brighter inner core for a two-layer bloom feel.
     const inner = new THREE.SpriteMaterial({
-      map: this.glowTex, color: 0xffffff, transparent: true,
+      map: this.glowTexDark, color: 0xffffff, transparent: true,
       opacity: 0, blending: THREE.AdditiveBlending, depthWrite: false,
     });
     this.singularityInner = new THREE.Sprite(inner);
@@ -310,7 +330,7 @@ export class Scene {
     this.nodeBase = [];
 
     const nodeMat = new THREE.SpriteMaterial({
-      map: this.glowTex, color: 0x38bdf8, transparent: true,
+      map: this.glowTexDark, color: 0x38bdf8, transparent: true,
       opacity: 0.9, blending: THREE.AdditiveBlending, depthWrite: false,
     });
 
@@ -339,7 +359,10 @@ export class Scene {
     this.filamentGeo.setAttribute('aAlpha', new THREE.BufferAttribute(fAlpha, 1));
 
     const fMat = new THREE.ShaderMaterial({
-      uniforms: { uOpacity: { value: 0 } },
+      uniforms: {
+        uOpacity: { value: 0 },
+        uIsLight: { value: 0 },
+      },
       transparent: true,
       depthWrite: false,
       blending: THREE.AdditiveBlending,
@@ -353,10 +376,14 @@ export class Scene {
       `,
       fragmentShader: `
         uniform float uOpacity;
+        uniform float uIsLight;
         varying float vA;
         void main() {
-          vec3 col = mix(vec3(0.14, 0.38, 0.96), vec3(0.22, 0.74, 0.96), vA);
-          gl_FragColor = vec4(col, vA * uOpacity);
+          vec3 darkCol = mix(vec3(0.14, 0.38, 0.96), vec3(0.22, 0.74, 0.96), vA);
+          vec3 lightCol = mix(vec3(0.10, 0.28, 0.76), vec3(0.06, 0.48, 0.90), vA);
+          vec3 col = mix(darkCol, lightCol, uIsLight);
+          float a = vA * uOpacity * (uIsLight > 0.5 ? 1.35 : 1.0);
+          gl_FragColor = vec4(col, min(a, 0.95));
         }
       `,
     });
@@ -431,9 +458,75 @@ export class Scene {
 
   setTheme(theme) {
     this.isLight = theme === 'light';
-    const fogColor = this.isLight ? 0xf1f5f9 : 0x07090e;
+    const fogColor = this.isLight ? 0xf8fafc : 0x07090e;
     if (this.scene && this.scene.fog) {
       this.scene.fog.color.setHex(fogColor);
+    }
+
+    if (this.uniforms && this.uniforms.uIsLight) {
+      this.uniforms.uIsLight.value = this.isLight ? 1.0 : 0.0;
+    }
+    if (this.core && this.core.material) {
+      this.core.material.blending = this.isLight ? THREE.NormalBlending : THREE.AdditiveBlending;
+      this.core.material.needsUpdate = true;
+    }
+
+    if (this.cages) {
+      this.cages.forEach((mesh) => {
+        const spec = mesh.userData.spec;
+        mesh.material.blending = this.isLight ? THREE.NormalBlending : THREE.AdditiveBlending;
+        if (spec) {
+          mesh.material.color.setHex(this.isLight ? spec.colorLight : spec.colorDark);
+        }
+        mesh.material.needsUpdate = true;
+      });
+    }
+
+    const currentGlow = this.isLight ? this.glowTexLight : this.glowTexDark;
+    if (this.singularity) {
+      this.singularity.material.map = currentGlow;
+      this.singularity.material.blending = this.isLight ? THREE.NormalBlending : THREE.AdditiveBlending;
+      this.singularity.material.color.setHex(this.isLight ? 0x1d4ed8 : 0x60a5fa);
+      this.singularity.material.needsUpdate = true;
+    }
+    if (this.singularityInner) {
+      this.singularityInner.material.map = currentGlow;
+      this.singularityInner.material.blending = this.isLight ? THREE.NormalBlending : THREE.AdditiveBlending;
+      this.singularityInner.material.color.setHex(this.isLight ? 0x2563eb : 0xffffff);
+      this.singularityInner.material.needsUpdate = true;
+    }
+
+    if (this.nodes) {
+      this.nodes.forEach((s) => {
+        s.material.map = currentGlow;
+        s.material.blending = this.isLight ? THREE.NormalBlending : THREE.AdditiveBlending;
+        s.material.color.setHex(this.isLight ? 0x1d4ed8 : 0x38bdf8);
+        s.material.needsUpdate = true;
+      });
+    }
+    if (this.filamentMat) {
+      this.filamentMat.blending = this.isLight ? THREE.NormalBlending : THREE.AdditiveBlending;
+      if (this.filamentMat.uniforms.uIsLight) {
+        this.filamentMat.uniforms.uIsLight.value = this.isLight ? 1.0 : 0.0;
+      }
+      this.filamentMat.needsUpdate = true;
+    }
+
+    if (this.ribbons) {
+      const lightRibbonColors = [0x1d4ed8, 0x2563eb, 0x0284c7];
+      const darkRibbonColors = [0x1d4ed8, 0x2563eb, 0x06b6d4];
+      this.ribbons.forEach((m, i) => {
+        m.material.blending = this.isLight ? THREE.NormalBlending : THREE.AdditiveBlending;
+        m.material.color.setHex(this.isLight ? lightRibbonColors[i] : darkRibbonColors[i]);
+        m.material.needsUpdate = true;
+      });
+    }
+
+    if (this.stars) {
+      this.stars.material.blending = this.isLight ? THREE.NormalBlending : THREE.AdditiveBlending;
+      this.stars.material.color.setHex(this.isLight ? 0x2563eb : 0x94a3b8);
+      this.stars.material.opacity = this.isLight ? 0.35 : 0.45;
+      this.stars.material.needsUpdate = true;
     }
   }
 
@@ -506,7 +599,10 @@ export class Scene {
        flares with velocity, and spins on its own axis. ---- */
     const cageOp = mix('cage') * this.ignite;
     this.cages.forEach((c, i) => {
-      c.material.opacity += ((cageOp * (i === 0 ? 1 : 0.7)) - c.material.opacity) * 0.06;
+      const baseTarget = this.isLight
+        ? (cageOp * (i === 0 ? 1.2 : 0.9) + 0.20)
+        : (cageOp * (i === 0 ? 1 : 0.7));
+      c.material.opacity += (baseTarget - c.material.opacity) * 0.06;
       if (!this.reduced) {
         c.rotation.y += dt * (c.userData.speed + vAmt * 0.4) * (i === 0 ? 1 : 1.6);
         c.rotation.x += dt * c.userData.speed * 0.6;
@@ -520,15 +616,16 @@ export class Scene {
     const flare = 1 + vAmt * 0.9;
     const mergeBloom = mix('bond');
     if (this.singularity) {
-      const s = 3.0 * breathe * flare * (0.55 + ignitePulse * 0.45) * (1 + mergeBloom * 0.35);
+      const s = (this.isLight ? 2.6 : 3.0) * breathe * flare * (0.55 + ignitePulse * 0.45) * (1 + mergeBloom * 0.35);
       this.singularity.scale.set(s, s, 1);
-      this.singularity.material.opacity +=
-        ((0.30 + vAmt * 0.35 + mergeBloom * 0.25) * ignitePulse - this.singularity.material.opacity) * 0.06;
+      const targetSingOp = (this.isLight ? (0.42 + vAmt * 0.35 + mergeBloom * 0.25) : (0.30 + vAmt * 0.35 + mergeBloom * 0.25)) * ignitePulse;
+      this.singularity.material.opacity += (targetSingOp - this.singularity.material.opacity) * 0.06;
     }
     if (this.singularityInner) {
-      const s = 0.85 * breathe * flare * ignitePulse;
+      const s = (this.isLight ? 1.1 : 0.85) * breathe * flare * ignitePulse;
       this.singularityInner.scale.set(s, s, 1);
-      this.singularityInner.material.opacity += ((0.55 + vAmt * 0.3) * ignitePulse - this.singularityInner.material.opacity) * 0.08;
+      const targetInnerOp = (this.isLight ? (0.70 + vAmt * 0.3) : (0.55 + vAmt * 0.3)) * ignitePulse;
+      this.singularityInner.material.opacity += (targetInnerOp - this.singularityInner.material.opacity) * 0.08;
     }
 
     /* ---- Orbits: nodes swing around the core; radius collapses at
@@ -553,7 +650,8 @@ export class Scene {
       s.position.set(px, py, pz);
       const pulse = 1 + Math.sin(t * 2.0 + d.bob) * 0.18 + vAmt * 0.4;
       s.scale.setScalar(d.scale * pulse * (0.6 + this.ignite * 0.4));
-      s.material.opacity += ((0.5 + vAmt * 0.4) * this.ignite - s.material.opacity) * 0.08;
+      const targetNodeOp = (this.isLight ? (0.80 + vAmt * 0.2) : (0.5 + vAmt * 0.4)) * this.ignite;
+      s.material.opacity += (targetNodeOp - s.material.opacity) * 0.08;
 
       const o = i * 6;
       fPos.array[o] = 0; fPos.array[o + 1] = 0; fPos.array[o + 2] = 0;
@@ -563,7 +661,8 @@ export class Scene {
     });
     fPos.needsUpdate = true;
     fA.needsUpdate = true;
-    this.filamentMat.uniforms.uOpacity.value += (bondOpacity * 0.55 - this.filamentMat.uniforms.uOpacity.value) * 0.06;
+    const targetFilamentOp = this.isLight ? (bondOpacity * 0.8 + 0.16) : (bondOpacity * 0.55);
+    this.filamentMat.uniforms.uOpacity.value += (targetFilamentOp - this.filamentMat.uniforms.uOpacity.value) * 0.06;
     this.filaments.visible = this.filamentMat.uniforms.uOpacity.value > 0.01;
 
     /* ---- Aurora ribbons undulate; velocity tilts the whole field. */
@@ -577,7 +676,7 @@ export class Scene {
         p.setZ(k, z);
       }
       p.needsUpdate = true;
-      m.material.opacity = 0.035 + vAmt * 0.05;
+      m.material.opacity = this.isLight ? (0.05 + vAmt * 0.04) : (0.035 + vAmt * 0.05);
       m.rotation.z += dt * 0.012 * (i % 2 ? -1 : 1);
     });
 
