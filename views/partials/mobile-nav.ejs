@@ -1,0 +1,98 @@
+<nav class="mobile-nav" id="mobileNav" aria-label="Mobile Navigation">
+  <div class="mobile-nav__bar">
+    <!-- 1. Home / Studio -->
+    <a href="/" class="mobile-nav__item<%= isActive('/') ? ' is-active' : '' %>" aria-label="Home Studio"<% if (isActive('/')) { %> aria-current="page"<% } %>>
+      <div class="mobile-nav__icon-wrap">
+        <svg class="mobile-nav__icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+          <polyline points="9 22 9 12 15 12 15 22"></polyline>
+        </svg>
+      </div>
+      <span class="mobile-nav__label">Studio</span>
+    </a>
+
+    <!-- 2. Work / Projects -->
+    <a href="/work" class="mobile-nav__item<%= isActive('/work') ? ' is-active' : '' %>" aria-label="Selected Work"<% if (isActive('/work')) { %> aria-current="page"<% } %>>
+      <div class="mobile-nav__icon-wrap">
+        <svg class="mobile-nav__icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
+          <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
+        </svg>
+      </div>
+      <span class="mobile-nav__label">Work</span>
+    </a>
+
+    <!-- 3. Segments (Home) OR Services (Other Pages) -->
+    <% if (locals.pageType === 'home') { %>
+      <button type="button" class="mobile-nav__item mobile-nav__item--btn" id="mobileSegmentsTrigger" aria-label="View Page Chapters" aria-haspopup="dialog" aria-expanded="false">
+        <div class="mobile-nav__icon-wrap">
+          <svg class="mobile-nav__icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="4" y1="6" x2="20" y2="6"></line>
+            <line x1="4" y1="12" x2="14" y2="12"></line>
+            <line x1="4" y1="18" x2="18" y2="18"></line>
+          </svg>
+          <span class="mobile-nav__badge" id="mobileCurrentChapterBadge">01</span>
+        </div>
+        <span class="mobile-nav__label">Segments</span>
+      </button>
+    <% } else { %>
+      <a href="/services" class="mobile-nav__item<%= isActive('/services') ? ' is-active' : '' %>" aria-label="Services"<% if (isActive('/services')) { %> aria-current="page"<% } %>>
+        <div class="mobile-nav__icon-wrap">
+          <svg class="mobile-nav__icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="16 18 22 12 16 6"></polyline>
+            <polyline points="8 6 2 12 8 18"></polyline>
+          </svg>
+        </div>
+        <span class="mobile-nav__label">Services</span>
+      </a>
+    <% } %>
+
+    <!-- 4. Quick Search / Command Palette -->
+    <button type="button" class="mobile-nav__item mobile-nav__item--btn" data-open-command-palette aria-label="Quick Search across platform">
+      <div class="mobile-nav__icon-wrap">
+        <svg class="mobile-nav__icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="11" cy="11" r="8"></circle>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        </svg>
+      </div>
+      <span class="mobile-nav__label">Search</span>
+    </button>
+
+    <!-- 5. Start a Project (CTA) -->
+    <a href="/contact" class="mobile-nav__item mobile-nav__item--cta<%= isActive('/contact') ? ' is-active' : '' %>" aria-label="Start a Project">
+      <div class="mobile-nav__icon-wrap mobile-nav__icon-wrap--cta">
+        <svg class="mobile-nav__icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+        </svg>
+      </div>
+      <span class="mobile-nav__label">Start</span>
+    </a>
+  </div>
+</nav>
+
+<!-- Mobile Chapter Telemetry Bottom Sheet (Home) -->
+<% if (locals.pageType === 'home') { %>
+<div class="mobile-sheet" id="mobileSegmentsSheet" aria-hidden="true" role="dialog" aria-modal="true" aria-label="Chapter Navigator">
+  <div class="mobile-sheet__backdrop" id="mobileSegmentsBackdrop"></div>
+  <div class="mobile-sheet__panel">
+    <div class="mobile-sheet__handle" aria-hidden="true"></div>
+    <div class="mobile-sheet__head">
+      <div class="mobile-sheet__meta">
+        <span class="code">DCP // 008</span>
+        <h3 class="mobile-sheet__title">Chapter Telemetry</h3>
+      </div>
+      <button type="button" class="mobile-sheet__close" id="mobileSegmentsClose" aria-label="Close chapter menu">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+      </button>
+    </div>
+    
+    <div class="mobile-sheet__progress-bar">
+      <div class="mobile-sheet__progress-fill" id="mobileSheetProgressFill"></div>
+    </div>
+
+    <div class="mobile-sheet__list" id="mobileSheetList">
+      <!-- Populated dynamically by initRail -->
+    </div>
+  </div>
+</div>
+<% } %>

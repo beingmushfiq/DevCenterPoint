@@ -208,6 +208,36 @@ function initLightInteractions() {
   document.querySelectorAll('[data-year]').forEach((el) => {
     el.textContent = String(new Date().getFullYear());
   });
+
+  /* --- mobile segments bottom sheet --- */
+  const segTrigger = document.getElementById('mobileSegmentsTrigger');
+  const segSheet = document.getElementById('mobileSegmentsSheet');
+  const segBackdrop = document.getElementById('mobileSegmentsBackdrop');
+  const segClose = document.getElementById('mobileSegmentsClose');
+
+  if (segTrigger && segSheet && !segTrigger.dataset.sheetBound) {
+    segTrigger.dataset.sheetBound = 'true';
+    const openSheet = () => {
+      segSheet.classList.add('is-open');
+      segSheet.setAttribute('aria-hidden', 'false');
+      segTrigger.setAttribute('aria-expanded', 'true');
+      document.body.classList.add('sheet-open');
+    };
+    const closeSheet = () => {
+      segSheet.classList.remove('is-open');
+      segSheet.setAttribute('aria-hidden', 'true');
+      segTrigger.setAttribute('aria-expanded', 'false');
+      document.body.classList.remove('sheet-open');
+    };
+
+    segTrigger.addEventListener('click', openSheet);
+    if (segBackdrop) segBackdrop.addEventListener('click', closeSheet);
+    if (segClose) segClose.addEventListener('click', closeSheet);
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && segSheet.classList.contains('is-open')) closeSheet();
+    });
+    window.__dcpCloseMobileSheet = closeSheet;
+  }
 }
 
 /* ---- Instant Quick Search (Command Palette) ----------------- */
@@ -215,7 +245,6 @@ function initCommandPalette() {
   const palette = document.getElementById('commandPalette');
   const input = document.getElementById('commandPaletteInput');
   const resultsEl = document.getElementById('commandPaletteResults');
-  const openBtn = document.getElementById('openCommandPalette');
   const backdrop = document.getElementById('commandPaletteBackdrop');
   const escBtn = document.getElementById('commandPaletteEsc');
 
@@ -238,7 +267,9 @@ function initCommandPalette() {
     palette.setAttribute('aria-hidden', 'true');
   };
 
-  if (openBtn) openBtn.addEventListener('click', open);
+  document.querySelectorAll('#openCommandPalette, [data-open-command-palette]').forEach((btn) => {
+    btn.addEventListener('click', open);
+  });
   if (backdrop) backdrop.addEventListener('click', close);
   if (escBtn) escBtn.addEventListener('click', close);
 

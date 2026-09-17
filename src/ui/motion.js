@@ -408,6 +408,32 @@ export function initRail(sections, onChapter) {
   dots.appendChild(shell);
   dots.appendChild(hud);
 
+  // Populate Mobile Bottom Sheet List if present
+  const mobileSheetList = document.getElementById('mobileSheetList');
+  const mobileBadge = document.getElementById('mobileCurrentChapterBadge');
+  const mobileProgress = document.getElementById('mobileSheetProgressFill');
+
+  if (mobileSheetList) {
+    mobileSheetList.innerHTML = '';
+    chapters.forEach(({ sec, index, chNum, title }) => {
+      const item = document.createElement('button');
+      item.type = 'button';
+      item.className = 'mobile-sheet__item';
+      item.setAttribute('aria-label', `Navigate to Chapter ${chNum}: ${title}`);
+      item.dataset.index = String(index);
+      item.innerHTML = `
+        <span class="mobile-sheet__item-num">${chNum}</span>
+        <span class="mobile-sheet__item-title">${title}</span>
+        <svg class="mobile-sheet__item-arr" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+      `;
+      item.addEventListener('click', () => {
+        if (window.__dcpCloseMobileSheet) window.__dcpCloseMobileSheet();
+        scrollToChapter(index, { smooth: true });
+      });
+      mobileSheetList.appendChild(item);
+    });
+  }
+
   const hudBadge = hud.querySelector('.chapter-dots__hud-badge');
   const hudPct = hud.querySelector('.chapter-dots__hud-pct');
   const hudTitle = hud.querySelector('.chapter-dots__hud-title');
@@ -519,6 +545,18 @@ export function initRail(sections, onChapter) {
       b.setAttribute('aria-current', String(isCurrent));
       b.classList.toggle('is-passed', i < currentIdx);
     });
+
+    if (mobileBadge && chapters[currentIdx]) {
+      mobileBadge.textContent = chapters[currentIdx].chNum;
+    }
+    if (mobileProgress) {
+      mobileProgress.style.width = pctStr;
+    }
+    if (mobileSheetList) {
+      [...mobileSheetList.children].forEach((item, i) => {
+        item.classList.toggle('is-active', i === currentIdx);
+      });
+    }
   };
 
   // Global scroll listener for natural scrolling
@@ -638,6 +676,14 @@ export function initRail(sections, onChapter) {
         b.setAttribute('aria-current', String(i === idx));
         b.classList.toggle('is-passed', i < idx);
       });
+      if (mobileBadge && chapters[idx]) {
+        mobileBadge.textContent = chapters[idx].chNum;
+      }
+      if (mobileSheetList) {
+        [...mobileSheetList.children].forEach((item, i) => {
+          item.classList.toggle('is-active', i === idx);
+        });
+      }
       if (onChapter) onChapter(idx);
     }
   };
