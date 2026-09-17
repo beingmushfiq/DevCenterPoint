@@ -140,7 +140,6 @@ async function app() {
       revealSplit(heroChars, { delay: reduceMotion ? 0 : 1.15 });
     }
 
-    initLightInteractions();
     setTimeout(() => window.dispatchEvent(new Event('resize')), 260);
   };
 
@@ -155,7 +154,8 @@ function initLightInteractions() {
   /* --- mobile nav --- */
   const toggle = document.querySelector('[data-nav-toggle]');
   const nav = document.getElementById('nav');
-  if (toggle && nav) {
+  if (toggle && nav && !toggle.dataset.navBound) {
+    toggle.dataset.navBound = 'true';
     toggle.addEventListener('click', () => {
       const open = nav.classList.toggle('is-open');
       toggle.setAttribute('aria-expanded', String(open));
@@ -164,6 +164,9 @@ function initLightInteractions() {
 
   /* --- FAQ / disclosure accordions --- */
   document.querySelectorAll('[data-accordion]').forEach((item) => {
+    if (item.dataset.accordionBound) return;
+    item.dataset.accordionBound = 'true';
+
     const trigger = item.querySelector('button, [data-accordion-trigger]');
     if (!trigger) return;
     trigger.addEventListener('click', () => {
@@ -353,5 +356,9 @@ function initScopeEstimator() {
   }
 }
 
-document.addEventListener('DOMContentLoaded', app);
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', app);
+} else {
+  app();
+}
 

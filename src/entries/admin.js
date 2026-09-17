@@ -13,7 +13,7 @@
 import '../styles/admin.css';
 import { initTheme } from '../ui/theme.js';
 
-document.addEventListener('DOMContentLoaded', () => {
+function initAdmin() {
   initTheme();
   initSlugFields();
   initConfirmations();
@@ -24,7 +24,13 @@ document.addEventListener('DOMContentLoaded', () => {
   initMediaPicker();
   initToasts();
   initTestimonialPreview();
-});
+}
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initAdmin);
+} else {
+  initAdmin();
+}
 
 /* ---- admin sidebar (mobile drawer) --------------------------- */
 function initSidebar() {

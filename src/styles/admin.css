@@ -183,6 +183,7 @@ img { display: block; max-width: 100%; }
   transition: color var(--motion-base);
 }
 .stat-card:hover .stat-card__v { color: var(--color-primary-soft); }
+.stat-card__v.is-highlighted { color: var(--color-primary); }
 .stat-card__l {
   margin-top: var(--space-3);
   font-family: var(--font-mono); font-size: 0.625rem;
@@ -213,6 +214,7 @@ img { display: block; max-width: 100%; }
   vertical-align: middle;
 }
 .admin-table tr:hover td { background: var(--color-surface-raised); }
+.admin-table tr.is-unread td { background: rgb(255 77 28 / 0.04); font-weight: 500; }
 .admin-table__title { color: var(--color-text); font-weight: 500; }
 .admin-table__title a:hover { color: var(--color-primary); }
 .admin-table__actions { display: flex; gap: var(--space-3); flex-wrap: wrap; justify-content: flex-end; }
@@ -304,6 +306,7 @@ img { display: block; max-width: 100%; }
 .btn--primary:hover { box-shadow: var(--glow-primary); filter: brightness(1.08); }
 .btn--ghost { background: transparent; border-color: var(--color-border-strong); color: var(--color-text); }
 .btn--ghost:hover { border-color: var(--color-border-hover); color: var(--color-text); background: var(--color-surface-raised); }
+.btn--ghost.is-active { border-color: var(--color-primary); color: var(--color-primary); }
 .btn--danger { background: transparent; border-color: rgb(239 68 68 / 0.40); color: #ef4444; }
 .btn--danger:hover { background: rgb(239 68 68 / 0.10); border-color: #ef4444; }
 .btn--sm { height: 32px; padding: 0 var(--space-4); font-size: 0.5625rem; }
@@ -512,20 +515,78 @@ tr.is-dragging { opacity: 0.4; }
   to { opacity: 1; transform: translateY(0); }
 }
 
-/* ============ ADMIN THEME TOGGLE ============ */
-.theme-toggle--admin {
-  width: 32px;
-  height: 32px;
+/* ============ THEME TOGGLE BUTTON ============ */
+.theme-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  line-height: 1;
+  border-radius: var(--radius-xs);
   background: var(--color-surface);
   border: 1px solid var(--color-border);
   color: var(--color-text);
-  border-radius: var(--radius-xs);
+  cursor: pointer;
+  overflow: hidden;
+  position: relative;
+  flex: none;
+  transition:
+    border-color var(--motion-fast),
+    color var(--motion-fast),
+    background var(--motion-fast),
+    transform var(--motion-fast),
+    box-shadow var(--motion-fast);
 }
-.theme-toggle--admin:hover {
-  background: var(--color-surface-raised);
+.theme-toggle:hover {
   border-color: var(--color-primary);
   color: var(--color-primary);
+  background: var(--color-surface-raised);
   box-shadow: var(--glow-primary);
+  transform: translateY(-1px);
+}
+.theme-toggle:active { transform: translateY(0); }
+
+.theme-toggle--admin {
+  width: 32px;
+  height: 32px;
+}
+
+/* Both icons overlap each other in the center; only one is
+   visible at a time with smooth spring rotation. */
+.theme-toggle__icon-sun,
+.theme-toggle__icon-moon {
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%) scale(1);
+  width: 16px; height: 16px;
+  transition:
+    opacity var(--motion-fast),
+    transform var(--motion-base) var(--ease-spring);
+}
+
+/* Dark mode default: show moon, hide sun */
+.theme-toggle__icon-sun {
+  opacity: 0;
+  transform: translate(-50%, -50%) scale(0.5) rotate(-30deg);
+  color: #f59e0b;
+  pointer-events: none;
+}
+.theme-toggle__icon-moon {
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1) rotate(0deg);
+}
+
+/* Light mode: show sun, hide moon */
+[data-theme='light'] .theme-toggle__icon-sun {
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1) rotate(0deg);
+}
+[data-theme='light'] .theme-toggle__icon-moon {
+  opacity: 0;
+  transform: translate(-50%, -50%) scale(0.5) rotate(30deg);
+  pointer-events: none;
 }
 
 /* ============ RESPONSIVE & MOBILE DRAWER ============ */

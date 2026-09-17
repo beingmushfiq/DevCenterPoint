@@ -18,7 +18,7 @@
   </div>
 
   <div class="stat-card">
-    <span class="stat-card__v" style="color: <%= stats.unreadSubmissions > 0 ? 'var(--color-primary)' : 'inherit' %>;">
+    <span class="stat-card__v <%= stats.unreadSubmissions > 0 ? 'is-highlighted' : '' %>">
       <%= stats.unreadSubmissions %>
     </span>
     <span class="stat-card__l">New Enquiries</span>
