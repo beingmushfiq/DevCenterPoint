@@ -204,6 +204,9 @@ async function main() {
     });
   });
 
+  /* Fast favicon route: avoids routing/db overhead */
+  app.get('/favicon.ico', (req, res) => res.redirect(301, '/favicon.svg'));
+
   /* ---- 7. assets --------------------------------------------- */
   await initAssets(app);
 
