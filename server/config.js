@@ -32,9 +32,9 @@ if (!process.env.SESSION_SECRET || !process.env.DB_NAME) {
 }
 
 /* Production is opted into explicitly, via `--prod` or NODE_ENV.
-   We never infer it — inferring has cost too many people their
-   staging database. */
+   On cPanel, the Application mode panel sets NODE_ENV automatically. */
 const isProd = process.argv.includes('--prod') || process.env.NODE_ENV === 'production';
+
 
 function fail(message) {
   console.error(`\n  ✖ Configuration error\n    ${message}\n`);

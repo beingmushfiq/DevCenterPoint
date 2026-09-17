@@ -42,28 +42,44 @@ function esc(value) {
 }
 
 export async function initAssets(app) {
+  /* In production (or when vite is not installed), load the build manifest. */
+  const manifestPath = path.join(config.paths.dist, '.vite', 'manifest.json');
+
   if (config.isProd) {
     mode = 'prod';
-    const manifestPath = path.join(config.paths.dist, '.vite', 'manifest.json');
     if (!fs.existsSync(manifestPath)) {
-      console.error('\n  ✖ Build manifest not found.');
-      console.error('    Run `npm run build` before starting in production mode.\n');
-      process.exit(1);
+      console.warn('  ⚠️ Build manifest not found at dist/.vite/manifest.json');
+      console.warn('    Serving without asset tags. Run `npm run build` to fix.');
+      manifest = {};
+    } else {
+      manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
+      console.log('  · Assets: production build manifest loaded');
     }
-    manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
-    console.log('  · Assets: production build manifest loaded');
     return;
   }
 
+  /* Dev mode — try to start Vite middleware. If vite is not installed
+     (e.g. npm install --omit=dev was used), fall back to prod manifest. */
   mode = 'dev';
-  /* Imported lazily so production never loads the dev server. */
-  const { createServer } = await import('vite');
-  viteServer = await createServer({
-    server: { middlewareMode: true },
-    appType: 'custom',
-  });
-  app.use(viteServer.middlewares);
-  console.log('  · Assets: Vite dev middleware attached (HMR active)');
+  try {
+    const { createServer } = await import('vite');
+    viteServer = await createServer({
+      server: { middlewareMode: true },
+      appType: 'custom',
+    });
+    app.use(viteServer.middlewares);
+    console.log('  · Assets: Vite dev middleware attached (HMR active)');
+  } catch (e) {
+    /* vite not installed — switch to production manifest mode */
+    mode = 'prod';
+    if (fs.existsSync(manifestPath)) {
+      manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
+      console.log('  · Assets: vite not installed, using production build manifest');
+    } else {
+      manifest = {};
+      console.warn('  ⚠️ vite not installed and no build manifest found — assets may not load.');
+    }
+  }
 }
 
 /* Resolve an entry name to its emitted files. In production a
