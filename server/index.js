@@ -70,6 +70,35 @@ async function main() {
   }
   const app = express();
 
+  /* ---- diagnostic endpoints (bypass all middleware & sessions) ---- */
+  app.get('/healthz', async (req, res) => {
+    try {
+      const h = await healthCheck();
+      let tablesCount = 0;
+      let tables = [];
+      if (h.ok) {
+        try {
+          const [rows] = await pool.query('SHOW TABLES');
+          tablesCount = rows.length;
+          tables = rows.map((r) => Object.values(r)[0]);
+        } catch { /* ignore */ }
+      }
+      res.status(h.ok ? 200 : 503).json({
+        ok: h.ok,
+        database: h.ok ? h.database : null,
+        version: h.ok ? h.version : null,
+        tablesCount,
+        tables,
+        sessionSecretConfigured: !!config.session.secret,
+        mode: config.isProd ? 'production' : 'development',
+      });
+    } catch (err) {
+      res.status(500).json({ ok: false, error: err.message, stack: err.stack });
+    }
+  });
+
+  app.get('/favicon.ico', (req, res) => res.redirect(301, '/favicon.svg'));
+
   app.disable('x-powered-by');
   /* Trust the first proxy hop so `req.protocol` and rate limiting
      see the real client address behind a reverse proxy. */
@@ -132,17 +161,15 @@ async function main() {
      restarts, means being logged out constantly. */
   const MySQLStore = MySQLStoreFactory(session);
   const sessionStore = new MySQLStore({
-    host: config.db.host,
-    port: config.db.port,
-    user: config.db.user,
-    password: config.db.password,
-    database: config.db.database,
-    createDatabaseTable: false,   // declared in 001_init.sql
+    clearExpired: true,
+    checkExpirationInterval: 1000 * 60 * 15,
+    expiration: config.session.maxAge,
+    createDatabaseTable: true,   // Automatically creates sessions table if absent!
     schema: {
       tableName: 'sessions',
       columnNames: { session_id: 'session_id', expires: 'expires', data: 'data' },
     },
-  });
+  }, pool);
 
   sessionStore.on('error', (err) => {
     console.error('  ✖ Session store error:', err.message);
@@ -192,20 +219,6 @@ async function main() {
       dotfiles: 'deny',
     }));
   }
-
-  /* Health endpoint for uptime checks and for confirming the
-     server is live without touching a rendered page. */
-  app.get('/healthz', async (req, res) => {
-    const h = await healthCheck();
-    res.status(h.ok ? 200 : 503).json({
-      ok: h.ok,
-      database: h.ok ? h.database : null,
-      version: h.ok ? h.version : null,
-    });
-  });
-
-  /* Fast favicon route: avoids routing/db overhead */
-  app.get('/favicon.ico', (req, res) => res.redirect(301, '/favicon.svg'));
 
   /* ---- 7. assets --------------------------------------------- */
   await initAssets(app);

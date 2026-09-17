@@ -59,9 +59,23 @@ export function errorHandler(err, req, res, next) {
   const isDbDown = ['ECONNREFUSED', 'PROTOCOL_CONNECTION_LOST', 'ER_BAD_DB_ERROR']
     .includes(err.code);
 
-  return res.render('pages/500', {
-    title: 'Something went wrong',
-    isDbDown,
-    message: status < 500 ? err.message : null,
-  });
+  try {
+    return res.render('pages/500', {
+      title: 'Something went wrong',
+      isDbDown,
+      message: status < 500 ? err.message : null,
+    });
+  } catch (renderErr) {
+    return res.status(500).send(`
+      <!DOCTYPE html>
+      <html>
+      <head><meta charset="utf-8"><title>500 — Application Error</title></head>
+      <body style="font-family: ui-monospace, monospace; padding: 40px; background: #0c101a; color: #f5f3ef; line-height: 1.6;">
+        <h1 style="color: #ff4d1c; font-size: 1.5rem;">500 — Server Application Notice</h1>
+        <p style="color: #f5f3ef; font-size: 1rem;"><strong>Cause:</strong> ${err.message || 'Unknown internal error'}</p>
+        <p style="color: #8b92a5; font-size: 0.85rem;">If this mentions a missing database table or connection, run <code>npm run db:setup</code> in cPanel Setup Node.js App.</p>
+      </body>
+      </html>
+    `);
+  }
 }

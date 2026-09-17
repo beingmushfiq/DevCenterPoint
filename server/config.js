@@ -12,13 +12,24 @@
       clear message.
    ============================================================ */
 
-import 'dotenv/config';
+import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import dotenv from 'dotenv';
 
 const here = path.dirname(fileURLToPath(import.meta.url));
-
 export const ROOT = path.resolve(here, '..');
+
+// Load standard .env if present
+dotenv.config();
+
+// If SESSION_SECRET or DB_NAME is missing, load .env.production
+if (!process.env.SESSION_SECRET || !process.env.DB_NAME) {
+  const prodEnv = path.join(ROOT, '.env.production');
+  if (fs.existsSync(prodEnv)) {
+    dotenv.config({ path: prodEnv, override: true });
+  }
+}
 
 /* Production is opted into explicitly, via `--prod` or NODE_ENV.
    We never infer it — inferring has cost too many people their
