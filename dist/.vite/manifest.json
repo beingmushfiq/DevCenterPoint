@@ -24,7 +24,7 @@
     ]
   },
   "src/entries/site.js": {
-    "file": "assets/site-Cunil4nI.js",
+    "file": "assets/site-BpcveyJQ.js",
     "name": "site",
     "src": "src/entries/site.js",
     "isEntry": true,
@@ -37,7 +37,7 @@
       "src/three/spline.js"
     ],
     "css": [
-      "assets/site-CXv39P1_.css"
+      "assets/site-BkgFJZbb.css"
     ]
   },
   "src/three/scene.js": {

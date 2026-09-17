@@ -6,6 +6,8 @@ gsap.registerPlugin(ScrollTrigger);
 
 export const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
+export let activeLenis = null;
+
 export function initSmoothScroll() {
   if (reduceMotion) return null;
 
@@ -16,6 +18,7 @@ export function initSmoothScroll() {
     wheelMultiplier: 1,
     touchMultiplier: 1.4,
   });
+  activeLenis = lenis;
 
   lenis.on('scroll', ScrollTrigger.update);
 
@@ -305,28 +308,337 @@ export function initNav() {
   window.addEventListener('scroll', onScroll, { passive: true });
 }
 
-/* Progress rail + chapter dots. Returns an "set active" updater. */
+/* ============================================================
+   PRECISION SEGMENT NAVIGATOR & DRAGGABLE SCRUBBER
+   ------------------------------------------------------------
+   - Generous hit targets (30px vertical target per segment)
+   - Real-time dragging & scrubbing with magnetic chapter snaps
+   - Sleek glassmorphic telemetry shell
+   - Draggable reticle thumb with illuminated core
+   - Real-time floating HUD tooltip with section titles & %
+   - Direct integration with Lenis smooth scroll
+   ============================================================ */
 export function initRail(sections, onChapter) {
   const fill = document.getElementById('railFill');
   const dots = document.getElementById('dots');
-  if (!dots) return null;
+  if (!dots || !sections || !sections.length) return null;
 
-  sections.forEach((sec, i) => {
-    const b = document.createElement('button');
-    b.type = 'button';
-    b.setAttribute('aria-label', `Chapter ${i + 1}`);
-    b.addEventListener('click', () => sec.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth' }));
-    dots.appendChild(b);
+  dots.removeAttribute('aria-hidden');
+  dots.setAttribute('role', 'region');
+  dots.setAttribute('aria-label', 'Section Navigator and Scrubber');
+  dots.innerHTML = '';
+
+  // Extract titles and metadata for every chapter
+  const chapters = sections.map((sec, i) => {
+    const chNum = String(i + 1).padStart(2, '0');
+    let title = `Chapter ${i + 1}`;
+    const indexEl = sec.querySelector('.chapter__index, .eyebrow');
+    if (indexEl) {
+      const raw = indexEl.textContent.replace(/\s+/g, ' ').trim();
+      const stripped = raw.replace(/^(DCP\s*\/\s*\d+|\d+)\s*[-—·/]?\s*/i, '').trim();
+      if (stripped) title = stripped;
+    } else {
+      const heading = sec.querySelector('h1, h2, h3');
+      if (heading) {
+        const stripped = heading.textContent.replace(/\s+/g, ' ').trim();
+        if (stripped) title = stripped;
+      }
+    }
+    if (title.length > 28) title = title.slice(0, 26) + '…';
+    return { sec, index: i, chNum, title };
   });
 
-  window.addEventListener('scroll', () => {
+  // Create Shell
+  const shell = document.createElement('div');
+  shell.className = 'chapter-dots__shell';
+
+  // Create Vertical Track & Thumb
+  const track = document.createElement('div');
+  track.className = 'chapter-dots__track';
+  track.innerHTML = `
+    <div class="chapter-dots__fill" id="railVerticalFill"></div>
+    <div class="chapter-dots__thumb" id="railThumb" title="Drag to scrub">
+      <span class="chapter-dots__thumb-pip"></span>
+    </div>
+  `;
+  shell.appendChild(track);
+
+  const verticalFill = track.querySelector('.chapter-dots__fill');
+  const thumb = track.querySelector('.chapter-dots__thumb');
+
+  // Create List of Buttons
+  const list = document.createElement('div');
+  list.className = 'chapter-dots__list';
+
+  const buttons = chapters.map(({ sec, index, chNum, title }) => {
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'chapter-dots__item';
+    btn.setAttribute('aria-label', `Navigate to Chapter ${chNum}: ${title}`);
+    btn.setAttribute('aria-current', index === 0 ? 'true' : 'false');
+    btn.dataset.index = String(index);
+    btn.innerHTML = `
+      <span class="chapter-dots__num">${chNum}</span>
+      <span class="chapter-dots__bar"></span>
+    `;
+
+    // Click handler (triggers only if not dragging)
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      scrollToChapter(index, { smooth: true });
+    });
+
+    list.appendChild(btn);
+    return btn;
+  });
+
+  shell.appendChild(list);
+
+  // Floating HUD Tooltip
+  const hud = document.createElement('div');
+  hud.className = 'chapter-dots__hud';
+  hud.setAttribute('aria-hidden', 'true');
+  hud.innerHTML = `
+    <div class="chapter-dots__hud-meta">
+      <span class="chapter-dots__hud-badge">CH 01</span>
+      <span class="chapter-dots__hud-pct">0%</span>
+    </div>
+    <div class="chapter-dots__hud-title">Overview</div>
+  `;
+  dots.appendChild(shell);
+  dots.appendChild(hud);
+
+  const hudBadge = hud.querySelector('.chapter-dots__hud-badge');
+  const hudPct = hud.querySelector('.chapter-dots__hud-pct');
+  const hudTitle = hud.querySelector('.chapter-dots__hud-title');
+
+  let activeIndex = 0;
+  let isDragging = false;
+  let hudHideTimeout = null;
+  let pointerStartY = 0;
+
+  const showHud = () => {
+    clearTimeout(hudHideTimeout);
+    hud.classList.add('is-visible');
+  };
+
+  const hideHud = (delay = 700) => {
+    clearTimeout(hudHideTimeout);
+    hudHideTimeout = setTimeout(() => {
+      if (!isDragging) hud.classList.remove('is-visible');
+    }, delay);
+  };
+
+  const updateHudContent = (index, pct) => {
+    const ch = chapters[index] || chapters[0];
+    hudBadge.textContent = `CH ${ch.chNum}`;
+    hudPct.textContent = `${Math.round(pct * 100)}%`;
+    hudTitle.textContent = ch.title;
+  };
+
+  const positionHud = (yPx) => {
+    const dotsRect = dots.getBoundingClientRect();
+    const relativeY = Math.max(16, Math.min(dotsRect.height - 16, yPx - dotsRect.top));
+    hud.style.top = `${relativeY}px`;
+  };
+
+  const scrollToChapter = (index, { smooth = true } = {}) => {
+    const target = sections[index];
+    if (!target) return;
+    if (activeLenis) {
+      activeLenis.scrollTo(target, { duration: smooth && !reduceMotion ? 1.15 : 0 });
+    } else {
+      target.scrollIntoView({ behavior: smooth && !reduceMotion ? 'smooth' : 'auto' });
+    }
+  };
+
+  // Compute scroll metrics for each section
+  const getSectionMetrics = () => {
+    const maxScroll = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
+    return sections.map((sec, i) => {
+      const top = sec.getBoundingClientRect().top + window.scrollY;
+      return {
+        index: i,
+        top,
+        pct: Math.min(1, Math.max(0, top / maxScroll)),
+      };
+    });
+  };
+
+  // Perform scrub from client Y coordinate
+  const scrubToPointerY = (clientY, { snap = true } = {}) => {
+    const trackRect = track.getBoundingClientRect();
+    if (trackRect.height <= 0) return;
+
+    let p = (clientY - trackRect.top) / trackRect.height;
+    p = Math.max(0, Math.min(1, p));
+
+    const maxScroll = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
+    let targetY = p * maxScroll;
+
+    // Magnetic snapping: if within 3.5% of any section's target, snap cleanly
+    const metrics = getSectionMetrics();
+    let closestIndex = 0;
+    let minDiff = Infinity;
+    metrics.forEach((m) => {
+      const diff = Math.abs(m.pct - p);
+      if (diff < minDiff) {
+        minDiff = diff;
+        closestIndex = m.index;
+      }
+    });
+
+    if (snap && minDiff < 0.038) {
+      p = metrics[closestIndex].pct;
+      targetY = metrics[closestIndex].top;
+    }
+
+    if (activeLenis) {
+      activeLenis.scrollTo(targetY, { immediate: true });
+    } else {
+      window.scrollTo(0, targetY);
+    }
+
+    // Update visuals immediately
+    updateVisuals(p, closestIndex);
+    positionHud(clientY);
+    updateHudContent(closestIndex, p);
+    showHud();
+  };
+
+  const updateVisuals = (p, currentIdx) => {
+    const pctClamped = Math.max(0, Math.min(1, p));
+    const pctStr = (pctClamped * 100).toFixed(1) + '%';
+
+    if (fill) fill.style.width = pctStr;
+    if (verticalFill) verticalFill.style.height = pctStr;
+    if (thumb) thumb.style.top = pctStr;
+
+    buttons.forEach((b, i) => {
+      const isCurrent = i === currentIdx;
+      b.setAttribute('aria-current', String(isCurrent));
+      b.classList.toggle('is-passed', i < currentIdx);
+    });
+  };
+
+  // Global scroll listener for natural scrolling
+  const onWindowScroll = () => {
+    if (isDragging) return; // Drag handler owns the updates while dragging
     const max = document.documentElement.scrollHeight - window.innerHeight;
     const p = max > 0 ? window.scrollY / max : 0;
-    if (fill) fill.style.width = (p * 100).toFixed(2) + '%';
-  }, { passive: true });
+    
+    // Find closest section
+    const metrics = getSectionMetrics();
+    let currentIdx = 0;
+    for (let i = 0; i < metrics.length; i++) {
+      if (window.scrollY >= metrics[i].top - window.innerHeight * 0.45) {
+        currentIdx = i;
+      }
+    }
+    activeIndex = currentIdx;
+    updateVisuals(p, currentIdx);
+  };
 
+  window.addEventListener('scroll', onWindowScroll, { passive: true });
+  window.addEventListener('resize', onWindowScroll, { passive: true });
+
+  // Initial sync
+  setTimeout(onWindowScroll, 50);
+
+  // Drag / Scrub Event Handlers on Shell
+  shell.addEventListener('pointerdown', (e) => {
+    if (e.button !== 0 && e.pointerType === 'mouse') return;
+    isDragging = true;
+    pointerStartY = e.clientY;
+
+    try { shell.setPointerCapture(e.pointerId); } catch {}
+    dots.classList.add('is-dragging');
+    document.body.classList.add('is-scrubbing');
+
+    scrubToPointerY(e.clientY, { snap: false });
+    e.preventDefault();
+  });
+
+  shell.addEventListener('pointermove', (e) => {
+    if (isDragging) {
+      scrubToPointerY(e.clientY, { snap: true });
+    } else {
+      // Hover preview: update HUD
+      const trackRect = track.getBoundingClientRect();
+      if (trackRect.height > 0) {
+        let p = (e.clientY - trackRect.top) / trackRect.height;
+        p = Math.max(0, Math.min(1, p));
+        const metrics = getSectionMetrics();
+        let closestIndex = 0;
+        let minDiff = Infinity;
+        metrics.forEach((m) => {
+          const diff = Math.abs(m.pct - p);
+          if (diff < minDiff) {
+            minDiff = diff;
+            closestIndex = m.index;
+          }
+        });
+        positionHud(e.clientY);
+        updateHudContent(closestIndex, p);
+        showHud();
+      }
+    }
+  });
+
+  const onPointerEnd = (e) => {
+    if (isDragging) {
+      try { shell.releasePointerCapture(e.pointerId); } catch {}
+      isDragging = false;
+      dots.classList.remove('is-dragging');
+      document.body.classList.remove('is-scrubbing');
+      hideHud(1000);
+    }
+  };
+
+  shell.addEventListener('pointerup', onPointerEnd);
+  shell.addEventListener('pointercancel', onPointerEnd);
+
+  shell.addEventListener('mouseenter', () => {
+    showHud();
+    const thumbRect = thumb.getBoundingClientRect();
+    positionHud(thumbRect.top + thumbRect.height / 2);
+    updateHudContent(activeIndex, activeIndex / Math.max(1, chapters.length - 1));
+  });
+
+  shell.addEventListener('mouseleave', () => {
+    if (!isDragging) hideHud(300);
+  });
+
+  // Keyboard navigation support on shell
+  shell.setAttribute('tabindex', '0');
+  shell.setAttribute('aria-label', 'Use arrow keys to jump between sections');
+  shell.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowDown' || e.key === 'ArrowRight') {
+      e.preventDefault();
+      const next = Math.min(sections.length - 1, activeIndex + 1);
+      scrollToChapter(next, { smooth: true });
+    } else if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') {
+      e.preventDefault();
+      const prev = Math.max(0, activeIndex - 1);
+      scrollToChapter(prev, { smooth: true });
+    } else if (e.key === 'Home') {
+      e.preventDefault();
+      scrollToChapter(0, { smooth: true });
+    } else if (e.key === 'End') {
+      e.preventDefault();
+      scrollToChapter(sections.length - 1, { smooth: true });
+    }
+  });
+
+  // Return updater function for trackChapters IntersectionObserver
   return (idx) => {
-    [...dots.children].forEach((d, i) => d.setAttribute('aria-current', String(i === idx)));
-    if (onChapter) onChapter(idx);
+    activeIndex = idx;
+    if (!isDragging) {
+      buttons.forEach((b, i) => {
+        b.setAttribute('aria-current', String(i === idx));
+        b.classList.toggle('is-passed', i < idx);
+      });
+      if (onChapter) onChapter(idx);
+    }
   };
 }
