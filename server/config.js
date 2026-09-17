@@ -52,7 +52,9 @@ function opt(key, fallback = '') {
 
 export const config = {
   isProd,
-  port: Number(opt('PORT', 3000)),
+  port: (process.env.PORT && isNaN(Number(process.env.PORT)))
+    ? process.env.PORT
+    : Number(opt('PORT', 3000)),
   siteUrl: opt('SITE_URL', `http://localhost:${opt('PORT', 3000)}`),
 
   db: {
@@ -64,6 +66,7 @@ export const config = {
     password: opt('DB_PASSWORD', ''),
     database: opt('DB_NAME', 'devcenterpoint_cms'),
     connectionLimit: Number(opt('DB_POOL_SIZE', 10)),
+    socketPath: opt('DB_SOCKET', ''),
   },
 
   session: {

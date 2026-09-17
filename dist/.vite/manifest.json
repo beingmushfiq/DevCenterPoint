@@ -1,0 +1,58 @@
+{
+  "_motion-B-NUKnBa.js": {
+    "file": "assets/motion-B-NUKnBa.js",
+    "name": "motion"
+  },
+  "_theme-B_nFrgoG.js": {
+    "file": "assets/theme-B_nFrgoG.js",
+    "name": "theme"
+  },
+  "_three-CvlHKI96.js": {
+    "file": "assets/three-CvlHKI96.js",
+    "name": "three"
+  },
+  "src/entries/admin.js": {
+    "file": "assets/admin-B_eAi6iy.js",
+    "name": "admin",
+    "src": "src/entries/admin.js",
+    "isEntry": true,
+    "imports": [
+      "_theme-B_nFrgoG.js"
+    ],
+    "css": [
+      "assets/admin-Cercojm8.css"
+    ]
+  },
+  "src/entries/site.js": {
+    "file": "assets/site-Cunil4nI.js",
+    "name": "site",
+    "src": "src/entries/site.js",
+    "isEntry": true,
+    "imports": [
+      "_motion-B-NUKnBa.js",
+      "_theme-B_nFrgoG.js"
+    ],
+    "dynamicImports": [
+      "src/three/scene.js",
+      "src/three/spline.js"
+    ],
+    "css": [
+      "assets/site-CXv39P1_.css"
+    ]
+  },
+  "src/three/scene.js": {
+    "file": "assets/scene-BDg1886C.js",
+    "name": "scene",
+    "src": "src/three/scene.js",
+    "isDynamicEntry": true,
+    "imports": [
+      "_three-CvlHKI96.js"
+    ]
+  },
+  "src/three/spline.js": {
+    "file": "assets/spline-Bab0RT4N.js",
+    "name": "spline",
+    "src": "src/three/spline.js",
+    "isDynamicEntry": true
+  }
+}

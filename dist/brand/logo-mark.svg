@@ -1,0 +1,63 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500" width="100%" height="100%">
+  <defs>
+    <linearGradient id="dcp-blue-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#2563EB" />
+      <stop offset="50%" stop-color="#1D4ED8" />
+      <stop offset="100%" stop-color="#3B82F6" />
+    </linearGradient>
+    <linearGradient id="dcp-core-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#3B82F6" />
+      <stop offset="100%" stop-color="#1E40AF" />
+    </linearGradient>
+  </defs>
+
+  <!-- Left 'D' Form in Dark Carbon -->
+  <path d="M 140 110 
+           L 260 110 
+           C 275 110, 285 116, 292 125 
+           C 272 138, 255 160, 245 185
+           L 205 185
+           L 205 315
+           L 270 315
+           C 285 315, 305 305, 320 290
+           L 320 340
+           C 300 375, 260 390, 215 390
+           L 140 390 
+           Z" 
+        fill="#0D111A" />
+
+  <!-- Right 'P' Pin Form in Electric Blue -->
+  <path d="M 268 128
+           C 285 128, 305 132, 325 142
+           C 355 158, 375 188, 375 228
+           C 375 272, 350 305, 312 320
+           L 268 320
+           L 268 425
+           L 268 360
+           L 268 320
+           C 252 305, 238 285, 230 262
+           C 240 248, 248 232, 252 215
+           C 255 200, 255 185, 252 170
+           C 255 155, 260 142, 268 128
+           Z" 
+        fill="url(#dcp-blue-grad)" />
+
+  <!-- The Code symbol </> inside the upper right of 'P' -->
+  <g fill="none" stroke="#FFFFFF" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" transform="translate(305, 155)">
+    <!-- < -->
+    <polyline points="14,10 4,20 14,30" />
+    <!-- / -->
+    <line x1="22" y1="8" x2="16" y2="32" stroke-width="7" />
+    <!-- > -->
+    <polyline points="24,10 34,20 24,30" />
+  </g>
+
+  <!-- Center Pinpoint / Lens Bullseye -->
+  <!-- Outer White Ring -->
+  <circle cx="268" cy="245" r="58" fill="#FFFFFF" />
+  <circle cx="268" cy="245" r="58" fill="none" stroke="#0D111A" stroke-width="4" />
+
+  <!-- Inner Electric Blue Bullseye Pupil -->
+  <circle cx="268" cy="245" r="32" fill="url(#dcp-core-grad)" />
+  <circle cx="262" cy="238" r="8" fill="#60A5FA" opacity="0.6" />
+</svg>

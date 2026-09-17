@@ -46,7 +46,83 @@ Before you begin, verify that your cPanel account has:
 
 ---
 
-## 2. Step-by-Step Deployment Walkthrough
+## 2. ⚡ Automated Deployment with cPanel Git™ Version Control (Recommended)
+
+This project includes pre-configured `.cpanel.yml`, `deploy.sh`, and `.env.production` files so your commits deploy **automatically**.
+
+### Pre-Configured Database Credentials
+The project is already pre-configured with your cPanel database credentials:
+- **DB Name:** `devcente_prime`
+- **DB User:** `devcente_primeusr`
+- **Password:** `Pr!M=,d-[-qn6p[h`
+- **Host / Port:** `127.0.0.1:3306`
+
+---
+
+### Step-by-Step Automated Git Setup
+
+#### 1. Setup Node.js App in cPanel
+1. In cPanel, navigate to **Software** ➔ **Setup Node.js App**.
+2. Click **Create Application**.
+3. Set the following:
+   - **Node.js version**: `20.x` or `22.x` (LTS)
+   - **Application mode**: `Production`
+   - **Application root**: `devcenterpoint` (or your chosen folder path)
+   - **Application URL**: Select your domain
+   - **Application startup file**: `app.js`
+4. Click **Create**.
+
+#### 2. Create the Git Repository in cPanel
+1. In cPanel, go to **Files** ➔ **Git™ Version Control**.
+2. Click **Create** (top-right).
+3. Choose your preferred workflow:
+   - **Option A (Clone from GitHub/GitLab)**:
+     - Toggle ON **Clone a Repository**.
+     - **Clone URL**: Paste your repository URL (e.g., `https://github.com/youruser/devcenterpoint.git`).
+     - **Repository Path**: `/home/devcente/devcenterpoint` (same as your Application root).
+     - **Repository Name**: `devcenterpoint`.
+     - Click **Create**.
+   - **Option B (Direct cPanel Remote Git)**:
+     - Toggle OFF **Clone a Repository**.
+     - **Repository Path**: `/home/devcente/devcenterpoint`.
+     - **Repository Name**: `devcenterpoint`.
+     - Click **Create**. Copy the git remote URL provided by cPanel.
+
+#### 3. Enable Automatic Deployment on Push / Commit
+Depending on your Git host:
+
+##### If using GitHub / GitLab:
+1. In cPanel ➔ **Git™ Version Control**, click **Manage** next to `devcenterpoint`.
+2. Navigate to the **Deployment** tab.
+3. cPanel displays your unique **Deployment Webhook URL**:
+   `https://cpanel.yourdomain.com:2083/cpsess.../execute/VersionControlDeployment/create?repository_root=/home/devcente/devcenterpoint`
+4. Go to your **GitHub repository** ➔ **Settings** ➔ **Webhooks** ➔ **Add webhook**.
+5. Paste the cPanel Webhook URL into **Payload URL**, set Content type to `application/json`, select **Just the push event**, and click **Add webhook**.
+6. **Done!** Every time you run `git push`, GitHub notifies cPanel, cPanel pulls the commit, executes `.cpanel.yml`, runs `deploy.sh`, and restarts Phusion Passenger automatically.
+
+##### If pushing directly to cPanel Git Remote:
+1. On your local machine, add the cPanel remote:
+   ```bash
+   git remote add cpanel ssh://devcente@your-server.com:22/home/devcente/devcenterpoint
+   ```
+2. Whenever you commit and push:
+   ```bash
+   git push cpanel main
+   ```
+3. cPanel automatically triggers `.cpanel.yml` upon receive!
+
+---
+
+### What happens automatically during deployment?
+When `.cpanel.yml` and `deploy.sh` run:
+1. Copies `.env.production` to `.env` if `.env` does not yet exist.
+2. Runs `npm install --omit=dev --no-audit --no-fund` (fast, lightweight, avoids Vite out-of-memory).
+3. Automatically runs `node server/db/setup.js` (creating all tables, initial CMS content, and owner admin account).
+4. Creates `tmp/` and touches `tmp/restart.txt`, triggering Phusion Passenger to instantly reload your live app.
+
+---
+
+## 3. Manual / ZIP Upload Deployment Walkthrough
 
 ### Step 1: Prepare the Files Locally
 

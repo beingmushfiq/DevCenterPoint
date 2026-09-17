@@ -16,38 +16,52 @@ import { runMigrations } from './migrate.js';
 import { runSeed } from './seed.js';
 
 async function ensureDatabase() {
-  const { host, port, user, password, database } = config.db;
+  const { host, port, user, password, database, socketPath } = config.db;
+
+  const connOpts = {
+    host,
+    port,
+    user,
+    password,
+    socketPath: socketPath || undefined,
+    multipleStatements: true,
+  };
 
   let conn;
+  // 1. Try connecting directly to the specified database (standard on cPanel where DB is already created)
   try {
-    conn = await mysql.createConnection({ host, port, user, password, multipleStatements: true });
+    conn = await mysql.createConnection({ ...connOpts, database });
+    const [[{ version }]] = await conn.query('SELECT VERSION() AS version');
+    await conn.end();
+    return version;
   } catch (err) {
-    console.error('\n  ✖ Could not reach MySQL.\n');
-    if (err.code === 'ECONNREFUSED') {
-      console.error(`    Nothing is listening on ${host}:${port}.`);
-      console.error('    Start MySQL — with Laragon, use "Start All".');
-      console.error('    Note: do NOT start the "MySQL80" Windows service;');
-      console.error('    it and Laragon both want port 3306 and will conflict.\n');
-    } else if (err.code === 'ER_ACCESS_DENIED_ERROR') {
-      console.error(`    MySQL rejected user "${user}".`);
-      console.error('    Check DB_USER / DB_PASSWORD in .env.\n');
+    if (err.code === 'ER_BAD_DB_ERROR') {
+      // Database does not exist yet (local dev environment) — create it
+      try {
+        conn = await mysql.createConnection(connOpts);
+        await conn.query(
+          `CREATE DATABASE IF NOT EXISTS \`${database}\`
+           CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci`
+        );
+        const [[{ version }]] = await conn.query('SELECT VERSION() AS version');
+        await conn.end();
+        return version;
+      } catch (createErr) {
+        console.error(`\n  ✖ Could not create database \`${database}\`: ${createErr.message}\n`);
+        process.exit(1);
+      }
     } else {
-      console.error(`    ${err.message}\n`);
+      console.error('\n  ✖ Could not reach MySQL.\n');
+      if (err.code === 'ECONNREFUSED') {
+        console.error(`    Nothing is listening on ${host}:${port}.`);
+      } else if (err.code === 'ER_ACCESS_DENIED_ERROR') {
+        console.error(`    MySQL rejected user "${user}". Check DB_USER / DB_PASSWORD in .env.\n`);
+      } else {
+        console.error(`    ${err.message}\n`);
+      }
+      process.exit(1);
     }
-    process.exit(1);
   }
-
-  /* `devcenterpoint_cms` is namespaced so it can never collide with
-     the existing databases on this server (leadlayer_crm,
-     ordershield_oms, …). */
-  await conn.query(
-    `CREATE DATABASE IF NOT EXISTS \`${database}\`
-     CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci`
-  );
-
-  const [[{ version }]] = await conn.query('SELECT VERSION() AS version');
-  await conn.end();
-  return version;
 }
 
 async function main() {

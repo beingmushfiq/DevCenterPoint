@@ -62,6 +62,7 @@ export async function runMigrations({ quiet = false } = {}) {
     user: config.db.user,
     password: config.db.password,
     database: config.db.database,
+    socketPath: config.db.socketPath || undefined,
     multipleStatements: true,
   });
 

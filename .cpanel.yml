@@ -1,0 +1,9 @@
+---
+deployment:
+  tasks:
+    - "export DEPLOYPATH=${DEPLOYPATH:-$HOME/devcenterpoint}"
+    - "/bin/mkdir -p $DEPLOYPATH"
+    - "/bin/mkdir -p $DEPLOYPATH/tmp $DEPLOYPATH/public/uploads"
+    - "if [ \"$PWD\" != \"$DEPLOYPATH\" ]; then /bin/cp -R * $DEPLOYPATH/ && /bin/cp -f .htaccess $DEPLOYPATH/ 2>/dev/null || true; /bin/cp -f .env.production $DEPLOYPATH/ 2>/dev/null || true; fi"
+    - "if [ ! -f \"$DEPLOYPATH/.env\" ] && [ -f \"$DEPLOYPATH/.env.production\" ]; then /bin/cp \"$DEPLOYPATH/.env.production\" \"$DEPLOYPATH/.env\"; fi"
+    - "/bin/bash -c \"cd $DEPLOYPATH && /bin/chmod +x deploy.sh && /bin/bash deploy.sh\""
