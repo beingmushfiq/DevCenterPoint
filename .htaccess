@@ -30,13 +30,3 @@ RedirectMatch 403 ^/(server|views|migrations|node_modules)/
   RewriteCond %{HTTP:X-Forwarded-Proto} !https
   RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
 </IfModule>
-
-# 5. Phusion Passenger (CloudLinux cPanel Node.js Selector)
-# Usually configured automatically by cPanel, but included here for completeness:
-<IfModule mod_passenger.c>
-  PassengerAppRoot "/"
-  PassengerBaseURI "/"
-  PassengerNodejs "/usr/bin/node"
-  PassengerAppType node
-  PassengerStartupFile app.js
-</IfModule>

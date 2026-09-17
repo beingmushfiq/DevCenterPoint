@@ -211,10 +211,13 @@ async function main() {
   app.use(errorHandler);
 
   /* ---- listen ------------------------------------------------ */
-  const server = app.listen(config.port, () => {
+  const listenTarget = (typeof PhusionPassenger !== 'undefined')
+    ? 'passenger'
+    : (process.env.PORT || config.port || 3000);
+
+  const server = app.listen(listenTarget, () => {
     console.log(`  · Mode:     ${config.isProd ? 'production' : 'development'}`);
-    console.log(`\n  ✓ Running at http://localhost:${config.port}\n`);
-    console.log(`    Admin:    http://localhost:${config.port}/admin/login\n`);
+    console.log(`\n  ✓ Running on ${listenTarget}\n`);
   });
 
   server.on('error', (err) => {
