@@ -53,7 +53,21 @@ async function main() {
   }
   console.log(`  · Database: MySQL ${health.version} / ${health.database}`);
 
-  /* ---- 2. app ------------------------------------------------ */
+  /* ---- auto-setup database if uninitialized ----------------- */
+  try {
+    const { query } = await import('./db/pool.js');
+    const tables = await query("SHOW TABLES LIKE 'site_settings'");
+    if (!tables || tables.length === 0) {
+      console.log('  · Uninitialized database detected — running automated migrations & seed...');
+      const { runMigrations } = await import('./db/migrate.js');
+      const { runSeed } = await import('./db/seed.js');
+      await runMigrations();
+      await runSeed();
+      console.log('  ✓ Automated database setup completed successfully.');
+    }
+  } catch (dbSetupErr) {
+    console.error('  ✖ Auto-migration check notice:', dbSetupErr.message);
+  }
   const app = express();
 
   app.disable('x-powered-by');
