@@ -22,7 +22,7 @@ import crypto from 'node:crypto';
 import path from 'node:path';
 
 import { config } from './config.js';
-import { healthCheck, closePool } from './db/pool.js';
+import { pool, query, healthCheck, closePool } from './db/pool.js';
 import { globals } from './middleware/globals.js';
 import { notFound, errorHandler } from './middleware/errors.js';
 import { initAssets, closeAssets } from './lib/assets.js';
