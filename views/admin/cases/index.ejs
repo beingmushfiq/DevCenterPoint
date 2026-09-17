@@ -1,15 +1,16 @@
 <div style="display: flex; align-items: center; gap: var(--space-4); margin-bottom: var(--space-6); flex-wrap: wrap;">
-  <form method="GET" action="/admin/cases" style="display: flex; gap: var(--space-3); flex: 1; max-width: 500px;">
-    <input type="text" name="search" value="<%= search || '' %>" placeholder="Search by title, client or summary..." style="background: var(--carbon-900); border: 1px solid var(--color-border); padding: 6px 12px; border-radius: var(--radius-xs); color: var(--color-text); flex: 1;" />
+  <form method="GET" action="/admin/cases" style="display: flex; gap: var(--space-3); flex: 1; max-width: 540px; flex-wrap: wrap;">
+    <input type="text" name="search" value="<%= search || '' %>" placeholder="Search by title, client or summary..." class="admin-input" style="flex: 1; min-width: 200px;" />
     <% if (sectors && sectors.length > 0) { %>
-      <select name="sector" style="background: var(--carbon-900); border: 1px solid var(--color-border); padding: 6px 12px; border-radius: var(--radius-xs); color: var(--color-text);">
+      <select name="sector" class="admin-select">
         <option value="">All Sectors</option>
         <% sectors.forEach(function (s) { %>
-          <option value="<%= s %>" <%= sector === s ? 'selected' : '' %>><%= s %></option>
+          <% const secName = typeof s === 'object' && s ? (s.sector || s.name) : s; %>
+          <option value="<%= secName %>" <%= sector === secName ? 'selected' : '' %>><%= secName %></option>
         <% }); %>
       </select>
     <% } %>
-    <button class="btn btn--ghost" type="submit" style="padding: 6px 12px; font-size: 0.75rem;">Filter</button>
+    <button class="btn btn--ghost" type="submit" style="padding: 6px 14px; font-size: 0.75rem;">Filter</button>
   </form>
 </div>
 

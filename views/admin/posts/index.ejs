@@ -1,12 +1,12 @@
-<div style="display: flex; align-items: center; gap: var(--space-4); margin-bottom: var(--space-6);">
-  <form method="GET" action="/admin/posts" style="display: flex; gap: var(--space-3); flex: 1; max-width: 500px;">
-    <input type="text" name="search" value="<%= search || '' %>" placeholder="Search insights..." style="background: var(--carbon-900); border: 1px solid var(--color-border); padding: 6px 12px; border-radius: var(--radius-xs); color: var(--color-text); flex: 1;" />
-    <select name="status" style="background: var(--carbon-900); border: 1px solid var(--color-border); padding: 6px 12px; border-radius: var(--radius-xs); color: var(--color-text);">
+<div style="display: flex; align-items: center; gap: var(--space-4); margin-bottom: var(--space-6); flex-wrap: wrap;">
+  <form method="GET" action="/admin/posts" style="display: flex; gap: var(--space-3); flex: 1; max-width: 500px; flex-wrap: wrap;">
+    <input type="text" name="search" value="<%= search || '' %>" placeholder="Search insights..." class="admin-input" style="flex: 1; min-width: 200px;" />
+    <select name="status" class="admin-select">
       <option value="">All Statuses</option>
       <option value="published" <%= status === 'published' ? 'selected' : '' %>>Published</option>
       <option value="draft" <%= status === 'draft' ? 'selected' : '' %>>Draft</option>
     </select>
-    <button class="btn btn--ghost" type="submit" style="padding: 6px 12px; font-size: 0.75rem;">Filter</button>
+    <button class="btn btn--ghost" type="submit" style="padding: 6px 14px; font-size: 0.75rem;">Filter</button>
   </form>
 </div>
 

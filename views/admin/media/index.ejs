@@ -1,4 +1,4 @@
-<div style="background: var(--carbon-900); border: 1px solid var(--color-border); border-radius: var(--radius-sm); padding: var(--space-6); margin-bottom: var(--space-8);">
+<div style="background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--radius-sm); padding: var(--space-6); margin-bottom: var(--space-8);">
   <h3 style="font-family: var(--font-display); font-size: 1.125rem; margin-bottom: var(--space-4);">Upload Media</h3>
   <form method="POST" action="/admin/media/upload" enctype="multipart/form-data" style="display: flex; gap: var(--space-4); align-items: flex-end; flex-wrap: wrap;">
     <% if (locals.csrfToken) { %><input type="hidden" name="_csrf" value="<%= csrfToken %>" /><% } %>
@@ -20,8 +20,8 @@
 <% if (items && items.length > 0) { %>
   <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: var(--space-4);">
     <% items.forEach(function (m) { %>
-      <div style="background: var(--carbon-900); border: 1px solid var(--color-border); border-radius: var(--radius-xs); overflow: hidden; display: flex; flex-direction: column;">
-        <div style="aspect-ratio: 16/10; background: var(--carbon-950); display: grid; place-items: center; overflow: hidden;">
+      <div style="background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--radius-xs); overflow: hidden; display: flex; flex-direction: column;">
+        <div style="aspect-ratio: 16/10; background: var(--color-surface-sunken); display: grid; place-items: center; overflow: hidden;">
           <% if (m.mime_type && m.mime_type.startsWith('image/')) { %>
             <img src="<%= m.path %>" alt="<%= m.alt_text %>" style="width: 100%; height: 100%; object-fit: cover;" loading="lazy" />
           <% } else { %>

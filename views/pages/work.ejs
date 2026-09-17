@@ -13,7 +13,8 @@
     <div class="filters" data-filters data-reveal>
       <a class="filter <%= !sector ? 'is-active' : '' %>" href="/work" data-filter="all" role="button" aria-pressed="<%= !sector %>">All sectors</a>
       <% (sectors || []).forEach(function (s) { %>
-        <a class="filter <%= sector === s ? 'is-active' : '' %>" href="/work?sector=<%= encodeURIComponent(s) %>" data-filter="<%= s %>" role="button" aria-pressed="<%= sector === s %>"><%= s %></a>
+        <% const secName = typeof s === 'object' && s ? (s.sector || s.name) : s; %>
+        <a class="filter <%= sector === secName ? 'is-active' : '' %>" href="/work?sector=<%= encodeURIComponent(secName) %>" data-filter="<%= secName %>" role="button" aria-pressed="<%= sector === secName %>"><%= secName %></a>
       <% }); %>
       <span class="filters__count"><strong data-work-count><%= total %></strong> projects</span>
     </div>
