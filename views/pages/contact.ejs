@@ -4,7 +4,7 @@
   <div class="wrap">
     <%- include('../partials/breadcrumbs', { crumbs: [{ label: 'Contact' }] }) %>
 
-    <div class="wrap--split" style="gap: var(--space-16);">
+    <div class="wrap--split contact-split">
       <div>
         <div class="page-head" data-reveal>
           <p class="chapter__index"><span class="code">START A PROJECT</span></p>
@@ -12,7 +12,7 @@
           <p class="body body--lead page-head__lede">We reply within one business day with what we would build first, what it costs, and what we would refuse to build. No sales layer — you speak with a senior engineer.</p>
         </div>
 
-        <div style="margin-top: var(--space-12);" data-reveal>
+        <div style="margin-top: var(--space-8);" data-reveal>
           <div class="specs">
             <div class="spec">
               <span class="spec__k">Direct email</span>
@@ -38,7 +38,7 @@
           <div class="scope-estimator" id="scopeEstimator" style="margin-top: var(--space-8); padding: var(--space-6); background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--radius-sm);">
             <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: var(--space-4);">
               <span class="code" style="color: var(--color-primary); font-size: 0.6875rem;">PROJECT ESTIMATOR</span>
-              <span class="badge" style="font-size: 0.625rem; background: rgb(255 77 28 / 0.1); color: var(--color-primary);">INSTANT GUIDE</span>
+              <span class="badge" style="font-size: 0.625rem; background: var(--color-ember); color: var(--color-primary);">INSTANT GUIDE</span>
             </div>
 
             <p style="font-size: 0.875rem; color: var(--color-text-muted); margin-bottom: var(--space-4);">
@@ -47,7 +47,7 @@
 
             <div style="margin-bottom: var(--space-4);">
               <label style="font-size: 0.75rem; font-family: var(--font-mono); color: var(--color-text-faint); display: block; margin-bottom: var(--space-2); text-transform: uppercase;">1. Project Objective</label>
-              <select id="estimatorScope" style="width: 100%; background: var(--carbon-900); border: 1px solid var(--color-border); padding: 8px 12px; color: var(--color-text); border-radius: var(--radius-xs); font-size: 0.8125rem;">
+              <select id="estimatorScope" style="width: 100%; background: var(--color-surface-sunken); border: 1px solid var(--color-border); padding: 8px 12px; color: var(--color-text); border-radius: var(--radius-xs); font-size: 0.8125rem;">
                 <option value="rapid_mvp" data-weeks="4 to 6 weeks" data-team="1 Lead Architect + 1 Senior Engineer">Rapid Prototype / MVP</option>
                 <option value="full_platform" data-weeks="10 to 14 weeks" data-team="1 Lead Architect + 2 Senior Engineers + 1 QA">Full Production Platform</option>
                 <option value="hardening" data-weeks="4 to 8 weeks" data-team="1 Principal Security / Reliability Engineer">Performance &amp; Security Hardening</option>
@@ -55,7 +55,7 @@
               </select>
             </div>
 
-            <div style="padding: var(--space-4); background: var(--carbon-900); border: 1px solid var(--color-rule); border-radius: var(--radius-xs); margin-bottom: var(--space-4);">
+            <div style="padding: var(--space-4); background: var(--color-surface-sunken); border: 1px solid var(--color-rule); border-radius: var(--radius-xs); margin-bottom: var(--space-4);">
               <div style="display: flex; justify-content: space-between; margin-bottom: var(--space-2);">
                 <span style="font-size: 0.75rem; color: var(--color-text-faint); font-family: var(--font-mono);">ESTIMATED TIMELINE</span>
                 <strong id="estimatorTimelineOut" style="font-size: 0.8125rem; color: var(--color-text); font-family: var(--font-mono);">4 to 6 weeks</strong>
