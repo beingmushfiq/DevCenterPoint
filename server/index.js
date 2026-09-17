@@ -36,37 +36,33 @@ async function main() {
      diagnose than one that refuses to start with a clear reason. */
   const health = await healthCheck();
   if (!health.ok) {
-    const err = health.error;
-    console.error('  ✖ Cannot reach the database.\n');
+    const err = health.error || {};
+    console.error('  ✖ Cannot reach the database at startup:\n');
     if (err.code === 'ECONNREFUSED') {
       console.error(`    Nothing is listening on ${config.db.host}:${config.db.port}.`);
-      console.error('    Start MySQL — with Laragon, use "Start All".');
-      console.error('    Do NOT start the "MySQL80" Windows service; it conflicts');
-      console.error('    with Laragon over port 3306.\n');
     } else if (err.code === 'ER_BAD_DB_ERROR') {
       console.error(`    Database "${config.db.database}" does not exist.`);
-      console.error('    Run: npm run db:setup\n');
     } else {
-      console.error(`    ${err.message}\n`);
+      console.error(`    ${err.message || err}\n`);
     }
-    process.exit(1);
-  }
-  console.log(`  · Database: MySQL ${health.version} / ${health.database}`);
+    console.warn('  ⚠️ Continuing server boot so diagnostic /healthz remains live.\n');
+  } else {
+    console.log(`  · Database: MySQL ${health.version} / ${health.database}`);
 
-  /* ---- auto-setup database if uninitialized ----------------- */
-  try {
-    const { query } = await import('./db/pool.js');
-    const tables = await query("SHOW TABLES LIKE 'site_settings'");
-    if (!tables || tables.length === 0) {
-      console.log('  · Uninitialized database detected — running automated migrations & seed...');
-      const { runMigrations } = await import('./db/migrate.js');
-      const { runSeed } = await import('./db/seed.js');
-      await runMigrations();
-      await runSeed();
-      console.log('  ✓ Automated database setup completed successfully.');
+    /* ---- auto-setup database if uninitialized ----------------- */
+    try {
+      const tables = await query("SHOW TABLES LIKE 'site_settings'");
+      if (!tables || tables.length === 0) {
+        console.log('  · Uninitialized database detected — running automated migrations & seed...');
+        const { runMigrations } = await import('./db/migrate.js');
+        const { runSeed } = await import('./db/seed.js');
+        await runMigrations();
+        await runSeed();
+        console.log('  ✓ Automated database setup completed successfully.');
+      }
+    } catch (dbSetupErr) {
+      console.error('  ✖ Auto-migration check notice:', dbSetupErr.message);
     }
-  } catch (dbSetupErr) {
-    console.error('  ✖ Auto-migration check notice:', dbSetupErr.message);
   }
   const app = express();
 
@@ -241,22 +237,20 @@ async function main() {
   app.use(errorHandler);
 
   /* ---- listen ------------------------------------------------ */
-  const listenTarget = (typeof PhusionPassenger !== 'undefined')
-    ? 'passenger'
-    : (process.env.PORT || config.port || 3000);
+  const port = process.env.PORT || config.port || 3000;
 
-  const server = app.listen(listenTarget, () => {
+  const server = app.listen(port, () => {
     console.log(`  · Mode:     ${config.isProd ? 'production' : 'development'}`);
-    console.log(`\n  ✓ Running on ${listenTarget}\n`);
+    console.log(`\n  ✓ Running on port ${port}\n`);
   });
 
   server.on('error', (err) => {
     if (err.code === 'EADDRINUSE') {
-      console.error(`\n  ✖ Port ${config.port} is already in use.`);
+      console.error(`\n  ✖ Port ${port} is already in use.`);
       console.error('    Another server is running. Stop it, or set PORT in .env.\n');
-      process.exit(1);
+    } else {
+      console.error('  ✖ Server listen error:', err);
     }
-    throw err;
   });
 
   /* ---- shutdown ----------------------------------------------

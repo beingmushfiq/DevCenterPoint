@@ -73,19 +73,17 @@ chmod 755 public/uploads 2>/dev/null || true
 
 # 6. Ensure LiteSpeed / Apache public_html/.htaccess routes to Node.js
 if [ -d "$HOME/public_html" ]; then
-  if ! grep -q "PassengerAppRoot" "$HOME/public_html/.htaccess" 2>/dev/null; then
-    echo "Configuring LiteSpeed Passenger bridge in $HOME/public_html/.htaccess..."
-    NODE_EXEC=$(command -v node || find "$HOME/nodevenv/devcenterpoint" -name "node" 2>/dev/null | head -n 1 || echo "$HOME/nodevenv/devcenterpoint/24/bin/node")
-    cat << EOF > "$HOME/public_html/.htaccess"
+  echo "Configuring LiteSpeed Passenger bridge in $HOME/public_html/.htaccess..."
+  NODE_EXEC=$(command -v node || find "$HOME/nodevenv/devcenterpoint" -name "node" 2>/dev/null | head -n 1 || echo "$HOME/nodevenv/devcenterpoint/24/bin/node")
+  cat << EOF > "$HOME/public_html/.htaccess"
 # DO NOT REMOVE. CLOUDLINUX PASSENGER CONFIGURATION BEGIN
 PassengerAppRoot "$APP_DIR"
 PassengerBaseURI "/"
 PassengerNodejs "$NODE_EXEC"
 PassengerAppType node
-PassengerStartupFile app.js
+PassengerStartupFile start.cjs
 # DO NOT REMOVE. CLOUDLINUX PASSENGER CONFIGURATION END
 EOF
-  fi
 fi
 
 # 7. Restart Phusion Passenger / LiteSpeed

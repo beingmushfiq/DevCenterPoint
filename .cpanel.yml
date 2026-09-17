@@ -4,6 +4,7 @@ deployment:
     - "export DEPLOYPATH=${DEPLOYPATH:-$HOME/devcenterpoint}"
     - "/bin/mkdir -p $DEPLOYPATH"
     - "/bin/mkdir -p $DEPLOYPATH/tmp $DEPLOYPATH/public/uploads"
-    - "if [ \"$PWD\" != \"$DEPLOYPATH\" ]; then /bin/cp -R * $DEPLOYPATH/ 2>/dev/null || true; /bin/cp -f loader.cjs $DEPLOYPATH/ 2>/dev/null || true; /bin/cp -f .env.production $DEPLOYPATH/.env 2>/dev/null || true; fi"
+    - "if [ \"$PWD\" != \"$DEPLOYPATH\" ]; then /bin/cp -R * $DEPLOYPATH/ 2>/dev/null || true; /bin/cp -f start.cjs app.cjs loader.cjs app.js $DEPLOYPATH/ 2>/dev/null || true; /bin/cp -f .env.production $DEPLOYPATH/.env 2>/dev/null || true; fi"
     - "if [ -f .env.production ]; then /bin/cp -f .env.production $DEPLOYPATH/.env; fi"
+    - "/bin/cp -f start.cjs app.cjs loader.cjs app.js $DEPLOYPATH/ 2>/dev/null || true"
     - "/bin/bash -c \"cd $DEPLOYPATH && /bin/chmod +x deploy.sh && /bin/bash deploy.sh\""
