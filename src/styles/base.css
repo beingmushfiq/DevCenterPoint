@@ -4,6 +4,8 @@
    grid, and the 3D field — never from decorative gradients.
    ============================================================ */
 
+@import './select.css';
+
 /* ============ RESET ============ */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 html { -webkit-text-size-adjust: 100%; scroll-behavior: auto; max-width: 100vw; overflow-x: clip; }

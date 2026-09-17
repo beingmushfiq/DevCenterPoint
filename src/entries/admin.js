@@ -12,9 +12,11 @@
 
 import '../styles/admin.css';
 import { initTheme } from '../ui/theme.js';
+import { initCustomSelects } from '../ui/select.js';
 
 function initAdmin() {
   initTheme();
+  initCustomSelects();
   initSlugFields();
   initConfirmations();
   initCharCounters();
