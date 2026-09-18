@@ -30,3 +30,10 @@ RedirectMatch 403 ^/(server|views|migrations|node_modules)/
   RewriteCond %{HTTP:X-Forwarded-Proto} !https
   RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
 </IfModule>
+
+# 5. Phusion Passenger — hand ALL requests to the Node.js app.
+#    This prevents Apache from serving any static index.html that
+#    might exist in the document root, and ensures every request
+#    reaches Express/Passenger instead.
+PassengerEnabled on
+PassengerNodejs /usr/bin/node
