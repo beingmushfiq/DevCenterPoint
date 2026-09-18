@@ -33,18 +33,13 @@ Disable the static fallback page so Phusion Passenger executes the Node.js appli
 
 ---
 
-### Step 2.2: Verify Node.js Binary Path
-1. In cPanel, open the **Terminal** tool.
-2. Run:
-   ```bash
-   which node
-   ```
-3. Check the output:
-   - If output is `/usr/bin/node`, your [.htaccess](file:///d:/DevCenterPoint/.htaccess) is already configured properly.
-   - If output points to a virtual environment (e.g., `/home/username/nodevenv/.../20/bin/node`), open [.htaccess](file:///d:/DevCenterPoint/.htaccess) and ensure line 50 matches:
-     ```apache
-     PassengerNodejs /path/to/your/discovered/node
-     ```
+### Step 2.2: Verify Node.js Binary Path (Configured)
+Your Node.js binary path has been identified and configured in [.htaccess](file:///d:/test_deepseek_v4_flash/devcenterpoint/.htaccess):
+```apache
+PassengerEnabled on
+PassengerNodejs /home/devcente/nodevenv/devcenterpoint/24/bin/node
+```
+*(Fallback alternate binary if switching versions: `/opt/alt/alt-nodejs24/root/usr/bin/node` or `/opt/alt/alt-nodejs20/root/usr/bin/node`)*
 
 ---
 

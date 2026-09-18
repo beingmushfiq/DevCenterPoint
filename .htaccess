@@ -52,4 +52,4 @@ RewriteRule ^(.\*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
 # reaches Express/Passenger instead.
 
 PassengerEnabled on
-PassengerNodejs /usr/bin/node
+PassengerNodejs /home/devcente/nodevenv/devcenterpoint/24/bin/node
