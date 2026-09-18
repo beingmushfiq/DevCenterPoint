@@ -1,0 +1,233 @@
+/* ============================================================
+   LAYER 1 — PRIMITIVE TOKENS
+   Palette: Obsidian Carbon & Electric Cobalt Signal
+   ============================================================ */
+:root {
+  /* Obsidian Carbon — deep high-tech blacks matching the logo backdrop */
+  --carbon-950: #07090e;
+  --carbon-900: #0c101a;
+  --carbon-850: #111724;
+  --carbon-800: #182030;
+  --carbon-700: #222d42;
+  --carbon-600: #2f3d57;
+
+  /* Bone / Slate White — high-legibility clean type */
+  --bone-100: #f8fafc;
+  --bone-200: #e2e8f0;
+  --bone-300: #cbd5e1;
+  --bone-400: #94a3b8;
+  --bone-500: #64748b;
+  --bone-600: #475569;
+
+  /* Electric Cobalt — The primary brand signal from the logo */
+  --blue-300: #93c5fd;
+  --blue-400: #3b82f6;
+  --blue-500: #2563eb;
+  --blue-600: #1d4ed8;
+  --blue-700: #1e40af;
+
+  /* Backward compatibility aliases */
+  --vermilion-400: var(--blue-400);
+  --vermilion-500: var(--blue-500);
+  --vermilion-600: var(--blue-600);
+  --vermilion-700: var(--blue-700);
+
+  /* Cyan & Steel accents */
+  --amber-400: #38bdf8;
+  --amber-500: #0ea5e9;
+  --amber-600: #0284c7;
+
+  --steel-400: #94a3b8;
+  --steel-500: #64748b;
+  --steel-600: #475569;
+
+  /* Status */
+  --signal-ok: #10b981;
+  --signal-warn: #f59e0b;
+
+  --space-1: 4px;   --space-2: 8px;   --space-3: 12px;
+  --space-4: 16px;  --space-5: 20px;  --space-6: 24px;
+  --space-8: 32px;  --space-10: 40px; --space-12: 48px;
+  --space-16: 64px; --space-20: 80px; --space-24: 96px;
+  --space-32: 128px; --space-40: 160px; --space-48: 200px;
+
+  /* Engineered border radius */
+  --radius-xs: 2px;  --radius-sm: 4px;  --radius-md: 6px;
+  --radius-lg: 8px;  --radius-xl: 12px; --radius-2xl: 16px;
+  --radius-full: 9999px;
+
+  --font-display: 'Archivo', 'Helvetica Neue', sans-serif;
+  --font-body: 'IBM Plex Sans', system-ui, sans-serif;
+  --font-mono: 'IBM Plex Mono', monospace;
+  --font-quote: 'Instrument Serif', Georgia, serif;
+}
+
+/* ============================================================
+   LAYER 2 — SEMANTIC TOKENS
+   ============================================================ */
+:root {
+  --color-bg: var(--carbon-950);
+  --color-bg-deep: #04060a;
+  --color-surface: var(--carbon-900);
+  --color-surface-raised: var(--carbon-850);
+  --color-surface-sunken: var(--carbon-800);
+  --color-surface-float: var(--carbon-700);
+
+  /* Cool subtle structural borders */
+  --color-border: rgb(248 250 252 / 0.10);
+  --color-border-strong: rgb(248 250 252 / 0.20);
+  --color-border-hover: rgb(37 99 235 / 0.40);
+  --color-rule: rgb(248 250 252 / 0.07);
+
+  --color-text: var(--bone-100);
+  --color-text-muted: var(--bone-300);
+  --color-text-subtle: var(--bone-400);
+  --color-text-faint: var(--bone-500);
+
+  --color-primary: var(--blue-500);
+  --color-primary-hover: var(--blue-400);
+  --color-primary-deep: var(--blue-600);
+  --color-primary-soft: var(--blue-300);
+  --color-accent: #0ea5e9;
+  --color-structure: var(--steel-500);
+
+  /* Atmosphere */
+  --color-ember: rgb(29 78 216 / 0.30);
+  --color-blueprint: rgb(37 99 235 / 0.20);
+
+  /* Glow tokens in Electric Cobalt Blue */
+  --glow-primary: 0 0 20px -2px rgb(37 99 235 / 0.50);
+  --glow-primary-strong: 0 0 32px -4px rgb(37 99 235 / 0.70);
+  --glow-amber: 0 0 20px -2px rgb(14 165 233 / 0.45);
+  --glow-subtle: 0 4px 24px rgb(0 0 0 / 0.50);
+
+  --color-success: var(--signal-ok);
+  --color-nav-bg: rgb(10 9 8 / 0.82);
+  --color-foot-bg: rgb(7 9 14 / 0.88);
+}
+
+/* ============================================================
+   LAYER 2B — THEME SPECIFIC TOKENS
+   ============================================================ */
+[data-theme='dark'] {
+  --color-bg: var(--carbon-950);
+  --color-bg-deep: #04060a;
+  --color-surface: var(--carbon-900);
+  --color-surface-raised: var(--carbon-850);
+  --color-surface-sunken: var(--carbon-800);
+  --color-surface-float: var(--carbon-700);
+
+  --color-border: rgb(248 250 252 / 0.10);
+  --color-border-strong: rgb(248 250 252 / 0.20);
+  --color-border-hover: rgb(37 99 235 / 0.40);
+  --color-rule: rgb(248 250 252 / 0.07);
+
+  --color-text: var(--bone-100);
+  --color-text-muted: var(--bone-300);
+  --color-text-subtle: var(--bone-400);
+  --color-text-faint: var(--bone-500);
+
+  --color-primary: var(--blue-500);
+  --color-primary-hover: var(--blue-400);
+  --color-primary-deep: var(--blue-600);
+  --color-primary-soft: var(--blue-300);
+  --color-accent: #0ea5e9;
+  --color-structure: var(--steel-500);
+
+  --color-ember: rgb(29 78 216 / 0.30);
+  --color-blueprint: rgb(37 99 235 / 0.20);
+
+  --glow-primary: 0 0 20px -2px rgb(37 99 235 / 0.50);
+  --glow-primary-strong: 0 0 32px -4px rgb(37 99 235 / 0.70);
+  --glow-amber: 0 0 20px -2px rgb(14 165 233 / 0.45);
+  --glow-subtle: 0 4px 24px rgb(0 0 0 / 0.50);
+
+  --color-success: var(--signal-ok);
+  --color-focus: var(--blue-400);
+  --color-nav-bg: rgb(10 9 8 / 0.82);
+  --color-foot-bg: rgb(7 9 14 / 0.88);
+}
+
+/* Light theme — calibrated for 100% visibility, crisp contrast, and precision engineering */
+[data-theme='light'] {
+  --color-bg: #f8fafc;
+  --color-bg-deep: #f1f5f9;
+  --color-surface: #ffffff;
+  --color-surface-raised: #ffffff;
+  --color-surface-sunken: #edf2f7;
+  --color-surface-float: #ffffff;
+
+  --color-border: rgb(15 23 42 / 0.12);
+  --color-border-strong: rgb(15 23 42 / 0.22);
+  --color-border-hover: rgb(37 99 235 / 0.50);
+  --color-rule: rgb(15 23 42 / 0.08);
+
+  --color-text: #0f172a;
+  --color-text-muted: #334155;
+  --color-text-subtle: #475569;
+  --color-text-faint: #64748b;
+
+  --color-primary: #2563eb;
+  --color-primary-hover: #1d4ed8;
+  --color-primary-deep: #1e40af;
+  --color-primary-soft: var(--blue-600);
+  --color-primary-tint: #eff6ff;
+  --color-accent: #0284c7;
+  --color-structure: #64748b;
+
+  --color-ember: rgb(37 99 235 / 0.06);
+  --color-blueprint: rgb(37 99 235 / 0.08);
+
+  --glow-primary: 0 4px 20px -2px rgb(37 99 235 / 0.22);
+  --glow-primary-strong: 0 8px 28px -4px rgb(37 99 235 / 0.32);
+  --glow-amber: 0 4px 20px -2px rgb(2 132 199 / 0.20);
+  --glow-subtle: 0 8px 24px -4px rgb(15 23 42 / 0.08);
+
+  --color-success: #059669;
+  --color-focus: #2563eb;
+  --color-nav-bg: rgb(255 255 255 / 0.88);
+  --color-foot-bg: rgb(255 255 255 / 0.96);
+}
+
+/* ============================================================
+   LAYER 3 — COMPONENT TOKENS
+   ============================================================ */
+:root {
+  --btn-height-sm: 38px;
+  --btn-height-md: 46px;
+  --btn-height-lg: 56px;
+  --btn-radius: var(--radius-sm);
+  --nav-height: 68px;
+  --rail-width: 2px;
+  --measure: 64ch;
+  --grid-size: 88px;
+}
+
+/* ============================================================
+   LAYER 4 — MOTION TOKENS
+   ============================================================ */
+:root {
+  --motion-instant: 80ms;
+  --motion-fast: 160ms;
+  --motion-base: 280ms;
+  --motion-slow: 480ms;
+  --motion-enter: 640ms;
+  --motion-deliberate: 700ms;
+
+  --ease-standard: cubic-bezier(0.2, 0, 0, 1);
+  --ease-entrance: cubic-bezier(0.05, 0.7, 0.1, 1);
+  --ease-exit: cubic-bezier(0.3, 0, 0.8, 0.15);
+  --ease-emphasis: cubic-bezier(0.3, 0, 0, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --motion-instant: 1ms;
+    --motion-fast: 1ms;
+    --motion-base: 1ms;
+    --motion-slow: 1ms;
+    --motion-enter: 1ms;
+    --motion-deliberate: 1ms;
+  }
+}
