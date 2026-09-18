@@ -3,8 +3,8 @@
     "file": "assets/motion-B-NUKnBa.js",
     "name": "motion"
   },
-  "_select-DriIjeMF.js": {
-    "file": "assets/select-DriIjeMF.js",
+  "_select-Becc5uk-.js": {
+    "file": "assets/select-Becc5uk-.js",
     "name": "select"
   },
   "_three-CvlHKI96.js": {
@@ -12,32 +12,32 @@
     "name": "three"
   },
   "src/entries/admin.js": {
-    "file": "assets/admin-BVM5hEcp.js",
+    "file": "assets/admin-7TEBL2PJ.js",
     "name": "admin",
     "src": "src/entries/admin.js",
     "isEntry": true,
     "imports": [
-      "_select-DriIjeMF.js"
+      "_select-Becc5uk-.js"
     ],
     "css": [
-      "assets/admin-k_t3r83a.css"
+      "assets/admin-DY_tIwlR.css"
     ]
   },
   "src/entries/site.js": {
-    "file": "assets/site-DkTJ7FXd.js",
+    "file": "assets/site-XGkfKAnF.js",
     "name": "site",
     "src": "src/entries/site.js",
     "isEntry": true,
     "imports": [
       "_motion-B-NUKnBa.js",
-      "_select-DriIjeMF.js"
+      "_select-Becc5uk-.js"
     ],
     "dynamicImports": [
       "src/three/scene.js",
       "src/three/spline.js"
     ],
     "css": [
-      "assets/site-D6xxxWET.css"
+      "assets/site-BEA82xcr.css"
     ]
   },
   "src/three/scene.js": {

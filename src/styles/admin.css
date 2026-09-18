@@ -562,6 +562,9 @@ tr.is-dragging { opacity: 0.4; }
   overflow: hidden;
   position: relative;
   flex: none;
+  touch-action: manipulation;
+  user-select: none;
+  -webkit-user-select: none;
   transition:
     border-color var(--motion-fast),
     color var(--motion-fast),
@@ -576,11 +579,44 @@ tr.is-dragging { opacity: 0.4; }
   box-shadow: var(--glow-primary);
   transform: translateY(-1px);
 }
-.theme-toggle:active { transform: translateY(0); }
+.theme-toggle:active {
+  transform: scale(0.92);
+}
 
 .theme-toggle--admin {
   width: 32px;
   height: 32px;
+}
+
+/* Tactile Spring & Micro-Haptic Click Animation */
+.theme-toggle.is-animating {
+  animation: themeToggleBounceAdmin 0.48s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes themeToggleBounceAdmin {
+  0% { transform: scale(0.92); }
+  42% { transform: scale(1.12); }
+  72% { transform: scale(0.97); }
+  100% { transform: scale(1); }
+}
+
+/* Expanding radial aura on click */
+.theme-toggle::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: radial-gradient(circle, var(--color-primary) 10%, transparent 70%);
+  opacity: 0;
+  transform: scale(0.4);
+  pointer-events: none;
+  transition: opacity 0.3s ease, transform 0.4s ease;
+}
+
+.theme-toggle.is-animating::after {
+  opacity: 0.35;
+  transform: scale(2.2);
+  transition: opacity 0.45s ease-out, transform 0.45s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
 /* Both icons overlap each other in the center; only one is
@@ -589,17 +625,18 @@ tr.is-dragging { opacity: 0.4; }
 .theme-toggle__icon-moon {
   position: absolute;
   top: 50%; left: 50%;
-  transform: translate(-50%, -50%) scale(1);
   width: 16px; height: 16px;
+  transform-origin: center center;
   transition:
-    opacity var(--motion-fast),
-    transform var(--motion-base) var(--ease-spring);
+    opacity 0.28s cubic-bezier(0.2, 0, 0, 1),
+    transform 0.46s cubic-bezier(0.34, 1.56, 0.64, 1);
+  will-change: transform, opacity;
 }
 
 /* Dark mode default: show moon, hide sun */
 .theme-toggle__icon-sun {
   opacity: 0;
-  transform: translate(-50%, -50%) scale(0.5) rotate(-30deg);
+  transform: translate(-50%, -50%) scale(0.35) rotate(-90deg);
   color: #f59e0b;
   pointer-events: none;
 }
@@ -612,11 +649,41 @@ tr.is-dragging { opacity: 0.4; }
 [data-theme='light'] .theme-toggle__icon-sun {
   opacity: 1;
   transform: translate(-50%, -50%) scale(1) rotate(0deg);
+  filter: drop-shadow(0 0 3px rgba(245, 158, 11, 0.4));
 }
 [data-theme='light'] .theme-toggle__icon-moon {
   opacity: 0;
-  transform: translate(-50%, -50%) scale(0.5) rotate(30deg);
+  transform: translate(-50%, -50%) scale(0.35) rotate(90deg);
   pointer-events: none;
+}
+
+/* View Transitions API */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+
+::view-transition-old(root) {
+  z-index: 1;
+}
+
+::view-transition-new(root) {
+  z-index: 9999;
+}
+
+html.is-theme-switching *,
+html.is-theme-switching *::before,
+html.is-theme-switching *::after {
+  transition: none !important;
+}
+
+.theme-transition-fallback {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 999999;
+  will-change: clip-path, opacity;
 }
 
 /* ============ RESPONSIVE & MOBILE DRAWER ============ */
