@@ -86,8 +86,8 @@ export async function globals(req, res, next) {
       defaultDescription: settings['seo.default_description'] || 'DevCenterPoint is an elite engineering consultancy. We code, build, deploy, and scale high-performance platforms, cloud architecture, and mission-critical software.',
       ogImage: settings['seo.og_image'] || '/brand/og-image.svg',
       social: {
-        linkedin: settings['social.linkedin'] || '',
-        github: settings['social.github'] || '',
+        linkedin: settings['social.linkedin'] || 'https://www.linkedin.com/company/devcenterpoint',
+        github: settings['social.github'] || 'https://github.com/DevCenterPoint',
         x: settings['social.x'] || '',
       },
     };

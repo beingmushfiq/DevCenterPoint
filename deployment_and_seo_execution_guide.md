@@ -144,29 +144,26 @@ graph TD
 
 ### Step 4.2: Establish LinkedIn Company Page
 1. Visit [LinkedIn Company Setup](https://www.linkedin.com/company/setup/new/).
-2. Create a **Company** page for **DevCenterPoint**:
+2. Create or verify your **Company** page for **DevCenterPoint**:
    - **Name**: `DevCenterPoint`
-   - **Public URL**: `linkedin.com/company/devcenterpoint` (or closest available variation)
+   - **Public URL**: [linkedin.com/company/devcenterpoint](https://www.linkedin.com/company/devcenterpoint)
    - **Website**: `https://devcenterpoint.com`
    - **Industry**: `Software Development` or `IT Services and IT Consulting`
-   - **Organization size**: Select appropriate bracket
    - **Tagline**: `Product Engineering Studio & Architecture Consulting`
    - **About**: Add a 2–3 paragraph summary declaring core services: Custom Web Application Development, Cloud Architecture, Scalable Backend Engineering, and Technical Audits.
 
 ---
 
-### Step 4.3: Sync `sameAs` Structured Data
-Once your LinkedIn Company URL is active:
-1. Open [views/partials/head.ejs](file:///d:/DevCenterPoint/views/partials/head.ejs).
-2. Locate the `sameAs` array within the `Organization` schema:
-   ```json
-   "sameAs": [
-     "https://devcenterpoint.com",
-     "https://github.com/beingmushfiq",
-     "https://www.linkedin.com/company/devcenterpoint"
-   ]
-   ```
-3. Commit and push the update to GitHub.
+### Step 4.3: Sync `sameAs` Structured Data (Configured)
+The `sameAs` entity graph in [views/partials/head.ejs](file:///d:/test_deepseek_v4_flash/devcenterpoint/views/partials/head.ejs) and footer profiles have been synced:
+```json
+"sameAs": [
+  "https://devcenterpoint.com",
+  "https://github.com/DevCenterPoint",
+  "https://github.com/beingmushfiq",
+  "https://www.linkedin.com/company/devcenterpoint"
+]
+```
 
 ---
 
