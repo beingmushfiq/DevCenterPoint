@@ -1,17 +1,22 @@
 # ============================================================
+
 # DEVCENTERPOINT — CPANEL & APACHE PRODUCTION CONFIGURATION
+
 # ============================================================
 
 # 1. Block access to sensitive source files, dotfiles, and databases
+
 <FilesMatch "^\.(env|git|gitignore|eslintrc|editorconfig)|package(-lock)?\.json|\.(md|sql|log|sh)$">
-  Order Allow,Deny
-  Deny from all
+Order Allow,Deny
+Deny from all
 </FilesMatch>
 
 # 2. Block access to backend internal directories if web root points to project root
+
 RedirectMatch 403 ^/(server|views|migrations|node_modules)/
 
 # 3. Security Headers
+
 <IfModule mod_headers.c>
   Header always set X-Content-Type-Options "nosniff"
   Header always set X-Frame-Options "DENY"
@@ -22,18 +27,24 @@ RedirectMatch 403 ^/(server|views|migrations|node_modules)/
 </IfModule>
 
 # 4. HTTPS Force Redirect
+
 <IfModule mod_rewrite.c>
   RewriteEngine On
 
-  # Redirect HTTP to HTTPS
-  RewriteCond %{HTTPS} off
-  RewriteCond %{HTTP:X-Forwarded-Proto} !https
-  RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+# Redirect HTTP to HTTPS
+
+RewriteCond %{HTTPS} off
+RewriteCond %{HTTP:X-Forwarded-Proto} !https
+RewriteRule ^(.\*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
 </IfModule>
 
 # 5. Phusion Passenger — hand ALL requests to the Node.js app.
-#    This prevents Apache from serving any static index.html that
-#    might exist in the document root, and ensures every request
-#    reaches Express/Passenger instead.
+
+# This prevents Apache from serving any static index.html that
+
+# might exist in the document root, and ensures every request
+
+# reaches Express/Passenger instead.
+
 PassengerEnabled on
 PassengerNodejs /usr/bin/node
