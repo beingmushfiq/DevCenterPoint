@@ -394,6 +394,24 @@ publicRoutes.get('/robots.txt', (req, res) => {
 Allow: /
 Disallow: /admin/
 Disallow: /api/
+Disallow: /cgi-bin/
+Disallow: /uploads/
+
+# Allow Google's AI Overview crawler to index content for AIO citations
+User-agent: Googlebot-Extended
+Allow: /
+
+# Allow Perplexity AI to index content for AI search citations
+User-agent: PerplexityBot
+Allow: /
+
+# Allow other AI search crawlers
+User-agent: GPTBot
+Allow: /insights/
+Allow: /work/
+Allow: /services/
+Allow: /about
+Disallow: /admin/
 
 Sitemap: ${config.siteUrl}/sitemap.xml
 `);
@@ -409,19 +427,19 @@ publicRoutes.get('/sitemap.xml', async (req, res, next) => {
     ]);
 
     const urls = [
-      { loc: '/', priority: '1.0', changefreq: 'weekly' },
-      { loc: '/work', priority: '0.9', changefreq: 'weekly' },
-      { loc: '/services', priority: '0.9', changefreq: 'monthly' },
-      { loc: '/insights', priority: '0.8', changefreq: 'weekly' },
-      { loc: '/about', priority: '0.7', changefreq: 'monthly' },
-      { loc: '/contact', priority: '0.8', changefreq: 'monthly' },
+      { loc: '/', priority: '1.0', changefreq: 'weekly', lastmod: new Date().toISOString().slice(0, 10) },
+      { loc: '/work', priority: '0.9', changefreq: 'weekly', lastmod: new Date().toISOString().slice(0, 10) },
+      { loc: '/services', priority: '0.9', changefreq: 'monthly', lastmod: new Date().toISOString().slice(0, 10) },
+      { loc: '/insights', priority: '0.8', changefreq: 'weekly', lastmod: new Date().toISOString().slice(0, 10) },
+      { loc: '/about', priority: '0.7', changefreq: 'monthly', lastmod: new Date().toISOString().slice(0, 10) },
+      { loc: '/contact', priority: '0.8', changefreq: 'monthly', lastmod: new Date().toISOString().slice(0, 10) },
     ];
 
-    cases.forEach((c) => urls.push({ loc: `/work/${c.slug}`, priority: '0.8', changefreq: 'monthly' }));
-    posts.forEach((p) => urls.push({ loc: `/insights/${p.slug}`, priority: '0.7', changefreq: 'monthly' }));
-    services.forEach((s) => urls.push({ loc: `/services/${s.slug}`, priority: '0.8', changefreq: 'monthly' }));
+    cases.forEach((c) => urls.push({ loc: `/work/${c.slug}`, priority: '0.8', changefreq: 'monthly', lastmod: (c.updated_at || c.created_at || '').toString().slice(0, 10) }));
+    posts.forEach((p) => urls.push({ loc: `/insights/${p.slug}`, priority: '0.7', changefreq: 'monthly', lastmod: (p.updated_at || p.published_at || p.created_at || '').toString().slice(0, 10) }));
+    services.forEach((s) => urls.push({ loc: `/services/${s.slug}`, priority: '0.8', changefreq: 'monthly', lastmod: (s.updated_at || s.created_at || '').toString().slice(0, 10) }));
     pages.forEach((p) => {
-      if (p.slug !== 'about') urls.push({ loc: `/${p.slug}`, priority: '0.5', changefreq: 'yearly' });
+      if (p.slug !== 'about') urls.push({ loc: `/${p.slug}`, priority: '0.5', changefreq: 'yearly', lastmod: (p.updated_at || p.created_at || '').toString().slice(0, 10) });
     });
 
     res.type('application/xml');
@@ -430,7 +448,8 @@ publicRoutes.get('/sitemap.xml', async (req, res, next) => {
 ${urls.map((u) => `  <url>
     <loc>${config.siteUrl}${u.loc}</loc>
     <changefreq>${u.changefreq}</changefreq>
-    <priority>${u.priority}</priority>
+    <priority>${u.priority}</priority>${u.lastmod ? `
+    <lastmod>${u.lastmod}</lastmod>` : ''}
   </url>`).join('\n')}
 </urlset>`;
     res.send(xml);

@@ -1,3 +1,21 @@
+<%
+  /* Service JSON-LD — AEO/GEO: machine-readable service definition
+     linked to the Organisation entity via '@id' reference. */
+  locals.schemaData = {
+    '@context': 'https://schema.org',
+    '@type': 'Service',
+    '@id': `https://devcenterpoint.com/services/${service.slug}#service`,
+    name: service.title,
+    description: service.summary || service.tagline,
+    provider: { '@id': 'https://devcenterpoint.com/#organization' },
+    serviceType: service.title,
+    url: `https://devcenterpoint.com/services/${service.slug}`,
+    mainEntityOfPage: {
+      '@type': 'WebPage',
+      '@id': `https://devcenterpoint.com/services/${service.slug}`,
+    },
+  };
+%>
 <%- include('../partials/head', { pageType: 'index', bodyClass: 'page-service' }) %>
 
 <article class="chapter chapter--flow chapter--lead">

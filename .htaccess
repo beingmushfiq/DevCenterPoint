@@ -4,6 +4,11 @@
 
 # ============================================================
 
+# 0. Disable directory listings globally — prevents Apache from
+#    serving bare file indexes (the cgi-bin listing that Google
+#    cached instead of the real site was caused by this being absent)
+Options -Indexes
+
 # 1. Block access to sensitive source files, dotfiles, and databases
 
 <FilesMatch "^\.(env|git|gitignore|eslintrc|editorconfig)|package(-lock)?\.json|\.(md|sql|log|sh)$">

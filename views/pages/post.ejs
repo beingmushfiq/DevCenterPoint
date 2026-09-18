@@ -1,3 +1,40 @@
+<%
+  /* BlogPosting JSON-LD — GEO: full BlogPosting schema makes insight
+     articles citable by AI Overviews and Perplexity with correct
+     attribution to DevCenterPoint. datePublished + headline are the
+     two fields most used in AI answer citations. */
+  locals.schemaData = {
+    '@context': 'https://schema.org',
+    '@type': 'BlogPosting',
+    '@id': `https://devcenterpoint.com/insights/${post.slug}#post`,
+    headline: post.title,
+    description: post.excerpt || '',
+    author: {
+      '@id': 'https://devcenterpoint.com/#organization',
+      '@type': 'Organization',
+      name: 'DevCenterPoint',
+    },
+    publisher: { '@id': 'https://devcenterpoint.com/#organization' },
+    datePublished: (post.published_at || post.created_at || '').toString().slice(0, 10),
+    dateModified: (post.updated_at || post.published_at || post.created_at || '').toString().slice(0, 10),
+    image: post.cover_path
+      ? `https://devcenterpoint.com${post.cover_path}`
+      : 'https://devcenterpoint.com/brand/og-image.svg',
+    mainEntityOfPage: {
+      '@type': 'WebPage',
+      '@id': `https://devcenterpoint.com/insights/${post.slug}`,
+    },
+    wordCount: post.word_count || undefined,
+    timeRequired: post.reading_time ? `PT${post.reading_time}M` : undefined,
+    inLanguage: 'en',
+    isPartOf: {
+      '@type': 'Blog',
+      '@id': 'https://devcenterpoint.com/insights#blog',
+      name: 'DevCenterPoint Insights',
+      publisher: { '@id': 'https://devcenterpoint.com/#organization' },
+    },
+  };
+%>
 <%- include('../partials/head', { pageType: 'detail', bodyClass: 'page-post' }) %>
 
 <article class="chapter chapter--flow chapter--lead">

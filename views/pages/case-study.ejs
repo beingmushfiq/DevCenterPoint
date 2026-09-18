@@ -1,3 +1,24 @@
+<%
+  /* Case Study JSON-LD — AEO/GEO: Article schema links this work
+     to DevCenterPoint as author, making it citable by AI systems. */
+  locals.schemaData = {
+    '@context': 'https://schema.org',
+    '@type': 'Article',
+    '@id': `https://devcenterpoint.com/work/${cs.slug}#article`,
+    headline: cs.title,
+    description: cs.summary,
+    author: { '@id': 'https://devcenterpoint.com/#organization' },
+    publisher: { '@id': 'https://devcenterpoint.com/#organization' },
+    datePublished: (cs.published_at || cs.created_at || '').toString().slice(0, 10),
+    dateModified: (cs.updated_at || cs.published_at || cs.created_at || '').toString().slice(0, 10),
+    image: cs.cover_path ? `https://devcenterpoint.com${cs.cover_path}` : 'https://devcenterpoint.com/brand/og-image.svg',
+    mainEntityOfPage: {
+      '@type': 'WebPage',
+      '@id': `https://devcenterpoint.com/work/${cs.slug}`,
+    },
+    about: cs.sector ? { '@type': 'Thing', name: cs.sector } : undefined,
+  };
+%>
 <%- include('../partials/head', { pageType: 'detail', bodyClass: 'page-case-study' }) %>
 
 <article class="chapter chapter--flow chapter--lead">
