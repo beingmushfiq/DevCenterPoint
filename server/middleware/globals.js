@@ -80,7 +80,7 @@ export async function globals(req, res, next) {
     res.locals.site = {
       name: settings['company.name'] || 'DevCenterPoint',
       tagline: settings['company.tagline'] || 'Code. Build. Deploy. Scale.',
-      email: settings['company.email'] || 'contact@devcenterpoint.com',
+      email: settings['company.email'] || 'hello@devcenterpoint.com',
       location: settings['company.location'] || '',
       defaultTitle: settings['seo.default_title'] || 'DevCenterPoint — Code. Build. Deploy. Scale.',
       defaultDescription: settings['seo.default_description'] || 'DevCenterPoint is an elite engineering consultancy. We code, build, deploy, and scale high-performance platforms, cloud architecture, and mission-critical software.',
